@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Extension due to ill health: Tell us when the illness ended
+{% endblock %}
+
+{% block main %}
+
+  <div class="govuk-width-container">
+    {{ govukPhaseBanner({
+      tag: {
+        text: "alpha"
+      },
+      html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+    }) }}
+    {{ govukBackLink({
+      text: "Back",
+      href: "continued-illness"
+    }) }}
+    <main role="main" class="govuk-main-wrapper">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+
+          <form action="" method="post">
+
+            {{ govukDateInput({
+  id: "illness-end-date",
+  namePrefix: "illnessEndDate",
+  fieldset: {
+    legend: {
+      text: "When did the illness end?",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--xl"
+    }
+  },
+  hint: {
+    text: "For example, 12 9 2018"
+  }
+}) }}
+
+            {{ govukButton({
+              text: "Continue"
+            }) }}
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+{% endblock %}

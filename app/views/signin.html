@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Sign in
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "company-number"
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+              titleText: "There was a problem signing you in",
+              errorList: errorList
+            }) }}
+      {% endif %}
+      <h1 class="govuk-heading-xl">Sign in to Companies House</h1>
+      <form action="" method="post">
+        {% if emailErr.flag %}
+          {{ govukInput({
+              label: {
+                text: "Email address"
+              },
+              errorMessage: {
+                text: emailErr.text
+              },
+              id: "email",
+              name: "email",
+              value: email
+            }) }}
+        {% else %}
+          {{ govukInput({
+              label: {
+                text: "Email address"
+              },
+              id: "email",
+              name: "email",
+              value: email
+            }) }}
+        {% endif %}
+        {% if passwordErr.flag %}
+          {{ govukInput({
+              label: {
+                text: "Password"
+              },
+              errorMessage: {
+                text: passwordErr.text
+              },
+              id: "password",
+              name: "password",
+              type: 'password',
+              value: password
+            }) }}
+        {% else %}
+          {{ govukInput({
+              label: {
+                text: "Password"
+              },
+              id: "password",
+              name: "password",
+              type: 'password',
+              value: password
+            }) }}
+        {% endif %}
+        {{ govukButton({
+              text: "Sign in"
+            }) }}
+        <p class="govuk-body">
+          <a href="" class="govuk-link">Register</a>
+        </p>
+        <p class="govuk-body">
+          <a href="" class="govuk-link">Forgotten your password?</a>
+        </p>
+      </form>
+    </div>
+  </div>
+{% endblock %}

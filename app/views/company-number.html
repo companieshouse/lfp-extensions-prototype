@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Tell us your company number
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "company-number"
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-xl">Tell us your company number</h1>
+
+      <form action="" method="post">
+
+        {{ govukInput({
+              label: {
+                text: "Company number"
+              },
+              hint: {
+                text: "This is the 8 character reference that uniquely identifies your company."
+              },
+              id: "company-number",
+              name: "companyNumber",
+              value: "00001234",
+              classes: "govuk-input--width-10"
+            }) }}
+
+        {{ govukDetails({
+                summaryText: "Where can i find these details?",
+                html: "<p>You can <a target='blank' href='https://beta.companieshouse.gov.uk/'>search for your company on the public register</a> to find your company number.</p><p>If your company was registered in Scotland your company number would start with SC. Companies registered in Northern Ireland will have a company number starting with NI.</p>"
+            }) }}
+
+        {{ govukButton({
+      text: "Continue"
+    }) }}
+
+      </form>
+    </div>
+  </div>
+{% endblock %}

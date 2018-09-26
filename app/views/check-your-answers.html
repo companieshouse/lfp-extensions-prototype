@@ -1,0 +1,204 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Check your answers before sending your application
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: backLinkHref
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">
+        Check your application
+      </h1>
+      <dl class="app-check-your-answers app-check-your-answers--long">
+        <div class="app-check-your-answers__contents">
+          <dt class="app-check-your-answers__question">
+            Company Name
+          </dt>
+          <dd class="app-check-your-answers__answer">
+            Fun Times Limited
+          </dd>
+          <dd class="app-check-your-answers__change"></dd>
+        </div>
+        <div class="app-check-your-answers__contents">
+          <dt class="app-check-your-answers__question">
+            Company Number
+          </dt>
+          <dd class="app-check-your-answers__answer">
+            00001234
+          </dd>
+          <dd class="app-check-your-answers__change"></dd>
+        </div>
+        <div class="app-check-your-answers__contents">
+          <dt class="app-check-your-answers__question">
+            Address
+          </dt>
+          <dd class="app-check-your-answers__answer">
+            15 Norton Street<br/>
+            Brighton<br/>
+            BR10 1QT
+          </dd>
+          <dd class="app-check-your-answers__change"></dd>
+        </div>
+        <div class="app-check-your-answers__contents">
+          <dt class="app-check-your-answers__question">
+            Filing due date
+          </dt>
+          <dd class="app-check-your-answers__answer">
+            6 October 2018
+          </dd>
+          <dd class="app-check-your-answers__change"></dd>
+        </div>
+      </dl>
+      <h2 class="govuk-heading-m">Extension Reasons</h2>
+      {% for reason in extensionReasons %}
+        {% if reason.reason === 'illness' %}
+          <dl class="app-check-your-answers app-check-your-answers--long">
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Reason for extension
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                {{ reason.reason | capitalize }}
+              </dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/chose-reason">Change</a>
+              </dd>
+            </div>
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Who was ill?
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                {% if reason.illPerson === 'Someone else' %}
+                  {{ reason.otherIllPerson }}
+                {% else %}
+                  {{ reason.illPerson | capitalize }}
+                {% endif %}
+              </dd>
+              <dd class="app-check-your-answers__change"></dd>
+            </div>
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Illness start date
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                {{ reason.illnessStartDate.day }}
+                {{ reason.illnessStartDate.month | displayMonth }}
+                {{ reason.illnessStartDate.year }}
+              </dd>
+              <dd class="app-check-your-answers__change"></dd>
+            </div>
+            {% if reason.continuedIllness === 'yes' %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Continuing illness?
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {{ reason.continuedIllness | capitalize }}
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% else %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Illness end date
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {{ reason.illnessEndDate.day }}
+                  {{ reason.illnessEndDate.month | displayMonth }}
+                  {{ reason.illnessEndDate.year }}
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% endif %}
+            {% if reason.illnessInformation != null %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Further information
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {{ reason.illnessInformation }}
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% endif %}
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Supporting evidence
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                <a href='' class='govuk-link'>gp-letter.jpg</a>
+              </dd>
+              <dd class="app-check-your-answers__change"></dd>
+            </div>
+          </dl>
+        {% elif reason.reason === 'disaster' %}
+          <dl class="app-check-your-answers app-check-your-answers--long">
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Disaster
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                TBD
+              </dd>
+              <dd class="app-check-your-answers__change"></dd>
+            </div>
+          </dl>
+        {% else %}
+          <dl class="app-check-your-answers app-check-your-answers--long">
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Extension reason
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                {{ reason.otherReason }}
+              </dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/chose-reason">Change</a>
+              </dd>
+            </div>
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Further information
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                {{ reason.otherInformation }}
+              </dd>
+              <dd class="app-check-your-answers__change"></dd>
+            </div>
+          </dl>
+        {% endif %}
+        <dl class="app-check-your-answers app-check-your-answers--long">
+          <div class="app-check-your-answers__contents">
+            <dt class="app-check-your-answers__question">
+              Extension length
+            </dt>
+            <dd class="app-check-your-answers__answer">
+              {{ extensionLength }}
+            </dd>
+            <dd class="app-check-your-answers__change">
+              <a href="/extension-length">Change</a>
+            </dd>
+          </div>
+        </dl>
+      {% endfor %}
+      <form action="" method="post">
+        {{ govukButton({
+        text: "Submit"
+      }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

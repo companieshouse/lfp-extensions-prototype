@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Choose a reason for your extension
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "/choose-reason"
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+              titleText: "There was a problem with the reason for your extension",
+              errorList: errorList
+            }) }}
+      {% endif %}
+
+      <form action="" method="post">
+
+        {% set otherInput %}
+        {{ govukInput({
+              id: "other-reason",
+              name: "otherReason",
+              classes: "",
+              errorMessage: otherReasonError,
+              label: {
+                text: "Reason"
+              }
+            }) }}
+        {% endset -%}
+
+        {{ govukRadios({
+              idPrefix: "extension-reason",
+              name: "extensionReason",
+              errorMessage: extensionReasonError,
+              fieldset: {
+                legend: {
+                  text: 'Tell us why you\'re applying for an extension',
+                  isPageHeading: true,
+                  classes: 'govuk-fieldset__legend--xl'
+                }
+              },
+              items: [
+                {
+                  value: "illness",
+                  text: "Illness"
+                },
+                {
+                  value: "disaster",
+                  text: "Natural disaster"
+                },
+                {
+                  value: "other",
+                  text: "I'm applying for another reason",
+                  checked: otherReasonError,
+                  conditional: {
+                    html: otherInput
+                  }
+                }
+              ]
+            }) }}
+
+          {{ govukButton({
+            text: "Save and continue"
+          }) }}
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+
+{% endblock %}

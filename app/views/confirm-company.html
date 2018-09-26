@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Confirm the company
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "company-number"
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-xl">Check company details</h1>
+
+      <h2 class="govuk-heading-l">Fun Times Limited</h2>
+
+      {{ govukTable({
+
+  firstCellIsHeader: true,
+  classes: "align-top",
+  rows: [
+    [
+      {
+        text: "Company number"
+      },
+      {
+        text: "00001234"
+      }
+    ],
+    [
+      {
+        text: "Status"
+      },
+      {
+        text: "Active"
+      }
+    ],
+    [
+      {
+        text: "Incorporation date"
+      },
+      {
+        text: "25 September 2002"
+      }
+    ],
+    [
+      {
+        text: "Company type"
+      },
+      {
+        text: "private limited company"
+      }
+    ],
+    [
+      {
+        text: "Registered office address"
+      },
+      {
+        html: "15 Norton Street<br>Brighton<br>BR10 1QT"
+      }
+    ]
+  ]
+}) }}
+
+      {{ govukButton({
+text: "Continue",
+href: "filing-deadline"
+}) }}
+    </div>
+  </div>
+{% endblock %}
