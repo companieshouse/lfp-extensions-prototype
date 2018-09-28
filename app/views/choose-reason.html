@@ -19,20 +19,14 @@
 }) }}
 {% endblock %}
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-width-container">
+    <main role="main" class="govuk-main-wrapper">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <form action="" method="post">
 
-      {% if errorList.length > 0 %}
-        {{ govukErrorSummary({
-              titleText: "There was a problem with the reason for your extension",
-              errorList: errorList
-            }) }}
-      {% endif %}
-
-      <form action="" method="post">
-
-        {% set otherInput %}
-        {{ govukInput({
+            {% set otherInput %}
+            {{ govukInput({
               id: "other-reason",
               name: "otherReason",
               classes: "",
@@ -41,9 +35,9 @@
                 text: "Reason"
               }
             }) }}
-        {% endset -%}
+            {% endset -%}
 
-        {{ govukRadios({
+            {{ govukRadios({
               idPrefix: "extension-reason",
               name: "extensionReason",
               errorMessage: extensionReasonError,

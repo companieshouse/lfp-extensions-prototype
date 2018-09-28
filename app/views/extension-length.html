@@ -17,8 +17,12 @@
 {% endblock %}
 
 {% block content %}
-  <form action="" method="post">
-    {{ govukRadios({
+  <div class="govuk-width-container">
+    <main role="main" class="govuk-main-wrapper">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <form action="" method="post">
+            {{ govukRadios({
   idPrefix: "extension-length",
   name: "extensionLength",
   fieldset: {
@@ -43,8 +47,12 @@
     }
   ]
 }) }}
-    {{ govukButton({
+            {{ govukButton({
   text: "Continue"
 }) }}
-  </form>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
 {% endblock %}
