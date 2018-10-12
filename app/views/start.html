@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-  Start page
+  Extend your filing deadline
 {% endblock %}
 
 {% block header %}
@@ -35,21 +35,25 @@
         {% endif %}
       </h1>
 
-      <p class="govuk-body-l">Use this service to get more time to file your accounts.</p>
+      <p class="govuk-body-l">Use this service to request more time to file your accounts.</p>
 
       <p>Applying takes around 10 minutes.</p>
 
-      <p>You'll need:</p>
-
+      <a href="signin" role="button" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8">Start now</a>
+      <h2 class="govuk-heading-m">Before you start</h2>
+      <h3 class="govuk-heading-s">You'll need:</h3>
       <ul class="govuk-list govuk-list--bullet">
         <li>the company number</li>
         <li>an email address</li>
+        <li>information about your extension reason</li>
       </ul>
 
-      <a href="signin" role="button" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8">Start now</a>
       <h2 class="govuk-heading-m">Other ways to apply</h2>
       <p>You can also
-        <a href="#">apply by email</a>.</p>
+        <a href="https://www.gov.uk/government/publications/life-of-a-company-annual-requirements/life-of-a-company-part-1-accounts#how-to-request-extra-time-to-file-your-companys-accounts">apply by post</a>.</p>
+      <p>
+        <a href="https://www.gov.uk/government/publications/life-of-a-company-annual-requirements/life-of-a-company-part-1-accounts#how-to-request-extra-time-to-file-your-companys-accounts" target="_blank">Read the guidance</a>
+      </p>
 
     </div>
 

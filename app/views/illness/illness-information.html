@@ -15,43 +15,47 @@
 }) }}
   {{ govukBackLink({
   text: "Back",
-  href: "/choose-reason"
+  href: "illness-pre-information"
 }) }}
 {% endblock %}
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
       {% if errorList.length > 0 %}
         {{ govukErrorSummary({
-              titleText: "There was a problem with your extension information",
-              errorList: errorList
-            }) }}
+        titleText: "There is a problem",
+        errorList: errorList
+      }) }}
       {% endif %}
-
+      <h1 class="govuk-heading-xl">Tell us about the illness</h1>
       <form action="" method="post">
-
-        {% if errorList.length > 0 %}
-          {% set illnessInformationError = {
-            text: illnessInformationErr.text
-          } %}
-        {% else %}
-          {% set IllnessinformationError = false %}
-        {% endif %}
-
         {% set hintHTML %}
-        Anything you tell us to support your appeal will be kept confidential.
+        Anything you tell us to support your extension will be kept confidential.
         {% endset -%}
-
-        <h1 class="govuk-heading-xl">Tell us about the illness</h1>
-        {{ govukTextarea({
+        {% if Err.flag %}
+          {{ govukTextarea({
               name: "illnessInformation",
               id: "illness-information",
-              errorMessage: illnessInformationError,
-              value: illnessInformation,
               rows: '12',
               label: {
-                text: "Anything you tell us to support your extension will be kept condfidential.",
+                text: "Anything you tell us to support your extension will be kept confidential.",
+                isPageHeading: true,
+                classes: 'govuk-heading-large'
+              },
+              hint: {
+                text: "Useful information could include symptoms, whether the illness was diagnosed by a GP and any medications taken."
+              },
+              errorMessage: {
+                text: "Enter information"
+              }
+            }) }}
+        {% else %}
+          {{ govukTextarea({
+              name: "illnessInformation",
+              id: "illness-information",
+              rows: '12',
+              label: {
+                text: "Anything you tell us to support your extension will be kept confidential.",
                 isPageHeading: true,
                 classes: 'govuk-heading-large'
               },
@@ -59,7 +63,7 @@
                 text: "Useful information could include symptoms, whether the illness was diagnosed by a GP and any medications taken."
               }
             }) }}
-
+        {% endif %}
         {{ govukButton({
               text: "Continue"
             }) }}

@@ -21,8 +21,15 @@
 
       <h1 class="govuk-heading-xl">Check company details</h1>
 
-      <h2 class="govuk-heading-l">Fun Times Limited</h2>
+      <h2 class="govuk-heading-l">{{scenario.company.name}}</h2>
 
+      {% set overdueHTML %}
+      {{scenario.company.accountsDue}}
+      {% if scenario.company.deadlineStatus === 'Overdue' %}
+        <br/>Your accounts are overdue
+      {% else %}
+      {% endif %}
+      {% endset %}
       {{ govukTable({
 
   firstCellIsHeader: true,
@@ -33,7 +40,7 @@
         text: "Company number"
       },
       {
-        text: "00001234"
+        text: scenario.company.number
       }
     ],
     [
@@ -41,7 +48,7 @@
         text: "Status"
       },
       {
-        text: "Active"
+        text: scenario.company.status
       }
     ],
     [
@@ -49,7 +56,7 @@
         text: "Incorporation date"
       },
       {
-        text: "25 September 2002"
+        text: scenario.company.incorporationDate
       }
     ],
     [
@@ -57,7 +64,7 @@
         text: "Company type"
       },
       {
-        text: "private limited company"
+        text: scenario.company.companyType
       }
     ],
     [
@@ -65,7 +72,7 @@
         text: "Registered office address"
       },
       {
-        html: "15 Norton Street<br>Brighton<br>BR10 1QT"
+        html: scenario.company.address | nl2br
       }
     ],
     [
@@ -73,16 +80,23 @@
         text: "Accounts due"
       },
       {
-        html: "6 October 2018"
+        html: overdueHTML
       }
     ]
   ]
 }) }}
 
-      {{ govukButton({
+      {% if scenario.company.deadlineStatus === 'Overdue' %}
+        {{ govukButton({
+text: "Continue",
+href: "ptf/ptf"
+}) }}
+      {% else %}
+        {{ govukButton({
 text: "Continue",
 href: "choose-reason"
 }) }}
+      {% endif %}
     </div>
   </div>
 {% endblock %}

@@ -23,18 +23,44 @@
     <main role="main" class="govuk-main-wrapper">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-          {% set someoneElseInput %}
-          {{ govukInput({
-            id: "other-ill-person",
-            name: "otherIllPerson",
-            classes: "",
-            errorMessage: otherPersonError,
-            label: {
-              text: "Their relationship to the company"
-            }
-          }) }}
-          {% endset -%}
+
           <form action="" method="post">
+
+            {% if errorList.length > 0 %}
+              {{ govukErrorSummary({
+                titleText: "There is an error on the page",
+                errorList: errorList
+              }) }}
+            {% endif %}
+
+            {% if errorList.length > 0 %}
+              {% set illPersonError = {
+                text: illPersonErr.text
+              } %}
+            {% else %}
+              {% set illPersonError = false %}
+            {% endif %}
+
+            {% if errorList.length > 0 %}
+              {% if illPersonErr.type === 'invalid' %}
+                {% set otherPersonError = true %}
+              {% else %}
+                {% set otherPersonError = false %}
+              {% endif %}
+            {% endif %}
+
+            {% set someoneElseInput %}
+            {{ govukInput({
+              id: "other-person",
+              name: "otherPerson",
+              classes: "",
+              errorMessage: otherPersonError,
+              label: {
+                text: "Their relationship to the company"
+              }
+            }) }}
+            {% endset -%}
+
             {{ govukRadios({
               idPrefix: "ill-person",
                 name: "illPerson",

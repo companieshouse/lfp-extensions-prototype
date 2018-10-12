@@ -27,3 +27,7 @@ $govuk-global-styles: true;
 .body-blue {
   background-color: #2b8cc4;
 }
+
+.govuk-input--company-number {
+  max-width: 13ex;
+}

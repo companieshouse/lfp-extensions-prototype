@@ -1,0 +1,81 @@
+//choose reason error
+
+var chooseReason = req.body.chooseReason
+var errorFlag = false
+var Err = {}
+var errorList = []
+
+if (chooseReason === '') {
+  Err.type = 'blank'
+  Err.text = 'You must select a reason'
+  Err.href = '#choose-reason'
+  Err.flag = true
+}
+if (Err.flag) {
+  errorList.push(Err)
+  errorFlag = true
+}
+if (errorFlag === true) {
+  res.render('choose-reason', {
+    errorList: errorList,
+    Err: Err
+  })
+} else {
+
+//continued illness error
+
+var continuedIllness = req.body.continuedIllness
+var errorFlag = false
+var Err = {}
+var errorList = []
+
+if (continuedIllness === '') {
+  Err.type = 'blank'
+  Err.text = 'You must tell us if this person is still ill'
+  Err.href = '#continued-illness'
+  Err.flag = true
+}
+if (Err.flag) {
+  errorList.push(Err)
+  errorFlag = true
+}
+if (errorFlag === true) {
+  res.render('continued-illness', {
+    errorList: errorList,
+    Err: Err
+  })
+} else {
+
+// illness end date error
+
+if (req.session.scenario != null) {
+  req.session.illnessEndDate = {}
+  req.session.illnessEndDate.day = req.body['illnessEnd-day']
+  req.session.illnessEndDate.month = req.body['illnessEnd-month']
+  req.session.illnessEndDate.year = req.body['illnessEnd-year']
+  var reasonObject = {}
+  var errorFlag = false
+  var endDateErr = {}
+  var errorList = []
+
+  if (req.session.illnessEndDate.day === '' || req.session.illnessEndDate.month === '' || req.session.illnessEndDate.year === '') {
+    endDateErr.type = 'invalid'
+    endDateErr.text = 'You must tell us when the illness ended'
+    endDateErr.href = '#illness-end-date'
+    endDateErr.flag = true
+  }
+  if (endDateErr.flag) {
+    errorList.push(endDateErr)
+    errorFlag = true
+  }
+
+  if (errorFlag === true) {
+    reasonObject = req.session.appealReasons[req.session.appealReasons.length - 1]
+    res.render('ill-health/date-illness-ended', {
+      scenario: req.session.scenario,
+      errorList: errorList,
+      endDateErr: endDateErr,
+      endDate: req.session.illnessEndDate,
+      startDate: reasonObject.illnessStartDate
+    })
+  } else {
