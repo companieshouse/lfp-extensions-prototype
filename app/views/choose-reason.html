@@ -25,6 +25,29 @@
         <div class="govuk-grid-column-two-thirds">
           <form action="" method="post">
 
+            {% if errorList.length > 0 %}
+              {{ govukErrorSummary({
+                titleText: "There is an error on the page",
+                errorList: errorList
+              }) }}
+            {% endif %}
+
+            {% if errorList.length > 0 %}
+              {% set extensionReasonError = {
+                text: extensionReasonErr.text
+              } %}
+            {% else %}
+              {% set extensionReasonError = false %}
+            {% endif %}
+
+            {% if errorList.length > 0 %}
+              {% if extensionReasonErr.type === 'invalid' %}
+                {% set otherReasonError = true %}
+              {% else %}
+                {% set otherReasonError = false %}
+              {% endif %}
+            {% endif %}
+
             {% set otherInput %}
             {{ govukInput({
               id: "other-reason",
@@ -35,41 +58,41 @@
                 text: "Reason"
               }
             }) }}
-            {% endset -%}
+            {% endset %}
 
             {{ govukRadios({
-              idPrefix: "extension-reason",
-              name: "extensionReason",
-              errorMessage: extensionReasonError,
-              fieldset: {
-                legend: {
-                  text: 'Tell us why you\'re applying for an extension',
-                  isPageHeading: true,
-                  classes: 'govuk-fieldset__legend--xl'
-                }
-              },
-              items: [
-                {
-                  value: "illness",
-                  text: "Illness"
-                },
-                {
-                  value: "disaster",
-                  text: "Natural disaster"
-                },
-                {
-                  value: "other",
-                  text: "I'm applying for another reason",
-                  checked: otherReasonError,
-                  conditional: {
-                    html: otherInput
+                idPrefix: "extension-reason",
+                name: "extensionReason",
+                errorMessage: extensionReasonError,
+                fieldset: {
+                  legend: {
+                    text: 'Tell us why you\'re applying for an extension',
+                    isPageHeading: true,
+                    classes: 'govuk-fieldset__legend--xl'
                   }
-                }
-              ]
-            }) }}
+                },
+                items: [
+                  {
+                    value: "illness",
+                    text: "Illness"
+                  },
+                  {
+                    value: "disaster",
+                    text: "Natural disaster"
+                  },
+                  {
+                    value: "other",
+                    text: "I'm applying for another reason",
+                    checked: otherReasonError,
+                    conditional: {
+                      html: otherInput
+                    }
+                  }
+                ]
+              }) }}
 
           {{ govukButton({
-            text: "Save and continue"
+            text: "Continue"
           }) }}
         </form>
       </div>

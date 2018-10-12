@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+
 {% block pageTitle %}
   {% if errorList.length > 0 %}
     Error:
@@ -14,22 +15,24 @@
 }) }}
   {{ govukBackLink({
   text: "Back",
-  href: "company-number"
+  href: "start"
 }) }}
 {% endblock %}
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half">
-      {% if errorList.length > 0 %}
-        {{ govukErrorSummary({
+  <div class="govuk-width-container">
+    <main role="main" class="govuk-main-wrapper">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+          {% if errorList.length > 0 %}
+            {{ govukErrorSummary({
               titleText: "There was a problem signing you in",
               errorList: errorList
             }) }}
-      {% endif %}
-      <h1 class="govuk-heading-xl">Sign in to Companies House</h1>
-      <form action="" method="post">
-        {% if emailErr.flag %}
-          {{ govukInput({
+          {% endif %}
+          <h1 class="govuk-heading-xl">Sign in to Companies House</h1>
+          <form action="" method="post">
+            {% if emailErr.flag %}
+              {{ govukInput({
               label: {
                 text: "Email address"
               },
@@ -40,8 +43,8 @@
               name: "email",
               value: email
             }) }}
-        {% else %}
-          {{ govukInput({
+            {% else %}
+              {{ govukInput({
               label: {
                 text: "Email address"
               },
@@ -49,9 +52,10 @@
               name: "email",
               value: email
             }) }}
-        {% endif %}
-        {% if passwordErr.flag %}
-          {{ govukInput({
+            {% endif %}
+
+            {% if passwordErr.flag %}
+              {{ govukInput({
               label: {
                 text: "Password"
               },
@@ -63,8 +67,8 @@
               type: 'password',
               value: password
             }) }}
-        {% else %}
-          {{ govukInput({
+            {% else %}
+              {{ govukInput({
               label: {
                 text: "Password"
               },
@@ -73,17 +77,21 @@
               type: 'password',
               value: password
             }) }}
-        {% endif %}
-        {{ govukButton({
+            {% endif %}
+
+            {{ govukButton({
               text: "Sign in"
             }) }}
-        <p class="govuk-body">
-          <a href="" class="govuk-link">Register</a>
-        </p>
-        <p class="govuk-body">
-          <a href="" class="govuk-link">Forgotten your password?</a>
-        </p>
-      </form>
-    </div>
+            <p class="govuk-body">
+              <a href="" class="govuk-link">Register</a>
+            </p>
+            <p class="govuk-body">
+              <a href="" class="govuk-link">Forgotten your password?</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </main>
   </div>
+
 {% endblock %}

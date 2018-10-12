@@ -1,22 +1,22 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-  Provide evidence to support your appeal against a late filing penalty
+  Add evidence to support your extension request
 {% endblock %}
-
-{% block main %}
-
+{% block beforecontent %}
+  {{ govukPhaseBanner({
+tag: {
+  text: "alpha"
+},
+html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+text: "Back",
+href: 'other-evidence'
+}) }}
+{% endblock %}
+{% block content %}
   <div class="govuk-width-container">
-    {{ govukPhaseBanner({
-    tag: {
-      text: "alpha"
-    },
-    html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
-  }) }}
-    {{ govukBackLink({
-    text: "Back",
-    href: backLink
-  }) }}
     <main role="main" class="govuk-main-wrapper">
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
@@ -52,7 +52,7 @@
               rows: [
                 [
                   {
-                    html: "<a href='' class='govuk-link'>gp-letter.jpg</a>"
+                    html: "<a href='' class='govuk-link'>evidence-letter.jpg</a>"
                   },
                   {
                     html: removeLink
