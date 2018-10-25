@@ -27,7 +27,7 @@
             Company Name
           </dt>
           <dd class="app-check-your-answers__answer">
-            Fun Times Limited
+            {{ scenario.company.name }}
           </dd>
           <dd class="app-check-your-answers__change"></dd>
         </div>
@@ -36,7 +36,7 @@
             Company Number
           </dt>
           <dd class="app-check-your-answers__answer">
-            00001234
+            {{ scenario.company.number }}
           </dd>
           <dd class="app-check-your-answers__change"></dd>
         </div>
@@ -45,9 +45,7 @@
             Address
           </dt>
           <dd class="app-check-your-answers__answer">
-            15 Norton Street<br/>
-            Brighton<br/>
-            BR10 1QT
+            {{ scenario.company.address | nl2br | safe }}
           </dd>
           <dd class="app-check-your-answers__change"></dd>
         </div>
@@ -56,13 +54,24 @@
             Filing due date
           </dt>
           <dd class="app-check-your-answers__answer">
-            6 October 2018
+            {{ scenario.company.accountsDue }}
+          </dd>
+          <dd class="app-check-your-answers__change"></dd>
+        </div>
+        <div class="app-check-your-answers__contents">
+          <dt class="app-check-your-answers__question">
+            Contact email address
+          </dt>
+          <dd class="app-check-your-answers__answer">
+            {{ userEmail }}
           </dd>
           <dd class="app-check-your-answers__change"></dd>
         </div>
       </dl>
-      <h2 class="govuk-heading-m">Extension Reasons</h2>
+      <h2 class="govuk-heading-l">Extension reasons</h2>
       {% for reason in extensionReasons %}
+        <h3 class="govuk-heading-m">Reason
+          {{loop.index}}</h3>
         {% if reason.reason === 'illness' %}
           <dl class="app-check-your-answers app-check-your-answers--long">
             <div class="app-check-your-answers__contents">
@@ -73,7 +82,7 @@
                 {{ reason.reason | capitalize }}
               </dd>
               <dd class="app-check-your-answers__change">
-                <a href="/chose-reason">Change</a>
+                <a href="/choose-reason">Change</a>
               </dd>
             </div>
             <div class="app-check-your-answers__contents">
@@ -82,6 +91,7 @@
               </dt>
               <dd class="app-check-your-answers__answer">
                 {% if reason.illPerson === 'Someone else' %}
+                  Someone else -
                   {{ reason.otherIllPerson }}
                 {% else %}
                   {{ reason.illPerson | capitalize }}
@@ -139,7 +149,7 @@
                 Supporting evidence
               </dt>
               <dd class="app-check-your-answers__answer">
-                <a href='' class='govuk-link'>gp-letter.jpg</a>
+                <a href='' class='govuk-link'>evidence-letter.jpg</a>
               </dd>
               <dd class="app-check-your-answers__change"></dd>
             </div>
@@ -148,10 +158,21 @@
           <dl class="app-check-your-answers app-check-your-answers--long">
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
-                Disaster
+                Reason for extension
               </dt>
               <dd class="app-check-your-answers__answer">
-                TBD
+                {{ reason.reason | capitalize }}
+              </dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/choose-reason">Change</a>
+              </dd>
+            </div>
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Further information
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                {{ reason.naturalDisaster}}
               </dd>
               <dd class="app-check-your-answers__change"></dd>
             </div>
@@ -163,37 +184,36 @@
                 Reason for extension
               </dt>
               <dd class="app-check-your-answers__answer">
+                Other -
                 {{ reason.otherReason }}
               </dd>
               <dd class="app-check-your-answers__change">
-                <a href="/chose-reason">Change</a>
+                <a href="/choose-reason">Change</a>
               </dd>
             </div>
+            {% if reason.otherInformation != null %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Further information
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {{ reason.otherInformation }}
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% endif %}
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
-                Further information
+                Supporting evidence
               </dt>
               <dd class="app-check-your-answers__answer">
-                {{ reason.otherInformation }}
+                <a href='' class='govuk-link'>evidence-letter.jpg</a>
               </dd>
               <dd class="app-check-your-answers__change"></dd>
             </div>
           </dl>
         {% endif %}
       {% endfor %}
-      <dl class="app-check-your-answers app-check-your-answers--long">
-        <div class="app-check-your-answers__contents">
-          <dt class="app-check-your-answers__question">
-            Extension length
-          </dt>
-          <dd class="app-check-your-answers__answer">
-            {{ extensionLength }}
-          </dd>
-          <dd class="app-check-your-answers__change">
-            <a href="/extension-length">Change</a>
-          </dd>
-        </div>
-      </dl>
       <form action="" method="post">
         {{ govukButton({
         text: "Submit"

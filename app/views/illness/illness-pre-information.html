@@ -15,15 +15,28 @@
 }) }}
   {{ govukBackLink({
   text: "Back",
-  href: backLinkHref
+  href: 'illness-start-date'
 }) }}
 {% endblock %}
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {% set hintHTML %}
-      Anything you tell us to support your extension will be kept condfidential.
+      Anything you tell us to support your application will be kept confidential.
       {% endset -%}
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+          titleText: "There was a problem with the information you gave us",
+          errorList: errorList
+        }) }}
+      {% endif %}
+      {% if errorList.length > 0 %}
+        {% set provideDetailError = {
+          text: provideDetailErr.text
+        } %}
+      {% else %}
+        {% set provideDetailError = false %}
+      {% endif %}
       <form action="" method="post">
         {{ govukRadios({
               classes: "govuk-radios--inline",

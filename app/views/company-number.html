@@ -14,33 +14,52 @@
 }) }}
   {{ govukBackLink({
   text: "Back",
-  href: "company-number"
+  href: "signin"
 }) }}
 {% endblock %}
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errorList
+      }) }}
+      {% endif %}
       <h1 class="govuk-heading-xl">Tell us your company number</h1>
 
       <form action="" method="post">
-
-        {{ govukInput({
+        {% if Err.flag %}
+          {{ govukInput({
+            label: {
+              text: ""
+            },
+            hint: {
+              text: "This is the 8 character reference issued by Companies House when the company was set up."
+            },
+            errorMessage: {
+              text: Err.text
+            },
+            id: "company-number",
+            name: "companyNumber",
+            classes: "govuk-input--company-number"
+          }) }}
+        {% else %}
+          {{ govukInput({
               label: {
-                text: "Company number"
+                text: ""
               },
               hint: {
-                text: "This is the 8 character reference that uniquely identifies your company."
+                text: "This is the 8 character reference issued by Companies House when the company was set up."
               },
               id: "company-number",
               name: "companyNumber",
-              value: "00001234",
-              classes: "govuk-input--width-10"
+              classes: "govuk-input--company-number"
             }) }}
-
+        {% endif %}
         {{ govukDetails({
-                summaryText: "Where can i find these details?",
-                html: "<p>You can <a target='blank' href='https://beta.companieshouse.gov.uk/'>search for your company on the public register</a> to find your company number.</p><p>If your company was registered in Scotland your company number would start with SC. Companies registered in Northern Ireland will have a company number starting with NI.</p>"
+                summaryText: "Help with company number",
+                html: "<p>Use the <a target='blank' href='https://beta.companieshouse.gov.uk/'>Companies House service</a> to find it.</p>"
             }) }}
 
         {{ govukButton({

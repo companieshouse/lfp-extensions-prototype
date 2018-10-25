@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Promise to file
+{% endblock %}
+{% block beforeContent %}
+  {% set mainClasses = "govuk-main-wrapper--l" %}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-l">
+        <form action="" method="post">
+          <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">You have told us
+              <br/>{{scenario.company.name}}
+              <br/>is still active.</h1>
+            <div class="govuk-panel__body"></div>
+          </div>
+          <h2 class="govuk-heading-m">What happens next</h2>
+          <p>{{scenario.company.name}}
+            needs to file its accounts as soon as possible. Failure to file may result in your account being struck off the register.</p>
+          <p>We'll send you another reminder within two weeks if you still haven't filed your accounts.</p>
+        </form>
+      </div>
+    </div>
+  {% endblock %}

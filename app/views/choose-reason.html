@@ -19,63 +19,80 @@
 }) }}
 {% endblock %}
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-width-container">
+    <main role="main" class="govuk-main-wrapper">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <form action="" method="post">
 
-      {% if errorList.length > 0 %}
-        {{ govukErrorSummary({
-              titleText: "There was a problem with the reason for your extension",
-              errorList: errorList
-            }) }}
-      {% endif %}
+            {% if errorList.length > 0 %}
+              {{ govukErrorSummary({
+                titleText: "There is an error on the page",
+                errorList: errorList
+              }) }}
+            {% endif %}
 
-      <form action="" method="post">
+            {% if errorList.length > 0 %}
+              {% set extensionReasonError = {
+                text: extensionReasonErr.text
+              } %}
+            {% else %}
+              {% set extensionReasonError = false %}
+            {% endif %}
 
-        {% set otherInput %}
-        {{ govukInput({
+            {% if errorList.length > 0 %}
+              {% if extensionReasonErr.type === 'invalid' %}
+                {% set otherReasonError = true %}
+              {% else %}
+                {% set otherReasonError = false %}
+              {% endif %}
+            {% endif %}
+
+            {% set otherInput %}
+            {{ govukInput({
               id: "other-reason",
               name: "otherReason",
               classes: "",
               errorMessage: otherReasonError,
               label: {
-                text: "Reason"
+                text: "Short description of the reason"
               }
             }) }}
-        {% endset -%}
+            {% endset %}
 
-        {{ govukRadios({
-              idPrefix: "extension-reason",
-              name: "extensionReason",
-              errorMessage: extensionReasonError,
-              fieldset: {
-                legend: {
-                  text: 'Tell us why you\'re applying for an extension',
-                  isPageHeading: true,
-                  classes: 'govuk-fieldset__legend--xl'
-                }
-              },
-              items: [
-                {
-                  value: "illness",
-                  text: "Illness"
-                },
-                {
-                  value: "disaster",
-                  text: "Natural disaster"
-                },
-                {
-                  value: "other",
-                  text: "I'm applying for another reason",
-                  checked: otherReasonError,
-                  conditional: {
-                    html: otherInput
+            {{ govukRadios({
+                idPrefix: "extension-reason",
+                name: "extensionReason",
+                errorMessage: extensionReasonError,
+                fieldset: {
+                  legend: {
+                    text: 'Tell us why you\'re applying for an extension',
+                    isPageHeading: true,
+                    classes: 'govuk-fieldset__legend--xl'
                   }
-                }
-              ]
-            }) }}
+                },
+                items: [
+                  {
+                    value: "illness",
+                    text: "Illness"
+                  },
+                  {
+                    value: "disaster",
+                    text: "Natural disaster"
+                  },
+                  {
+                    value: "other",
+                    text: "I'm applying for another reason",
+                    checked: otherReasonError,
+                    conditional: {
+                      html: otherInput
+                    }
+                  }
+                ]
+              }) }}
 
           {{ govukButton({
-            text: "Save and continue"
+            text: "Continue"
           }) }}
         </form>
       </div>

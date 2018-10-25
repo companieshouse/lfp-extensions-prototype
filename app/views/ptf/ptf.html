@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Promise to file
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: backLinkHref
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errorList
+      }) }}
+      {% endif %}
+      <h1 class="govuk-heading-xl">You can't apply for an extension</h1>
+      <p>Your filing due date was
+        {{scenario.company.accountsDue}}
+        and your accounts are now overdue.</p>
+      <p>You should file your accounts as soon as possible. Companies that don't file may be struck off the register. More information about the consequences of not filing can be
+        <a href="https://www.gov.uk/government/publications/late-filing-penalties/late-filing-penalties#consequences-of-not-filing">found in our guidance</a>.</p>
+      <p>You need to tell us if the company is still active. Dormant companies must file accounts. If the company is no longer active, please
+        <a href="https://www.gov.uk/strike-off-your-company-from-companies-register">close the company</a>.</p>
+      <form action="" method="post">
+        {% if Err.flag %}
+          {{ govukCheckboxes({
+            idPrefix: "ptfConfirm",
+            name: "ptfConfirm",
+            fieldset: {
+              legend: {
+              }
+            },
+            items: [
+              {
+                value: "ptfConfirm",
+                text: "The company is still active and will file its accounts."
+              }
+            ],
+            errorMessage: {
+              text: Err.text
+            }
+            }) }}
+          {{ govukButton({
+text: "Continue"
+}) }}
+        {% else %}
+          {{ govukCheckboxes({
+      idPrefix: "ptfConfirm",
+      name: "ptfConfirm",
+      fieldset: {
+        legend: {
+        }
+      },
+      items: [
+        {
+          value: "ptfConfirm",
+          text: "The company is still active and will file its accounts."
+        }
+      ]
+    }) }}
+          {{ govukButton({
+      text: "Continue"
+    }) }}
+        {% endif %}
+      </form>
+    </div>
+  </div>
+{% endblock %}
