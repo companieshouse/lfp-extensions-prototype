@@ -85,9 +85,6 @@
               <dd class="app-check-your-answers__answer">
                 {{ reason.reason | capitalize }}
               </dd>
-              <dd class="app-check-your-answers__change">
-                <a href="/choose-reason">Change</a>
-              </dd>
             </div>
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
@@ -101,7 +98,6 @@
                   {{ reason.illPerson | capitalize }}
                 {% endif %}
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
             </div>
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
@@ -112,7 +108,6 @@
                 {{ reason.illnessStartDate.month | displayMonth }}
                 {{ reason.illnessStartDate.year }}
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
             </div>
             {% if reason.continuedIllness === 'yes' %}
               <div class="app-check-your-answers__contents">
@@ -122,7 +117,6 @@
                 <dd class="app-check-your-answers__answer">
                   {{ reason.continuedIllness | capitalize }}
                 </dd>
-                <dd class="app-check-your-answers__change"></dd>
               </div>
             {% else %}
               <div class="app-check-your-answers__contents">
@@ -134,7 +128,6 @@
                   {{ reason.illnessEndDate.month | displayMonth }}
                   {{ reason.illnessEndDate.year }}
                 </dd>
-                <dd class="app-check-your-answers__change"></dd>
               </div>
             {% endif %}
             {% if reason.illnessInformation != null %}
@@ -145,7 +138,6 @@
                 <dd class="app-check-your-answers__answer">
                   {{ reason.illnessInformation }}
                 </dd>
-                <dd class="app-check-your-answers__change"></dd>
               </div>
             {% endif %}
             <div class="app-check-your-answers__contents">
@@ -155,7 +147,6 @@
               <dd class="app-check-your-answers__answer">
                 <a href='' class='govuk-link'>evidence-letter.jpg</a>
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
             </div>
           </dl>
         {% elif reason.reason === 'disaster' %}
@@ -167,9 +158,6 @@
               <dd class="app-check-your-answers__answer">
                 {{ reason.reason | capitalize }}
               </dd>
-              <dd class="app-check-your-answers__change">
-                <a href="/choose-reason">Change</a>
-              </dd>
             </div>
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
@@ -178,7 +166,6 @@
               <dd class="app-check-your-answers__answer">
                 {{ reason.naturalDisaster}}
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
             </div>
           </dl>
         {% else %}
@@ -191,9 +178,6 @@
                 Other -
                 {{ reason.otherReason }}
               </dd>
-              <dd class="app-check-your-answers__change">
-                <a href="/choose-reason">Change</a>
-              </dd>
             </div>
             {% if reason.otherInformation != null %}
               <div class="app-check-your-answers__contents">
@@ -203,7 +187,6 @@
                 <dd class="app-check-your-answers__answer">
                   {{ reason.otherInformation }}
                 </dd>
-                <dd class="app-check-your-answers__change"></dd>
               </div>
             {% endif %}
             <div class="app-check-your-answers__contents">
@@ -213,7 +196,6 @@
               <dd class="app-check-your-answers__answer">
                 <a href='' class='govuk-link'>evidence-letter.jpg</a>
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
             </div>
           </dl>
         {% endif %}
