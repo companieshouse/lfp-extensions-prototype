@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block header %}
-  <!-- Blank header with no service name for the start page -->
   {{ govukHeader() }}
 {% endblock %}
 
@@ -13,13 +12,13 @@
   <div class="govuk-breadcrumbs">
     <ol class="govuk-breadcrumbs__list">
       <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="https://www.gov.uk">Home</a>
+        <a class="govuk-breadcrumbs__link" href="https://www.gov.uk/">Home</a>
       </li>
       <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link" href="#">Section</a>
+        <a class="govuk-breadcrumbs__link" href="https://www.gov.uk/browse/business">Business and self-employed</a>
       </li>
       <li class="govuk-breadcrumbs__list-item">
-        <a class="govuk-breadcrumbs__link">Subsection</a>
+        <a class="govuk-breadcrumbs__link" href="https://www.gov.uk/browse/business/limited-company">Running a limited company</a>
       </li>
     </ol>
   </div>
@@ -28,35 +27,57 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
       <h1 class="govuk-heading-xl">
         {% if serviceName %}
           {{ serviceName }}
         {% endif %}
       </h1>
-
-      <p class="govuk-body-l">Use this service to request more time to file your accounts.</p>
-
-      <p>Applying takes around 10 minutes.</p>
-
+      <p class="govuk-body-l">Use this service to apply for more time to file your accounts.</p>
+      <p>It may take up to 30 minutes to complete this service.</p>
       <a href="signin" role="button" class="govuk-button govuk-button--start govuk-!-margin-top-2 govuk-!-margin-bottom-8">Start now</a>
       <h2 class="govuk-heading-m">Before you start</h2>
+      <p>
+        You should
+        <a href="https://www.gov.uk/government/publications/life-of-a-company-annual-requirements/life-of-a-company-part-1-accounts#how-to-request-extra-time-to-file-your-companys-accounts" target="_blank">read the guidance on extending your filing deadline</a>
+      </p>
       <h3 class="govuk-heading-s">You'll need:</h3>
       <ul class="govuk-list govuk-list--bullet">
         <li>the company number</li>
         <li>an email address</li>
         <li>information about your extension reason</li>
+        <li>any documents that support your appeal</li>
       </ul>
-
-      <h2 class="govuk-heading-m">Other ways to apply</h2>
+      <h3 class="govuk-heading-s">Other ways to apply</h3>
       <p>You can also
-        <a href="https://www.gov.uk/government/publications/life-of-a-company-annual-requirements/life-of-a-company-part-1-accounts#how-to-request-extra-time-to-file-your-companys-accounts">apply by post</a>.</p>
-      <p>
-        <a href="https://www.gov.uk/government/publications/life-of-a-company-annual-requirements/life-of-a-company-part-1-accounts#how-to-request-extra-time-to-file-your-companys-accounts" target="_blank">Read the guidance</a>
+        <a href="https://www.gov.uk/government/publications/life-of-a-company-annual-requirements/life-of-a-company-part-1-accounts#how-to-request-extra-time-to-file-your-companys-accounts">apply by post</a>.
       </p>
-
     </div>
-
-    <div class="govuk-grid-column-one-third"></div>
+    <div class="govuk-grid-column-one-third">
+      <aside class="app-related-items" role="complementary">
+        <h2 class="govuk-heading-m" id="subsection-title">
+          Subsection
+        </h2>
+        <nav role="navigation" aria-labelledby="subsection-title">
+          <ul class="govuk-list govuk-body-s">
+            <li>
+              <a href="https://www.gov.uk/file-an-annual-return-with-companies-house">
+                File your confirmation statement (annual return) with Companies House
+              </a>
+            </li>
+            <li>
+              <a href="https://www.gov.uk/running-a-limited-company">
+                Running a limited company
+              </a>
+            </li>
+            <li>
+              <a href="https://www.gov.uk/browse/business/limited-company" class="govuk-!-w-bold">
+                More
+                <span class="visuallyhidden">Running a limited company</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+    </div>
   </div>
 {% endblock %}

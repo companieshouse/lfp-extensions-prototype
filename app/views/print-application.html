@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-  Check your answers before sending your application
+  Print a copy of your application
 {% endblock %}
 {% block beforeContent %}
   {{ govukPhaseBanner({
@@ -18,9 +18,13 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">
-        Check your application
-      </h1>
+      <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-7">
+        <h1 class="govuk-panel__title">Extension request submitted</h1>
+        <div class="govuk-panel__body">
+          Your reference number is<br>
+          <strong>HDJ2123F</strong>
+        </div>
+      </div>
       <dl class="app-check-your-answers app-check-your-answers--long">
         <div class="app-check-your-answers__contents">
           <dt class="app-check-your-answers__question">
@@ -214,11 +218,6 @@
           </dl>
         {% endif %}
       {% endfor %}
-      <form action="" method="post">
-        {{ govukButton({
-        text: "Submit"
-      }) }}
-      </form>
     </div>
   </div>
 {% endblock %}

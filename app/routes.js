@@ -13,6 +13,7 @@ router.get('/signin', function (req, res) {
   res.render('signin')
 })
 router.post('/signin', function (req, res) {
+  req.session.userEmail = req.body.email
   res.redirect('company-number')
 })
 router.get('/company-number', function (req, res) {
@@ -673,7 +674,8 @@ router.get('/check-your-answers', function (req, res) {
   res.render('check-your-answers', {
     scenario: req.session.scenario,
     extensionReasons: req.session.extensionReasons,
-    extensionLength: req.session.extensionLength
+    extensionLength: req.session.extensionLength,
+    userEmail: req.session.userEmail
   })
 })
 router.post('/check-your-answers', function (req, res) {
@@ -684,5 +686,14 @@ router.get('/confirmation', function (req, res) {
 })
 router.post('/confirmation', function (req, res) {
   res.redirect('confirmation')
+})
+router.get('/print-application', function (req, res) {
+  res.render('print-application', {
+    scenario: req.session.scenario,
+    extensionReasons: req.session.extensionReasons,
+    extensionLength: req.session.extensionLength,
+    userEmail: req.session.userEmail,
+    backLinkHref: 'confirmation'
+  })
 })
 module.exports = router

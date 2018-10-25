@@ -4,7 +4,7 @@
   {% if errorList.length > 0 %}
     Error:
   {% endif %}
-  Add evidence to support your extension request
+  Add evidence to support your application
 {% endblock %}
 
 {% block main %}
@@ -31,7 +31,7 @@
 
           {% if errorList.length > 0 %}
             {{ govukErrorSummary({
-              titleText: "There was a problem with your extension information",
+              titleText: "There was a problem with the information you gave us",
               errorList: errorList
             }) }}
           {% endif %}
@@ -47,7 +47,7 @@
             {% endif %}
 
             {% set hintHTML %}
-            Anything you give us to support your extension request will be kept confidential.
+            Anything you give us to support your application will be kept confidential.
             {% endset -%}
 
             {{ govukRadios({
@@ -57,7 +57,7 @@
               errorMessage: supportingEvidenceError,
               fieldset: {
                 legend: {
-                  text: 'Do you want to add evidence to support your extension?',
+                  text: 'Do you want to add evidence to support your application?',
                   isPageHeading: true,
                   classes: 'govuk-fieldset__legend--xl'
                 }
