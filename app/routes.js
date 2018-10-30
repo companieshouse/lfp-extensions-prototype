@@ -682,10 +682,12 @@ router.post('/check-your-answers', function (req, res) {
   res.redirect('confirmation')
 })
 router.get('/confirmation', function (req, res) {
-  res.render('confirmation')
-})
-router.post('/confirmation', function (req, res) {
-  res.redirect('confirmation')
+  res.render('confirmation', {
+    scenario: req.session.scenario,
+    extensionReasons: req.session.extensionReasons,
+    extensionLength: req.session.extensionLength,
+    userEmail: req.session.userEmail
+  })
 })
 router.get('/print-application', function (req, res) {
   res.render('print-application', {

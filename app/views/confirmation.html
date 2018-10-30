@@ -13,16 +13,16 @@
     <div class="govuk-grid-column-two-thirds">
 
       <div class="govuk-panel govuk-panel--confirmation">
-        <h1 class="govuk-panel__title">Extension request submitted</h1>
+        <h1 class="govuk-panel__title">Application submitted</h1>
         <div class="govuk-panel__body">
-          Your reference number is<br>
-          <strong>HDJ2123F</strong>
+          Your reference number is your company number<br>
+          <strong>{{ scenario.company.number }}</strong>
         </div>
       </div>
 
       <p class="govuk-body-l">
         We've sent a confirmation email to
-        <span class="govuk-body-l govuk-!-font-weight-bold">{{ data['email'] }}</span>
+        <span class="govuk-body-l govuk-!-font-weight-bold">{{ userEmail }}</span>
         which contains your reference number.
       </p>
 
@@ -31,9 +31,9 @@
       </p>
 
       <h2 class="govuk-heading-m">What happens next</h2>
-      <p>We'll review the application and make a decision regarding your extension request.</p>
+      <p>We'll review the application and make a decision about your extension request.</p>
       <p>We'll contact you by email within 5 working days to confirm the outcome of your extension request. We may also contact you if we need more information.</p>
-      <p>It is important that you file your accounts by the due date if possible. You should not wait for a decision regarding your extension request.
+      <p>It's important that you file your accounts by the due date if possible. You should not wait for a decision about your extension request.
         <p>
           <a href="https://www.gov.uk/service-manual/user-centred-design/resources/patterns/feedback-pages.html">What did you think of this service?</a>
           (takes 30 seconds)</p>

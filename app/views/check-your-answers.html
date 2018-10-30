@@ -184,7 +184,6 @@
                 Reason for extension
               </dt>
               <dd class="app-check-your-answers__answer">
-                Other -
                 {{ reason.otherReason }}
               </dd>
               <dd class="app-check-your-answers__change">
@@ -214,9 +213,13 @@
           </dl>
         {% endif %}
       {% endfor %}
+      <h2 class="govuk-heading-m">Submit your application for an extension</h2>
+      <p>
+        By submitting this application you are confirming that, to the best of your knowledge, the details you are providing are true.
+      </p>
       <form action="" method="post">
         {{ govukButton({
-        text: "Submit"
+        text: "Confirm and submit"
       }) }}
       </form>
     </div>
