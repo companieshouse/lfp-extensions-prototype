@@ -50,6 +50,14 @@ router.get('/confirm-company', function (req, res) {
   res.render('confirm-company', {
     scenario: req.session.scenario
   })
+  router.get('/accountsnotdue', function (req, res) {
+    res.render('accountsnotdue', {
+      scenario: req.session.scenario
+    })
+  })
+  router.post('/accountsnotdue', function (req, res) {
+    res.redirect('accountsnotdue')
+  })
 })
 
 // Promise to file

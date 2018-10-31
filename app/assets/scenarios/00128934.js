@@ -7,7 +7,7 @@ module.exports = {
     incorporationDate: '12 December 2008',
     companyType: 'Private Limited Company',
     address: '25 Bones Lane\nCardiff\nCF13 2WW',
-    accountsDue: '10 October 2018',
+    accountsDue: '25 October 2018',
     extensionOneWeek: '17 October 2018',
     extensionTwoWeek: '24 October 2018',
     extensionFourWeek: '7 November 2018',
