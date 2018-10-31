@@ -30,6 +30,7 @@
       {% else %}
       {% endif %}
       {% endset %}
+
       {{ govukTable({
 
   firstCellIsHeader: true,
@@ -90,6 +91,11 @@
         {{ govukButton({
 text: "Continue",
 href: "ptf/ptf"
+}) }}
+      {% elif scenario.company.deadlineStatus === 'notDue' %}
+        {{ govukButton({
+text: "Continue",
+href: "accountsnotdue"
 }) }}
       {% else %}
         {{ govukButton({
