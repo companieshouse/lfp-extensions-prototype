@@ -33,15 +33,16 @@
         {% endif %}
         <h1 class="govuk-heading-xl">Provide more information to support your extension</h1>
         {{ govukTextarea({
-            name: "otherInformation",
-            id: "other-information",
-            errorMessage: Err.text,
-        rows: '12',
-        label: {
-        text: "Anything you tell us to support your extension will be kept confidential.",
-        isPageHeading: true,
-        classes: 'govuk-heading-large' } }) }}
-
+          name: "otherInformation",
+          id: "other-information",
+          errorMessage: Err.text,
+          rows: '8',
+          label: {
+            text: "Anything you tell us to support your extension will be kept confidential.",
+            isPageHeading: true,
+            classes: 'govuk-heading-large'
+          }
+        }) }}
         {{ govukButton({
             text: "Continue"
           }) }}

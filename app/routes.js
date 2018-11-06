@@ -1,6 +1,11 @@
 const express = require('express')
 const router = express.Router()
 
+const async = require('async')
+const fs = require('graceful-fs')
+const path = require('path')
+const del = require('del')
+
 // Sign in pages
 
 router.get('/', function (req, res) {
@@ -24,6 +29,8 @@ router.post('/company-number', function (req, res) {
   var errorFlag = false
   var Err = {}
   var errorList = []
+  var file = ''
+  var savedSession = {}
 
   if (companyNumber === '') {
     Err.type = 'blank'
@@ -41,23 +48,54 @@ router.post('/company-number', function (req, res) {
       Err: Err
     })
   } else {
-    req.session.scenario = require('./assets/scenarios/' + companyNumber)
-    req.session.extensionReasons = []
-    res.redirect('confirm-company')
+    if (fs.existsSync('public/saved-sessions/' + companyNumber + '.json')) {
+      file = 'public/saved-sessions/' + companyNumber + '.json'
+      fs.readFile(file, function (err, data) {
+        if (err) {
+          return done(err, data)
+        }
+        savedSession = JSON.parse(data)
+        req.session.userEmail = savedSession.userEmail
+        req.session.scenario = savedSession.scenario
+        req.session.extensionReasons = savedSession.extensionReasons
+        res.redirect('resume-application')
+      })
+    } else {
+      req.session.scenario = require('./assets/scenarios/' + companyNumber)
+      req.session.extensionReasons = []
+      res.redirect('confirm-company')
+    }
   }
+})
+
+router.get('/resume-application', function (req, res) {
+  var userEmail = req.session.userEmail
+  var scenario = req.session.scenario
+  var extensionReasons = req.session.extensionReasons
+
+  res.render('resume-application', {
+    scenario: scenario,
+    userEmail: userEmail,
+    extensionReasons: extensionReasons
+  })
+})
+router.post('/resume-application', function (req, res) {
+  res.render('confirm-company', {
+    scenario: req.session.scenario
+  })
 })
 router.get('/confirm-company', function (req, res) {
   res.render('confirm-company', {
     scenario: req.session.scenario
   })
-  router.get('/accountsnotdue', function (req, res) {
-    res.render('accountsnotdue', {
-      scenario: req.session.scenario
-    })
+})
+router.get('/accountsnotdue', function (req, res) {
+  res.render('accountsnotdue', {
+    scenario: req.session.scenario
   })
-  router.post('/accountsnotdue', function (req, res) {
-    res.redirect('accountsnotdue')
-  })
+})
+router.post('/accountsnotdue', function (req, res) {
+  res.redirect('accountsnotdue')
 })
 
 // Promise to file
@@ -72,7 +110,6 @@ router.post('/ptf/ptf', function (req, res) {
   var errorFlag = false
   var Err = {}
   var errorList = []
-  console.log(req.body.ptfConfirm)
   if (ptfConfirm === '_unchecked') {
     Err.type = 'blank'
     Err.text = 'You must declare the company is still active and will file its accounts before continuing'
@@ -122,7 +159,14 @@ router.post('/filing-deadline', function (req, res) {
 // choose reason
 
 router.get('/choose-reason', function (req, res) {
-  res.render('choose-reason')
+  var companyNumber = req.session.scenario.company.number
+  if (req.query.restart === 'yes') {
+    req.session.extensionReasons = []
+    del('public/saved-sessions/' + companyNumber + '.json')
+    res.render('choose-reason')
+  } else {
+    res.render('choose-reason')
+  }
 })
 router.post('/choose-reason', function (req, res) {
   var reasonObject = {}
@@ -191,7 +235,6 @@ router.get('/illness/who-was-ill', function (req, res) {
 })
 router.post('/illness/who-was-ill', function (req, res) {
   var reasonObject = req.session.extensionReasons.pop()
-  console.log(reasonObject)
   var illPerson = req.body.illPerson
   var otherPerson = req.body.otherPerson
   var errorFlag = false
@@ -428,13 +471,10 @@ router.post('/illness/illness-end-date', function (req, res) {
       inputClasses: inputClasses
     })
   } else {
-    console.log(req.body['illnessEnd-day'])
     illnessEndDate.day = req.body['illnessEndDate-day']
     illnessEndDate.month = req.body['illnessEndDate-month']
     illnessEndDate.year = req.body['illnessEndDate-year']
-    console.log(illnessEndDate)
     reasonObject.illnessEndDate = illnessEndDate
-    console.log(reasonObject.illnessEndDate)
     req.session.extensionReasons.push(reasonObject)
     res.redirect('/illness/illness-pre-information')
   }
@@ -551,10 +591,11 @@ router.post('/evidence', function (req, res) {
   var errorFlag = false
   var Err = {}
   var errorList = []
+  var reasonObject = {}
 
   if (typeof supportingEvidence === 'undefined') {
     Err.type = 'blank'
-    Err.text = 'You must tell us if you would like upload evidence'
+    Err.text = 'You must tell us if you want to upload evidence'
     Err.href = '#supporting-evidence'
     Err.flag = true
   }
@@ -568,6 +609,10 @@ router.post('/evidence', function (req, res) {
       Err: Err
     })
   } else {
+    reasonObject = req.session.extensionReasons.pop()
+    reasonObject.supportingEvidence = req.body.supportingEvidence
+    req.session.extensionReasons.push(reasonObject)
+    console.log(req.session.extensionReasons)
     switch (req.body.supportingEvidence) {
       case 'yes':
         res.redirect('/evidence-upload')
@@ -646,37 +691,8 @@ router.post('/other/reason-other', function (req, res) {
     res.redirect('/evidence')
   }
 })
-router.get('/evidence', function (req, res) {
-  res.render('evidence')
-})
-router.post('/evidence', function (req, res) {
-  switch (req.body.supportingEvidence) {
-    case 'yes':
-      res.redirect('/evidence-upload')
-      break
-    case 'no':
-      res.redirect('/add-extension-reason')
-      break
-  }
-})
-router.get('/evidence-upload', function (req, res) {
-  res.render('evidence-upload')
-})
-router.post('/evidence-upload', function (req, res) {
-  res.redirect('/add-extension-reason')
-})
-// Not in use
-
-router.get('/extension-length', function (req, res) {
-  res.render('extension-length')
-})
-router.post('/extension-length', function (req, res) {
-  req.session.extensionLength = req.body.extensionLength
-  res.redirect('check-your-answers')
-})
 
 // End of journey
-
 router.get('/check-your-answers', function (req, res) {
   console.log(req.session.extensionReasons)
   res.render('check-your-answers', {
@@ -688,6 +704,26 @@ router.get('/check-your-answers', function (req, res) {
 })
 router.post('/check-your-answers', function (req, res) {
   res.redirect('confirmation')
+})
+router.get('/sign-out', function (req, res) {
+  var application = {}
+  var json = ''
+  var jsonName = ''
+
+  application.userEmail = req.session.userEmail
+  application.scenario = req.session.scenario
+  application.extensionReasons = req.session.extensionReasons
+  jsonName = application.scenario.company.number
+  console.log(application)
+  json = JSON.stringify(application, null, '\t')
+  fs.writeFile('public/saved-sessions/' + jsonName + '.json', json, 'utf8')
+
+  res.render('sign-out', {
+    scenario: req.session.scenario,
+    extensionReasons: req.session.extensionReasons,
+    extensionLength: req.session.extensionLength,
+    userEmail: req.session.userEmail
+  })
 })
 router.get('/confirmation', function (req, res) {
   res.render('confirmation', {

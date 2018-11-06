@@ -25,32 +25,32 @@
       }) }}
       <form action="" method="post">
         {{ govukRadios({
-  classes: "govuk-radios--inline",
-  idPrefix: "extension-apply",
-  name: "extensionApply",
-  fieldset: {
-    legend: {
-      text: "Do you want to apply for an extension?",
-      isPageHeading: true,
-      classes: "govuk-fieldset__legend--l"
-    }
-  },
-  hint: {
-    text: "Applications for an extension more than 1 month before the filing deadline are unlikely to be approved."
-  },
-  items: [
-    {
-      value: "yes",
-      text: "Yes"
-    },
-    {
-      value: "no",
-      text: "No"
-    }
-  ]
-}) }}
+          classes: "govuk-radios--inline",
+          idPrefix: "extension-apply",
+          name: "extensionApply",
+          fieldset: {
+            legend: {
+              text: "Do you want to apply for an extension?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          hint: {
+            text: "Applications for an extension more than 1 month before the filing deadline are unlikely to be approved."
+          },
+          items: [
+            {
+              value: "yes",
+              text: "Yes"
+            },
+            {
+              value: "no",
+              text: "No"
+            }
+          ]
+        }) }}
         {{ govukButton({
-  text: "Continue"
-}) }}
+          text: "Continue"
+        }) }}
       </form>
     {% endblock %}

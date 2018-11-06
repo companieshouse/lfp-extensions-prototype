@@ -27,24 +27,26 @@
       <form action="" method="post">
         {% if errorList.length > 0 %}
           {{ govukErrorSummary({
-          titleText: "There is a problem",
-          errorList: errorList
-        }) }}
+            titleText: "There is a problem",
+            errorList: errorList
+          }) }}
         {% endif %}
         <h1 class="govuk-heading-xl">Provide more information to support your extension</h1>
         {{ govukTextarea({
-            name: "naturalDisaster",
-            id: "natural-disaster",
-            errorMessage: Err.text,
-        rows: '12',
-        label: {
-        text: "Anything you tell us to support your extension will be kept confidential.",
-        isPageHeading: true,
-        classes: 'govuk-heading-large' } }) }}
+          name: "naturalDisaster",
+          id: "natural-disaster",
+          errorMessage: Err.text,
+          rows: '8',
+          label: {
+            text: "Anything you tell us to support your extension will be kept confidential.",
+            isPageHeading: true,
+            classes: 'govuk-heading-large'
+          }
+        }) }}
 
         {{ govukButton({
-            text: "Continue"
-          }) }}
+          text: "Continue"
+        }) }}
       </form>
     </div>
   </div>

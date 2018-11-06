@@ -19,8 +19,9 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-xl">
-        Check your application
+        You already have an application in progress
       </h1>
+      <p class="govuk-body-l">Review what you've already told us.</p>
       <dl class="app-check-your-answers app-check-your-answers--long">
         <div class="app-check-your-answers__contents">
           <dt class="app-check-your-answers__question">
@@ -29,7 +30,6 @@
           <dd class="app-check-your-answers__answer">
             {{ scenario.company.name }}
           </dd>
-          <dd class="app-check-your-answers__change"></dd>
         </div>
         <div class="app-check-your-answers__contents">
           <dt class="app-check-your-answers__question">
@@ -38,7 +38,6 @@
           <dd class="app-check-your-answers__answer">
             {{ scenario.company.number }}
           </dd>
-          <dd class="app-check-your-answers__change"></dd>
         </div>
         <div class="app-check-your-answers__contents">
           <dt class="app-check-your-answers__question">
@@ -47,7 +46,6 @@
           <dd class="app-check-your-answers__answer">
             {{ scenario.company.address | nl2br | safe }}
           </dd>
-          <dd class="app-check-your-answers__change"></dd>
         </div>
         <div class="app-check-your-answers__contents">
           <dt class="app-check-your-answers__question">
@@ -56,7 +54,6 @@
           <dd class="app-check-your-answers__answer">
             {{ scenario.company.accountsDue }}
           </dd>
-          <dd class="app-check-your-answers__change"></dd>
         </div>
         <div class="app-check-your-answers__contents">
           <dt class="app-check-your-answers__question">
@@ -65,7 +62,6 @@
           <dd class="app-check-your-answers__answer">
             {{ userEmail }}
           </dd>
-          <dd class="app-check-your-answers__change"></dd>
         </div>
       </dl>
       {% if extensionReasons.length > 1 %}
@@ -103,7 +99,6 @@
                   {{ reason.illPerson | capitalize }}
                 {% endif %}
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
             </div>
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
@@ -114,7 +109,6 @@
                 {{ reason.illnessStartDate.month | displayMonth }}
                 {{ reason.illnessStartDate.year }}
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
             </div>
             {% if reason.continuedIllness === 'yes' %}
               <div class="app-check-your-answers__contents">
@@ -124,7 +118,6 @@
                 <dd class="app-check-your-answers__answer">
                   {{ reason.continuedIllness | capitalize }}
                 </dd>
-                <dd class="app-check-your-answers__change"></dd>
               </div>
             {% else %}
               <div class="app-check-your-answers__contents">
@@ -136,7 +129,6 @@
                   {{ reason.illnessEndDate.month | displayMonth }}
                   {{ reason.illnessEndDate.year }}
                 </dd>
-                <dd class="app-check-your-answers__change"></dd>
               </div>
             {% endif %}
             {% if reason.illnessInformation != null %}
@@ -147,7 +139,6 @@
                 <dd class="app-check-your-answers__answer">
                   {{ reason.illnessInformation }}
                 </dd>
-                <dd class="app-check-your-answers__change"></dd>
               </div>
             {% endif %}
             {% if reason.supportingEvidence === 'yes' %}
@@ -158,7 +149,6 @@
                 <dd class="app-check-your-answers__answer">
                   <a href='' class='govuk-link'>evidence-letter.jpg</a>
                 </dd>
-                <dd class="app-check-your-answers__change"></dd>
               </div>
             {% endif %}
           </dl>
@@ -182,7 +172,6 @@
               <dd class="app-check-your-answers__answer">
                 {{ reason.naturalDisaster}}
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
             </div>
           </dl>
         {% else %}
@@ -206,7 +195,6 @@
                 <dd class="app-check-your-answers__answer">
                   {{ reason.otherInformation }}
                 </dd>
-                <dd class="app-check-your-answers__change"></dd>
               </div>
             {% endif %}
             {% if reason.supportingEvidence === 'yes' %}
@@ -217,22 +205,20 @@
                 <dd class="app-check-your-answers__answer">
                   <a href='' class='govuk-link'>evidence-letter.jpg</a>
                 </dd>
-                <dd class="app-check-your-answers__change"></dd>
               </div>
             {% endif %}
           </dl>
         {% endif %}
       {% endfor %}
-      <h2 class="govuk-heading-m">Submit your application for an extension</h2>
-      <p>
-        By submitting this application you are confirming that, to the best of your knowledge, the details you are providing are true.
-      </p>
       <form action="" method="post">
         {{ govukButton({
-        text: "Confirm and submit"
+        text: "Continue with this application"
       }) }}
         <p>
-          <a href="sign-out" class="govuk-link">Save and sign out</a>
+          <a href="choose-reason?restart=yes" class="govuk-link">Start a new application</a>
+        </p>
+        <p>
+          <a href="sign-out" class="govuk-link">Sign out</a>
         </p>
       </form>
     </div>
