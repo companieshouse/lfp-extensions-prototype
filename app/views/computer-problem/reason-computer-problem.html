@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Applying for an extension for other reasons
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "/choose-reason"
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% set hintHTML %}
+      Anything you tell us to support your extension will be kept confidential.
+      {% endset %}
+      <form action="" method="post">
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errorList
+          }) }}
+        {% endif %}
+        <h1 class="govuk-heading-xl">Provide more information to support your extension</h1>
+        {{ govukTextarea({
+          name: "computerProblem",
+          id: "computer-problem",
+          errorMessage: Err.text,
+          rows: '8',
+          label: {
+            text: "Anything you tell us to support your extension will be kept confidential.",
+            isPageHeading: true,
+            classes: 'govuk-heading-large'
+          }
+        }) }}
+
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

@@ -213,10 +213,35 @@ router.post('/choose-reason', function (req, res) {
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/illness/who-was-ill')
         break
+      case 'damage':
+        reasonObject.reason = req.body.extensionReason
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/theft-criminal-damage/reason-damage')
+        break
       case 'disaster':
         reasonObject.reason = req.body.extensionReason
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/natural-disaster/reason-natural-disaster')
+        break
+      case 'accounts':
+        reasonObject.reason = req.body.extensionReason
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/accounts/reason-accounts')
+        break
+      case 'companyChanges':
+        reasonObject.reason = req.body.extensionReason
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/company-changes/reason-company-changes')
+        break
+      case 'computerProblem':
+        reasonObject.reason = req.body.extensionReason
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/computer-problem/reason-computer-problem')
+        break
+      case 'death':
+        reasonObject.reason = req.body.extensionReason
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/death/reason-death')
         break
       case 'other':
         reasonObject.reason = req.body.extensionReason
@@ -357,7 +382,8 @@ router.post('/illness/illness-start-date', function (req, res) {
   }
 })
 router.get('/illness/continued-illness', function (req, res) {
-  res.render('illness/continued-illness')
+  res.render('illness/continued-illness', {
+  })
 })
 router.post('/illness/continued-illness', function (req, res) {
   var reasonObject = req.session.extensionReasons.pop()
@@ -629,6 +655,7 @@ router.get('/evidence-upload', function (req, res) {
 router.post('/evidence-upload', function (req, res) {
   res.redirect('/add-extension-reason')
 })
+// Natural disaster
 router.get('/natural-disaster/reason-natural-disaster', function (req, res) {
   res.render('natural-disaster/reason-natural-disaster')
 })
@@ -656,6 +683,166 @@ router.post('/natural-disaster/reason-natural-disaster', function (req, res) {
   } else {
     var reasonObject = req.session.extensionReasons.pop()
     reasonObject.naturalDisaster = req.body.naturalDisaster
+    req.session.extensionReasons.push(reasonObject)
+    res.redirect('/evidence')
+  }
+  // theft or criminal damage
+})
+router.get('/theft-criminal-damage/reason-damage', function (req, res) {
+  res.render('theft-criminal-damage/reason-damage')
+})
+router.post('/theft-criminal-damage/reason-damage', function (req, res) {
+  var damage = req.body.damage
+  var errorFlag = false
+  var Err = {}
+  var errorList = []
+
+  if (damage === '') {
+    Err.type = 'blank'
+    Err.text = 'You must give us more information'
+    Err.href = '#damage'
+    Err.flag = true
+  }
+  if (Err.flag) {
+    errorList.push(Err)
+    errorFlag = true
+  }
+  if (errorFlag === true) {
+    res.render('theft-criminal-damage/reason-damage', {
+      errorList: errorList,
+      Err: Err
+    })
+  } else {
+    var reasonObject = req.session.extensionReasons.pop()
+    reasonObject.damage = req.body.damage
+    req.session.extensionReasons.push(reasonObject)
+    res.redirect('/evidence')
+  }
+  // accounts
+})
+router.get('/accounts/reason-accounts', function (req, res) {
+  res.render('accounts/reason-accounts')
+})
+router.post('/accounts/reason-accounts', function (req, res) {
+  var accounts = req.body.accounts
+  var errorFlag = false
+  var Err = {}
+  var errorList = []
+
+  if (accounts === '') {
+    Err.type = 'blank'
+    Err.text = 'You must give us more information'
+    Err.href = '#accounts'
+    Err.flag = true
+  }
+  if (Err.flag) {
+    errorList.push(Err)
+    errorFlag = true
+  }
+  if (errorFlag === true) {
+    res.render('accounts/reason-accounts', {
+      errorList: errorList,
+      Err: Err
+    })
+  } else {
+    var reasonObject = req.session.extensionReasons.pop()
+    reasonObject.accounts = req.body.accounts
+    req.session.extensionReasons.push(reasonObject)
+    res.redirect('/evidence')
+  }
+  // company changes
+})
+router.get('/company-changes/reason-company-changes', function (req, res) {
+  res.render('company-changes/reason-company-changes')
+})
+router.post('/company-changes/reason-company-changes', function (req, res) {
+  var companyChanges = req.body.companyChanges
+  var errorFlag = false
+  var Err = {}
+  var errorList = []
+
+  if (companyChanges === '') {
+    Err.type = 'blank'
+    Err.text = 'You must give us more information'
+    Err.href = '#companyChanges'
+    Err.flag = true
+  }
+  if (Err.flag) {
+    errorList.push(Err)
+    errorFlag = true
+  }
+  if (errorFlag === true) {
+    res.render('company-changes/reason-company-changes', {
+      errorList: errorList,
+      Err: Err
+    })
+  } else {
+    var reasonObject = req.session.extensionReasons.pop()
+    reasonObject.companyChanges = req.body.companyChanges
+    req.session.extensionReasons.push(reasonObject)
+    res.redirect('/evidence')
+  }
+  // computer problems
+})
+router.get('/computer-problem/reason-computer-problem', function (req, res) {
+  res.render('computer-problem/reason-computer-problem')
+})
+router.post('/computer-problem/reason-computer-problem', function (req, res) {
+  var computerProblem = req.body.computerProblem
+  var errorFlag = false
+  var Err = {}
+  var errorList = []
+
+  if (computerProblem === '') {
+    Err.type = 'blank'
+    Err.text = 'You must give us more information'
+    Err.href = '#computerProblem'
+    Err.flag = true
+  }
+  if (Err.flag) {
+    errorList.push(Err)
+    errorFlag = true
+  }
+  if (errorFlag === true) {
+    res.render('computer-problem/reason-computer-problem', {
+      errorList: errorList,
+      Err: Err
+    })
+  } else {
+    var reasonObject = req.session.extensionReasons.pop()
+    reasonObject.computerProblem = req.body.computerProblem
+    req.session.extensionReasons.push(reasonObject)
+    res.redirect('/evidence')
+  }
+  // death
+})
+router.get('/death/reason-death', function (req, res) {
+  res.render('death/reason-death')
+})
+router.post('/death/reason-death', function (req, res) {
+  var death = req.body.death
+  var errorFlag = false
+  var Err = {}
+  var errorList = []
+
+  if (death === '') {
+    Err.type = 'blank'
+    Err.text = 'You must give us more information'
+    Err.href = '#death'
+    Err.flag = true
+  }
+  if (Err.flag) {
+    errorList.push(Err)
+    errorFlag = true
+  }
+  if (errorFlag === true) {
+    res.render('death/reason-death', {
+      errorList: errorList,
+      Err: Err
+    })
+  } else {
+    var reasonObject = req.session.extensionReasons.pop()
+    reasonObject.death = req.body.death
     req.session.extensionReasons.push(reasonObject)
     res.redirect('/evidence')
   }
