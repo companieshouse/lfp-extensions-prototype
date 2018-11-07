@@ -1,6 +1,11 @@
 const express = require('express')
 const router = express.Router()
 
+const async = require('async')
+const fs = require('graceful-fs')
+const path = require('path')
+const del = require('del')
+
 // Sign in pages
 
 router.get('/', function (req, res) {
@@ -24,6 +29,8 @@ router.post('/company-number', function (req, res) {
   var errorFlag = false
   var Err = {}
   var errorList = []
+  var file = ''
+  var savedSession = {}
 
   if (companyNumber === '') {
     Err.type = 'blank'
@@ -41,23 +48,54 @@ router.post('/company-number', function (req, res) {
       Err: Err
     })
   } else {
-    req.session.scenario = require('./assets/scenarios/' + companyNumber)
-    req.session.extensionReasons = []
-    res.redirect('confirm-company')
+    if (fs.existsSync('public/saved-sessions/' + companyNumber + '.json')) {
+      file = 'public/saved-sessions/' + companyNumber + '.json'
+      fs.readFile(file, function (err, data) {
+        if (err) {
+          return done(err, data)
+        }
+        savedSession = JSON.parse(data)
+        req.session.userEmail = savedSession.userEmail
+        req.session.scenario = savedSession.scenario
+        req.session.extensionReasons = savedSession.extensionReasons
+        res.redirect('resume-application')
+      })
+    } else {
+      req.session.scenario = require('./assets/scenarios/' + companyNumber)
+      req.session.extensionReasons = []
+      res.redirect('confirm-company')
+    }
   }
+})
+
+router.get('/resume-application', function (req, res) {
+  var userEmail = req.session.userEmail
+  var scenario = req.session.scenario
+  var extensionReasons = req.session.extensionReasons
+
+  res.render('resume-application', {
+    scenario: scenario,
+    userEmail: userEmail,
+    extensionReasons: extensionReasons
+  })
+})
+router.post('/resume-application', function (req, res) {
+  res.render('confirm-company', {
+    scenario: req.session.scenario
+  })
 })
 router.get('/confirm-company', function (req, res) {
   res.render('confirm-company', {
     scenario: req.session.scenario
   })
-  router.get('/accountsnotdue', function (req, res) {
-    res.render('accountsnotdue', {
-      scenario: req.session.scenario
-    })
+})
+router.get('/accountsnotdue', function (req, res) {
+  res.render('accountsnotdue', {
+    scenario: req.session.scenario
   })
-  router.post('/accountsnotdue', function (req, res) {
-    res.redirect('accountsnotdue')
-  })
+})
+router.post('/accountsnotdue', function (req, res) {
+  res.redirect('accountsnotdue')
 })
 
 // Promise to file
@@ -72,7 +110,6 @@ router.post('/ptf/ptf', function (req, res) {
   var errorFlag = false
   var Err = {}
   var errorList = []
-  console.log(req.body.ptfConfirm)
   if (ptfConfirm === '_unchecked') {
     Err.type = 'blank'
     Err.text = 'You must declare the company is still active and will file its accounts before continuing'
@@ -122,7 +159,14 @@ router.post('/filing-deadline', function (req, res) {
 // choose reason
 
 router.get('/choose-reason', function (req, res) {
-  res.render('choose-reason')
+  var companyNumber = req.session.scenario.company.number
+  if (req.query.restart === 'yes') {
+    req.session.extensionReasons = []
+    del('public/saved-sessions/' + companyNumber + '.json')
+    res.render('choose-reason')
+  } else {
+    res.render('choose-reason')
+  }
 })
 router.post('/choose-reason', function (req, res) {
   var reasonObject = {}
@@ -169,10 +213,35 @@ router.post('/choose-reason', function (req, res) {
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/illness/who-was-ill')
         break
+      case 'damage':
+        reasonObject.reason = req.body.extensionReason
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/theft-criminal-damage/reason-damage')
+        break
       case 'disaster':
         reasonObject.reason = req.body.extensionReason
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/natural-disaster/reason-natural-disaster')
+        break
+      case 'accounts':
+        reasonObject.reason = req.body.extensionReason
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/accounts/reason-accounts')
+        break
+      case 'companyChanges':
+        reasonObject.reason = req.body.extensionReason
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/company-changes/reason-company-changes')
+        break
+      case 'computerProblem':
+        reasonObject.reason = req.body.extensionReason
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/computer-problem/reason-computer-problem')
+        break
+      case 'death':
+        reasonObject.reason = req.body.extensionReason
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/death/reason-death')
         break
       case 'other':
         reasonObject.reason = req.body.extensionReason
@@ -191,7 +260,6 @@ router.get('/illness/who-was-ill', function (req, res) {
 })
 router.post('/illness/who-was-ill', function (req, res) {
   var reasonObject = req.session.extensionReasons.pop()
-  console.log(reasonObject)
   var illPerson = req.body.illPerson
   var otherPerson = req.body.otherPerson
   var errorFlag = false
@@ -314,7 +382,8 @@ router.post('/illness/illness-start-date', function (req, res) {
   }
 })
 router.get('/illness/continued-illness', function (req, res) {
-  res.render('illness/continued-illness')
+  res.render('illness/continued-illness', {
+  })
 })
 router.post('/illness/continued-illness', function (req, res) {
   var reasonObject = req.session.extensionReasons.pop()
@@ -428,13 +497,10 @@ router.post('/illness/illness-end-date', function (req, res) {
       inputClasses: inputClasses
     })
   } else {
-    console.log(req.body['illnessEnd-day'])
     illnessEndDate.day = req.body['illnessEndDate-day']
     illnessEndDate.month = req.body['illnessEndDate-month']
     illnessEndDate.year = req.body['illnessEndDate-year']
-    console.log(illnessEndDate)
     reasonObject.illnessEndDate = illnessEndDate
-    console.log(reasonObject.illnessEndDate)
     req.session.extensionReasons.push(reasonObject)
     res.redirect('/illness/illness-pre-information')
   }
@@ -551,10 +617,11 @@ router.post('/evidence', function (req, res) {
   var errorFlag = false
   var Err = {}
   var errorList = []
+  var reasonObject = {}
 
   if (typeof supportingEvidence === 'undefined') {
     Err.type = 'blank'
-    Err.text = 'You must tell us if you would like upload evidence'
+    Err.text = 'You must tell us if you want to upload evidence'
     Err.href = '#supporting-evidence'
     Err.flag = true
   }
@@ -568,6 +635,10 @@ router.post('/evidence', function (req, res) {
       Err: Err
     })
   } else {
+    reasonObject = req.session.extensionReasons.pop()
+    reasonObject.supportingEvidence = req.body.supportingEvidence
+    req.session.extensionReasons.push(reasonObject)
+    console.log(req.session.extensionReasons)
     switch (req.body.supportingEvidence) {
       case 'yes':
         res.redirect('/evidence-upload')
@@ -584,6 +655,7 @@ router.get('/evidence-upload', function (req, res) {
 router.post('/evidence-upload', function (req, res) {
   res.redirect('/add-extension-reason')
 })
+// Natural disaster
 router.get('/natural-disaster/reason-natural-disaster', function (req, res) {
   res.render('natural-disaster/reason-natural-disaster')
 })
@@ -611,6 +683,166 @@ router.post('/natural-disaster/reason-natural-disaster', function (req, res) {
   } else {
     var reasonObject = req.session.extensionReasons.pop()
     reasonObject.naturalDisaster = req.body.naturalDisaster
+    req.session.extensionReasons.push(reasonObject)
+    res.redirect('/evidence')
+  }
+  // theft or criminal damage
+})
+router.get('/theft-criminal-damage/reason-damage', function (req, res) {
+  res.render('theft-criminal-damage/reason-damage')
+})
+router.post('/theft-criminal-damage/reason-damage', function (req, res) {
+  var damage = req.body.damage
+  var errorFlag = false
+  var Err = {}
+  var errorList = []
+
+  if (damage === '') {
+    Err.type = 'blank'
+    Err.text = 'You must give us more information'
+    Err.href = '#damage'
+    Err.flag = true
+  }
+  if (Err.flag) {
+    errorList.push(Err)
+    errorFlag = true
+  }
+  if (errorFlag === true) {
+    res.render('theft-criminal-damage/reason-damage', {
+      errorList: errorList,
+      Err: Err
+    })
+  } else {
+    var reasonObject = req.session.extensionReasons.pop()
+    reasonObject.damage = req.body.damage
+    req.session.extensionReasons.push(reasonObject)
+    res.redirect('/evidence')
+  }
+  // accounts
+})
+router.get('/accounts/reason-accounts', function (req, res) {
+  res.render('accounts/reason-accounts')
+})
+router.post('/accounts/reason-accounts', function (req, res) {
+  var accounts = req.body.accounts
+  var errorFlag = false
+  var Err = {}
+  var errorList = []
+
+  if (accounts === '') {
+    Err.type = 'blank'
+    Err.text = 'You must give us more information'
+    Err.href = '#accounts'
+    Err.flag = true
+  }
+  if (Err.flag) {
+    errorList.push(Err)
+    errorFlag = true
+  }
+  if (errorFlag === true) {
+    res.render('accounts/reason-accounts', {
+      errorList: errorList,
+      Err: Err
+    })
+  } else {
+    var reasonObject = req.session.extensionReasons.pop()
+    reasonObject.accounts = req.body.accounts
+    req.session.extensionReasons.push(reasonObject)
+    res.redirect('/evidence')
+  }
+  // company changes
+})
+router.get('/company-changes/reason-company-changes', function (req, res) {
+  res.render('company-changes/reason-company-changes')
+})
+router.post('/company-changes/reason-company-changes', function (req, res) {
+  var companyChanges = req.body.companyChanges
+  var errorFlag = false
+  var Err = {}
+  var errorList = []
+
+  if (companyChanges === '') {
+    Err.type = 'blank'
+    Err.text = 'You must give us more information'
+    Err.href = '#companyChanges'
+    Err.flag = true
+  }
+  if (Err.flag) {
+    errorList.push(Err)
+    errorFlag = true
+  }
+  if (errorFlag === true) {
+    res.render('company-changes/reason-company-changes', {
+      errorList: errorList,
+      Err: Err
+    })
+  } else {
+    var reasonObject = req.session.extensionReasons.pop()
+    reasonObject.companyChanges = req.body.companyChanges
+    req.session.extensionReasons.push(reasonObject)
+    res.redirect('/evidence')
+  }
+  // computer problems
+})
+router.get('/computer-problem/reason-computer-problem', function (req, res) {
+  res.render('computer-problem/reason-computer-problem')
+})
+router.post('/computer-problem/reason-computer-problem', function (req, res) {
+  var computerProblem = req.body.computerProblem
+  var errorFlag = false
+  var Err = {}
+  var errorList = []
+
+  if (computerProblem === '') {
+    Err.type = 'blank'
+    Err.text = 'You must give us more information'
+    Err.href = '#computerProblem'
+    Err.flag = true
+  }
+  if (Err.flag) {
+    errorList.push(Err)
+    errorFlag = true
+  }
+  if (errorFlag === true) {
+    res.render('computer-problem/reason-computer-problem', {
+      errorList: errorList,
+      Err: Err
+    })
+  } else {
+    var reasonObject = req.session.extensionReasons.pop()
+    reasonObject.computerProblem = req.body.computerProblem
+    req.session.extensionReasons.push(reasonObject)
+    res.redirect('/evidence')
+  }
+  // death
+})
+router.get('/death/reason-death', function (req, res) {
+  res.render('death/reason-death')
+})
+router.post('/death/reason-death', function (req, res) {
+  var death = req.body.death
+  var errorFlag = false
+  var Err = {}
+  var errorList = []
+
+  if (death === '') {
+    Err.type = 'blank'
+    Err.text = 'You must give us more information'
+    Err.href = '#death'
+    Err.flag = true
+  }
+  if (Err.flag) {
+    errorList.push(Err)
+    errorFlag = true
+  }
+  if (errorFlag === true) {
+    res.render('death/reason-death', {
+      errorList: errorList,
+      Err: Err
+    })
+  } else {
+    var reasonObject = req.session.extensionReasons.pop()
+    reasonObject.death = req.body.death
     req.session.extensionReasons.push(reasonObject)
     res.redirect('/evidence')
   }
@@ -646,37 +878,8 @@ router.post('/other/reason-other', function (req, res) {
     res.redirect('/evidence')
   }
 })
-router.get('/evidence', function (req, res) {
-  res.render('evidence')
-})
-router.post('/evidence', function (req, res) {
-  switch (req.body.supportingEvidence) {
-    case 'yes':
-      res.redirect('/evidence-upload')
-      break
-    case 'no':
-      res.redirect('/add-extension-reason')
-      break
-  }
-})
-router.get('/evidence-upload', function (req, res) {
-  res.render('evidence-upload')
-})
-router.post('/evidence-upload', function (req, res) {
-  res.redirect('/add-extension-reason')
-})
-// Not in use
-
-router.get('/extension-length', function (req, res) {
-  res.render('extension-length')
-})
-router.post('/extension-length', function (req, res) {
-  req.session.extensionLength = req.body.extensionLength
-  res.redirect('check-your-answers')
-})
 
 // End of journey
-
 router.get('/check-your-answers', function (req, res) {
   console.log(req.session.extensionReasons)
   res.render('check-your-answers', {
@@ -688,6 +891,26 @@ router.get('/check-your-answers', function (req, res) {
 })
 router.post('/check-your-answers', function (req, res) {
   res.redirect('confirmation')
+})
+router.get('/sign-out', function (req, res) {
+  var application = {}
+  var json = ''
+  var jsonName = ''
+
+  application.userEmail = req.session.userEmail
+  application.scenario = req.session.scenario
+  application.extensionReasons = req.session.extensionReasons
+  jsonName = application.scenario.company.number
+  console.log(application)
+  json = JSON.stringify(application, null, '\t')
+  fs.writeFile('public/saved-sessions/' + jsonName + '.json', json, 'utf8')
+
+  res.render('sign-out', {
+    scenario: req.session.scenario,
+    extensionReasons: req.session.extensionReasons,
+    extensionLength: req.session.extensionLength,
+    userEmail: req.session.userEmail
+  })
 })
 router.get('/confirmation', function (req, res) {
   res.render('confirmation', {
