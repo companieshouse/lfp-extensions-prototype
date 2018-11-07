@@ -19,48 +19,46 @@
 }) }}
 {% endblock %}
 {% block content %}
-  <div class="govuk-width-container">
-    <main role="main" class="govuk-main-wrapper">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-          <form action="" method="post">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="" method="post">
 
-            {% if errorList.length > 0 %}
-              {{ govukErrorSummary({
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
                 titleText: "There is an error on the page",
                 errorList: errorList
               }) }}
-            {% endif %}
+        {% endif %}
 
-            {% if errorList.length > 0 %}
-              {% set extensionReasonError = {
-                text: extensionReasonErr.text
-              } %}
-            {% else %}
-              {% set extensionReasonError = false %}
-            {% endif %}
+        {% if errorList.length > 0 %}
+          {% set extensionReasonError = {
+            text: extensionReasonErr.text
+          } %}
+        {% else %}
+          {% set extensionReasonError = false %}
+        {% endif %}
 
-            {% if errorList.length > 0 %}
-              {% if extensionReasonErr.type === 'invalid' %}
-                {% set otherReasonError = true %}
-              {% else %}
-                {% set otherReasonError = false %}
-              {% endif %}
-            {% endif %}
+        {% if errorList.length > 0 %}
+          {% if extensionReasonErr.type === 'invalid' %}
+            {% set otherReasonError = true %}
+          {% else %}
+            {% set otherReasonError = false %}
+          {% endif %}
+        {% endif %}
 
-            {% set otherInput %}
-            {{ govukInput({
+        {% set otherInput %}
+        {{ govukInput({
               id: "other-reason",
               name: "otherReason",
               classes: "",
               errorMessage: otherReasonError,
               label: {
-                text: "Reason"
+                text: "Short description of the reason"
               }
             }) }}
-            {% endset %}
+        {% endset %}
 
-            {{ govukRadios({
+        {{ govukRadios({
                 idPrefix: "extension-reason",
                 name: "extensionReason",
                 errorMessage: extensionReasonError,
@@ -77,8 +75,28 @@
                     text: "Illness"
                   },
                   {
+                    value: "damage",
+                    text: "Theft or criminal damage"
+                  },
+                  {
                     value: "disaster",
                     text: "Natural disaster"
+                  },
+                  {
+                    value: "accounts",
+                    text: "Accounting issues"
+                  },
+                  {
+                    value: "companyChanges",
+                    text: "Changes to the company"
+                  },
+                  {
+                    value: "computerProblem",
+                    text: "Computer problems"
+                  },
+                  {
+                    value: "death",
+                    text: "Death"
                   },
                   {
                     value: "other",
@@ -97,7 +115,5 @@
         </form>
       </div>
     </div>
-  </main>
-</div>
 
 {% endblock %}

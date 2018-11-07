@@ -4,60 +4,60 @@
   {% if errorList.length > 0 %}
     Error:
   {% endif %}
-  Add evidence to support your extension request
+  Add evidence to support your application
 {% endblock %}
 
-{% block main %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+    tag: {
+      text: "alpha"
+    },
+    html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+  }) }}
 
-  <div class="govuk-width-container">
-    {{ govukPhaseBanner({
-      tag: {
-        text: "alpha"
-      },
-      html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
-    }) }}
+  {% set backLinkHref %}
+  {{ backLink }}
+  {% endset -%}
 
-    {% set backLinkHref %}
-    {{ backLink }}
-    {% endset -%}
+  {{ govukBackLink({
+    text: "Back",
+    href: ''
+  }) }}
+{% endblock %}
 
-    {{ govukBackLink({
-      text: "Back",
-      href: ''
-    }) }}
-    <main role="main" class="govuk-main-wrapper">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-          {% if errorList.length > 0 %}
-            {{ govukErrorSummary({
-              titleText: "There was a problem with your extension information",
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+              titleText: "There was a problem with the information you gave us",
               errorList: errorList
             }) }}
-          {% endif %}
+      {% endif %}
 
-          <form action="" method="post">
+      <form action="" method="post">
 
-            {% if errorList.length > 0 %}
-              {% set supportingEvidenceError = {
-                text: supportingEvidenceErr.text
-              } %}
-            {% else %}
-              {% set supportingEvidenceError = false %}
-            {% endif %}
+        {% if errorList.length > 0 %}
+          {% set supportingEvidenceError = {
+            text: supportingEvidenceErr.text
+          } %}
+        {% else %}
+          {% set supportingEvidenceError = false %}
+        {% endif %}
 
-            {% set hintHTML %}
-            Anything you give us to support your extension request will be kept confidential.
-            {% endset -%}
+        {% set hintHTML %}
+        Anything you give us to support your application will be kept confidential.
+        {% endset -%}
 
-            {{ govukRadios({
+        {{ govukRadios({
               classes: "govuk-radios--inline",
               idPrefix: "supporting-evidence",
               name: "supportingEvidence",
               errorMessage: supportingEvidenceError,
               fieldset: {
                 legend: {
-                  text: 'Do you want to add evidence to support your extension?',
+                  text: 'Do you want to add evidence to support your application?',
                   isPageHeading: true,
                   classes: 'govuk-fieldset__legend--xl'
                 }
@@ -77,13 +77,11 @@
               ]
             }) }}
 
-            {{ govukButton({
+        {{ govukButton({
               text: "Continue"
             }) }}
-          </form>
-        </div>
-      </div>
-    </main>
+      </form>
+    </div>
   </div>
 
 {% endblock %}

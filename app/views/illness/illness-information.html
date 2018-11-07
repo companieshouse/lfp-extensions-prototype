@@ -29,16 +29,13 @@
       {% endif %}
       <h1 class="govuk-heading-xl">Tell us about the illness</h1>
       <form action="" method="post">
-        {% set hintHTML %}
-        Anything you tell us to support your extension will be kept confidential.
-        {% endset -%}
         {% if Err.flag %}
           {{ govukTextarea({
               name: "illnessInformation",
               id: "illness-information",
-              rows: '12',
+              rows: '8',
               label: {
-                text: "Anything you tell us to support your extension will be kept confidential.",
+                text: "Anything you tell us to support your application will be kept confidential.",
                 isPageHeading: true,
                 classes: 'govuk-heading-large'
               },
@@ -53,9 +50,9 @@
           {{ govukTextarea({
               name: "illnessInformation",
               id: "illness-information",
-              rows: '12',
+              rows: '8',
               label: {
-                text: "Anything you tell us to support your extension will be kept confidential.",
+                text: "Anything you tell us to support your application will be kept confidential.",
                 isPageHeading: true,
                 classes: 'govuk-heading-large'
               },

@@ -20,25 +20,24 @@
 {% endblock %}
 {% block content %}
 
-  <div class="govuk-width-container">
-    <main role="main" class="govuk-main-wrapper">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-          {% if errorList.length > 0 %}
-            {{ govukErrorSummary({
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
               titleText: "There was a problem with your extension information",
               errorList: errorList
             }) }}
-          {% endif %}
-          <form action="" method="post">
-            {% if errorList.length > 0 %}
-              {% set continuedIllnessError = {
-                text: continuedIllnessErr.text
-              } %}
-            {% else %}
-              {% set continuedIllnessError = false %}
-            {% endif %}
-            {{ govukRadios({
+      {% endif %}
+      <form action="" method="post">
+        {% if errorList.length > 0 %}
+          {% set continuedIllnessError = {
+            text: continuedIllnessErr.text
+          } %}
+        {% else %}
+          {% set continuedIllnessError = false %}
+        {% endif %}
+
+        {{ govukRadios({
               classes: "govuk-radios--inline",
               idPrefix: "continued-illness",
               name: "continuedIllness",
@@ -65,13 +64,11 @@
               ]
             }) }}
 
-            {{ govukButton({
+        {{ govukButton({
               text: "Continue"
             }) }}
-          </form>
-        </div>
-      </div>
-    </main>
+      </form>
+    </div>
   </div>
 
 {% endblock %}

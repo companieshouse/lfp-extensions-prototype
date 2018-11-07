@@ -18,9 +18,7 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
       <h1 class="govuk-heading-xl">Check company details</h1>
-
       <h2 class="govuk-heading-l">{{scenario.company.name}}</h2>
 
       {% set overdueHTML %}
@@ -30,6 +28,7 @@
       {% else %}
       {% endif %}
       {% endset %}
+
       {{ govukTable({
 
   firstCellIsHeader: true,
@@ -90,6 +89,11 @@
         {{ govukButton({
 text: "Continue",
 href: "ptf/ptf"
+}) }}
+      {% elif scenario.company.deadlineStatus === 'notDue' %}
+        {{ govukButton({
+text: "Continue",
+href: "accountsnotdue"
 }) }}
       {% else %}
         {{ govukButton({

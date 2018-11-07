@@ -20,34 +20,32 @@
 {% endblock %}
 {% block content %}
 
-  <div class="govuk-width-container">
-    <main role="main" class="govuk-main-wrapper">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-          <form action="" method="post">
-            {% if errorList.length > 0 %}
-              {{ govukErrorSummary({
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="" method="post">
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
                 titleText: "There was a problem with the date you gave us",
                 errorList: errorList
               }) }}
-            {% endif %}
+        {% endif %}
 
-            {% if errorList.length > 0 %}
-              {% set endDateError = {
-                text: 'Please enter a real date'
-              } %}
-            {% else %}
-              {% set endDateError = false %}
-            {% endif %}
+        {% if errorList.length > 0 %}
+          {% set endDateError = {
+            text: 'Please enter a real date'
+          } %}
+        {% else %}
+          {% set endDateError = false %}
+        {% endif %}
 
-            {% set hintHTML %}
-            You told us the illness started on
-            {{ reason.illnessStartDate.day }}
-            {{ reason.illnessStartDate.month | displayMonth }}
-            {{ reason.illnessStartDate.year }}
-            {% endset -%}
+        {% set hintHTML %}
+        You told us the illness started on
+        {{ reason.illnessStartDate.day }}
+        {{ reason.illnessStartDate.month | displayMonth }}
+        {{ reason.illnessStartDate.year }}
+        {% endset -%}
 
-            {{ govukDateInput({
+        {{ govukDateInput({
   id: "illness-end-date",
   namePrefix: "illnessEndDate",
   errorMessage: endDateError,
@@ -69,13 +67,11 @@
             })
           }}
 
-            {{ govukButton({
+        {{ govukButton({
               text: "Continue"
             }) }}
-          </form>
-        </div>
-      </div>
-    </main>
+      </form>
+    </div>
   </div>
 
 {% endblock %}
