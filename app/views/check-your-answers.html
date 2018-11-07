@@ -27,7 +27,7 @@
             Company Name
           </dt>
           <dd class="app-check-your-answers__answer">
-            Fun Times Limited
+            {{ scenario.company.name }}
           </dd>
           <dd class="app-check-your-answers__change"></dd>
         </div>
@@ -36,7 +36,7 @@
             Company Number
           </dt>
           <dd class="app-check-your-answers__answer">
-            00001234
+            {{ scenario.company.number }}
           </dd>
           <dd class="app-check-your-answers__change"></dd>
         </div>
@@ -45,9 +45,7 @@
             Address
           </dt>
           <dd class="app-check-your-answers__answer">
-            15 Norton Street<br/>
-            Brighton<br/>
-            BR10 1QT
+            {{ scenario.company.address | nl2br | safe }}
           </dd>
           <dd class="app-check-your-answers__change"></dd>
         </div>
@@ -56,13 +54,30 @@
             Filing due date
           </dt>
           <dd class="app-check-your-answers__answer">
-            6 October 2018
+            {{ scenario.company.accountsDue }}
+          </dd>
+          <dd class="app-check-your-answers__change"></dd>
+        </div>
+        <div class="app-check-your-answers__contents">
+          <dt class="app-check-your-answers__question">
+            Contact email address
+          </dt>
+          <dd class="app-check-your-answers__answer">
+            {{ userEmail }}
           </dd>
           <dd class="app-check-your-answers__change"></dd>
         </div>
       </dl>
-      <h2 class="govuk-heading-m">Extension Reasons</h2>
+      {% if extensionReasons.length > 1 %}
+        <h2 class="govuk-heading-l">Extension reasons</h2>
+      {% else %}
+        <h2 class="govuk-heading-l">Extension reason</h2>
+      {% endif %}
       {% for reason in extensionReasons %}
+        {% if extensionReasons.length > 1 %}
+          <h3 class="govuk-heading-m">Reason
+            {{loop.index}}</h3>
+        {% endif %}
         {% if reason.reason === 'illness' %}
           <dl class="app-check-your-answers app-check-your-answers--long">
             <div class="app-check-your-answers__contents">
@@ -73,7 +88,7 @@
                 {{ reason.reason | capitalize }}
               </dd>
               <dd class="app-check-your-answers__change">
-                <a href="/chose-reason">Change</a>
+                <a href="/choose-reason">Change</a>
               </dd>
             </div>
             <div class="app-check-your-answers__contents">
@@ -82,6 +97,7 @@
               </dt>
               <dd class="app-check-your-answers__answer">
                 {% if reason.illPerson === 'Someone else' %}
+                  Someone else -
                   {{ reason.otherIllPerson }}
                 {% else %}
                   {{ reason.illPerson | capitalize }}
@@ -134,27 +150,221 @@
                 <dd class="app-check-your-answers__change"></dd>
               </div>
             {% endif %}
+            {% if reason.supportingEvidence === 'yes' %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting evidence
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% endif %}
+          </dl>
+        {% elif reason.reason === 'damage' %}
+          <dl class="app-check-your-answers app-check-your-answers--long">
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
-                Supporting evidence
+                Reason for extension
               </dt>
               <dd class="app-check-your-answers__answer">
-                <a href='' class='govuk-link'>gp-letter.jpg</a>
+                Theft or criminal damage
+              </dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/choose-reason">Change</a>
+              </dd>
+            </div>
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Further information
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                {{ reason.damage}}
               </dd>
               <dd class="app-check-your-answers__change"></dd>
             </div>
+            {% if reason.supportingEvidence === 'yes' %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting evidence
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% endif %}
           </dl>
         {% elif reason.reason === 'disaster' %}
           <dl class="app-check-your-answers app-check-your-answers--long">
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
-                Disaster
+                Reason for extension
               </dt>
               <dd class="app-check-your-answers__answer">
-                TBD
+                {{ reason.reason | capitalize }}
+              </dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/choose-reason">Change</a>
+              </dd>
+            </div>
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Further information
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                {{ reason.naturalDisaster}}
               </dd>
               <dd class="app-check-your-answers__change"></dd>
             </div>
+            {% if reason.supportingEvidence === 'yes' %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting evidence
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% endif %}
+          </dl>
+        {% elif reason.reason === 'accounts' %}
+          <dl class="app-check-your-answers app-check-your-answers--long">
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Reason for extension
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                Accounting issues
+              </dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/choose-reason">Change</a>
+              </dd>
+            </div>
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Further information
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                {{ reason.accounts}}
+              </dd>
+              <dd class="app-check-your-answers__change"></dd>
+            </div>
+            {% if reason.supportingEvidence === 'yes' %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting evidence
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% endif %}
+          </dl>
+        {% elif reason.reason === 'companyChanges' %}
+          <dl class="app-check-your-answers app-check-your-answers--long">
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Reason for extension
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                Changes to the company
+              </dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/choose-reason">Change</a>
+              </dd>
+            </div>
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Further information
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                {{ reason.companyChanges}}
+              </dd>
+              <dd class="app-check-your-answers__change"></dd>
+            </div>
+            {% if reason.supportingEvidence === 'yes' %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting evidence
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% endif %}
+          </dl>
+        {% elif reason.reason === 'computerProblem' %}
+          <dl class="app-check-your-answers app-check-your-answers--long">
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Reason for extension
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                Computer problem
+              </dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/choose-reason">Change</a>
+              </dd>
+            </div>
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Further information
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                {{ reason.computerProblem}}
+              </dd>
+              <dd class="app-check-your-answers__change"></dd>
+            </div>
+            {% if reason.supportingEvidence === 'yes' %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting evidence
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% endif %}
+          </dl>
+        {% elif reason.reason === 'death' %}
+          <dl class="app-check-your-answers app-check-your-answers--long">
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Reason for extension
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                Death
+              </dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/choose-reason">Change</a>
+              </dd>
+            </div>
+            <div class="app-check-your-answers__contents">
+              <dt class="app-check-your-answers__question">
+                Further information
+              </dt>
+              <dd class="app-check-your-answers__answer">
+                {{ reason.death}}
+              </dd>
+              <dd class="app-check-your-answers__change"></dd>
+            </div>
+            {% if reason.supportingEvidence === 'yes' %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting evidence
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% endif %}
           </dl>
         {% else %}
           <dl class="app-check-your-answers app-check-your-answers--long">
@@ -166,38 +376,45 @@
                 {{ reason.otherReason }}
               </dd>
               <dd class="app-check-your-answers__change">
-                <a href="/chose-reason">Change</a>
+                <a href="/choose-reason">Change</a>
               </dd>
             </div>
-            <div class="app-check-your-answers__contents">
-              <dt class="app-check-your-answers__question">
-                Further information
-              </dt>
-              <dd class="app-check-your-answers__answer">
-                {{ reason.otherInformation }}
-              </dd>
-              <dd class="app-check-your-answers__change"></dd>
-            </div>
+            {% if reason.otherInformation != null %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Further information
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {{ reason.otherInformation }}
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% endif %}
+            {% if reason.supportingEvidence === 'yes' %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting evidence
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
+              </div>
+            {% endif %}
           </dl>
         {% endif %}
       {% endfor %}
-      <dl class="app-check-your-answers app-check-your-answers--long">
-        <div class="app-check-your-answers__contents">
-          <dt class="app-check-your-answers__question">
-            Extension length
-          </dt>
-          <dd class="app-check-your-answers__answer">
-            {{ extensionLength }}
-          </dd>
-          <dd class="app-check-your-answers__change">
-            <a href="/extension-length">Change</a>
-          </dd>
-        </div>
-      </dl>
+      <h2 class="govuk-heading-m">Submit your application for an extension</h2>
+      <p>
+        By submitting this application you are confirming that, to the best of your knowledge, the details you are providing are true.
+      </p>
       <form action="" method="post">
         {{ govukButton({
-        text: "Submit"
+        text: "Confirm and submit"
       }) }}
+        <p>
+          <a href="sign-out" class="govuk-link">Save and sign out</a>
+        </p>
       </form>
     </div>
   </div>

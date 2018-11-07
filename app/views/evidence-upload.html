@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Add evidence to support your application
+{% endblock %}
+
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+    tag: {
+      text: "alpha"
+    },
+    html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+  }) }}
+  {{ govukBackLink({
+    text: "Back",
+    href: 'illness-evidence'
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="" method="post">
+        <h1 class="govuk-heading-xl">
+          Add evidence to support your application
+        </h1>
+        <p class="govuk-body"></p>
+
+        {% set uploadText %}
+        {% if evidence.length > 0 %}
+          Add another document
+        {% else %}
+          Add a document
+        {% endif %}
+        {% endset -%}
+
+        {{ govukFileUpload({
+              id: "file-upload-1",
+              name: "file-upload-1",
+              label: {
+                text: uploadText
+              }
+            }) }}
+
+        {% set removeLink %}
+        <a href="" class="govuk-link">Remove</a>
+        {% endset -%}
+
+        {{ govukTable({
+              caption: "Attached evidence",
+              firstCellIsHeader: false,
+              rows: [
+                [
+                  {
+                    html: "<a href='' class='govuk-link'>evidence-letter.jpg</a>"
+                  },
+                  {
+                    html: removeLink
+                  }
+                ]
+              ]
+            }) }}
+
+        {{ govukButton({
+              text: "Continue"
+            }) }}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

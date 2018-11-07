@@ -6,36 +6,60 @@
   {% endif %}
   Extension due to ill health: Who was ill?
 {% endblock %}
-
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "/choose-reason"
+}) }}
+{% endblock %}
 {% block content %}
 
-  <div class="govuk-width-container">
-    {{ govukPhaseBanner({
-      tag: {
-        text: "alpha"
-      },
-      html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
-    }) }}
-    {{ govukBackLink({
-      text: "Back",
-      href: "/choose-reason"
-    }) }}
-    <main role="main" class="govuk-main-wrapper">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-          {% set someoneElseInput %}
-          {{ govukInput({
-            id: "other-ill-person",
-            name: "otherIllPerson",
-            classes: "",
-            errorMessage: otherPersonError,
-            label: {
-              text: "Their relationship to the company"
-            }
-          }) }}
-          {% endset -%}
-          <form action="" method="post">
-            {{ govukRadios({
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="" method="post">
+
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
+                titleText: "There is an error on the page",
+                errorList: errorList
+              }) }}
+        {% endif %}
+
+        {% if errorList.length > 0 %}
+          {% set illPersonError = {
+            text: illPersonErr.text
+          } %}
+        {% else %}
+          {% set illPersonError = false %}
+        {% endif %}
+
+        {% if errorList.length > 0 %}
+          {% if illPersonErr.type === 'invalid' %}
+            {% set otherPersonError = true %}
+          {% else %}
+            {% set otherPersonError = false %}
+          {% endif %}
+        {% endif %}
+
+        {% set someoneElseInput %}
+        {{ govukInput({
+              id: "other-person",
+              name: "otherPerson",
+              classes: "",
+              errorMessage: otherPersonError,
+              label: {
+                text: "Their relationship to the company"
+              }
+            }) }}
+        {% endset -%}
+
+        {{ govukRadios({
               idPrefix: "ill-person",
                 name: "illPerson",
                 errorMessage: illPersonError,
@@ -74,13 +98,11 @@
                 ]
               }) }}
 
-            {{ govukButton({
+        {{ govukButton({
               text: "Continue"
             }) }}
-          </form>
-        </div>
-      </div>
-    </main>
+      </form>
+    </div>
   </div>
 
 {% endblock %}

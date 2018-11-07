@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Accounts not due
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+    tag: {
+      text: "alpha"
+    },
+    html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+  }) }}
+  {{ govukBackLink({
+    text: "Back",
+    href: "confirm-company"
+  }) }}
+</div>
+{% endblock %}
+{% set mainClasses = "govuk-main-wrapper--l" %}
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-xl">You can't apply for an extension</h1>
+    <p class="govuk-body">
+      Your accounts aren't due until
+      {{scenario.company.accountsDue}}.
+    </p>
+    <p class="govuk-body">
+      You can file your accounts from
+      {{scenario.company.accountRegistration}}. You can find more information about how and when to file your accounts in
+      <a href="https://www.gov.uk/government/publications/life-of-a-company-annual-requirements/life-of-a-company-part-1-accounts">
+        our guidance</a>.
+    </p>
+  </div>
+</div>
+{% endblock %}

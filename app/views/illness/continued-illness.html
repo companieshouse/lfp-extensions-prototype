@@ -6,27 +6,38 @@
   {% endif %}
   Extension due to ill health: Is the person still ill?
 {% endblock %}
-
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "illness-start-date"
+}) }}
+{% endblock %}
 {% block content %}
 
-  <div class="govuk-width-container">
-    {{ govukPhaseBanner({
-      tag: {
-        text: "alpha"
-      },
-      html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
-    }) }}
-    {{ govukBackLink({
-      text: "Back",
-      href: "illness-start-date"
-    }) }}
-    <main role="main" class="govuk-main-wrapper">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+              titleText: "There was a problem with your extension information",
+              errorList: errorList
+            }) }}
+      {% endif %}
+      <form action="" method="post">
+        {% if errorList.length > 0 %}
+          {% set continuedIllnessError = {
+            text: continuedIllnessErr.text
+          } %}
+        {% else %}
+          {% set continuedIllnessError = false %}
+        {% endif %}
 
-          <form action="" method="post">
-
-            {{ govukRadios({
+        {{ govukRadios({
               classes: "govuk-radios--inline",
               idPrefix: "continued-illness",
               name: "continuedIllness",
@@ -53,13 +64,11 @@
               ]
             }) }}
 
-            {{ govukButton({
+        {{ govukButton({
               text: "Continue"
             }) }}
-          </form>
-        </div>
-      </div>
-    </main>
+      </form>
+    </div>
   </div>
 
 {% endblock %}

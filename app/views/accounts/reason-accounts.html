@@ -22,19 +22,19 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {% set hintHTML %}
-      Anything you tell us to support your appeal will be kept confidential.
+      Anything you tell us to support your extension will be kept confidential.
       {% endset %}
       <form action="" method="post">
         {% if errorList.length > 0 %}
           {{ govukErrorSummary({
-          titleText: "There is a problem",
-          errorList: errorList
-        }) }}
+            titleText: "There is a problem",
+            errorList: errorList
+          }) }}
         {% endif %}
         <h1 class="govuk-heading-xl">Provide more information to support your extension</h1>
         {{ govukTextarea({
-          name: "otherInformation",
-          id: "other-information",
+          name: "accounts",
+          id: "accounts",
           errorMessage: Err.text,
           rows: '8',
           label: {
@@ -43,9 +43,10 @@
             classes: 'govuk-heading-large'
           }
         }) }}
+
         {{ govukButton({
-            text: "Continue"
-          }) }}
+          text: "Continue"
+        }) }}
       </form>
     </div>
   </div>

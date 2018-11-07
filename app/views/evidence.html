@@ -4,48 +4,60 @@
   {% if errorList.length > 0 %}
     Error:
   {% endif %}
-  Extension due to ill health: Tell us more about the illness
+  Add evidence to support your application
 {% endblock %}
+
 {% block beforeContent %}
   {{ govukPhaseBanner({
-  tag: {
-    text: "alpha"
-  },
-  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
-}) }}
+    tag: {
+      text: "alpha"
+    },
+    html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+  }) }}
+
+  {% set backLinkHref %}
+  {{ backLink }}
+  {% endset -%}
+
   {{ govukBackLink({
-  text: "Back",
-  href: 'illness-start-date'
-}) }}
+    text: "Back",
+    href: ''
+  }) }}
 {% endblock %}
+
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      {% set hintHTML %}
-      Anything you tell us to support your application will be kept confidential.
-      {% endset -%}
+
       {% if errorList.length > 0 %}
         {{ govukErrorSummary({
-          titleText: "There was a problem with the information you gave us",
-          errorList: errorList
-        }) }}
+              titleText: "There was a problem with the information you gave us",
+              errorList: errorList
+            }) }}
       {% endif %}
-      {% if errorList.length > 0 %}
-        {% set provideDetailError = {
-          text: provideDetailErr.text
-        } %}
-      {% else %}
-        {% set provideDetailError = false %}
-      {% endif %}
+
       <form action="" method="post">
+
+        {% if errorList.length > 0 %}
+          {% set supportingEvidenceError = {
+            text: supportingEvidenceErr.text
+          } %}
+        {% else %}
+          {% set supportingEvidenceError = false %}
+        {% endif %}
+
+        {% set hintHTML %}
+        Anything you give us to support your application will be kept confidential.
+        {% endset -%}
+
         {{ govukRadios({
               classes: "govuk-radios--inline",
-              idPrefix: "provide-detail",
-              name: "provideDetail",
-              errorMessage: provideDetailError,
+              idPrefix: "supporting-evidence",
+              name: "supportingEvidence",
+              errorMessage: supportingEvidenceError,
               fieldset: {
                 legend: {
-                  text: 'Do you want to tell us about the illness?',
+                  text: 'Do you want to add evidence to support your application?',
                   isPageHeading: true,
                   classes: 'govuk-fieldset__legend--xl'
                 }
@@ -71,7 +83,5 @@
       </form>
     </div>
   </div>
-</main>
-</div>
 
 {% endblock %}

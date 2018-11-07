@@ -21,9 +21,20 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+          titleText: "There was a problem with your extension information",
+          errorList: errorList
+        }) }}
+      {% endif %}
       <form action="" method="post">
-
+        {% if errorList.length > 0 %}
+          {% set addExtensionReasonError = {
+            text: addExtensionReasonErr.text
+          } %}
+        {% else %}
+          {% set addExtensionReasonError = false %}
+        {% endif %}
         {{ govukRadios({
               classes: "govuk-radios--inline",
               idPrefix: "add-extension-reason",
@@ -31,7 +42,7 @@
               errorMessage: addExtensionReasonError,
               fieldset: {
                 legend: {
-                  text: 'Is there another reason to apply for an extension?',
+                  text: 'Do you want to add another extension reason?',
                   isPageHeading: true,
                   classes: 'govuk-fieldset__legend--xl'
                 }
@@ -54,7 +65,5 @@
       </form>
     </div>
   </div>
-</main>
-</div>
 
 {% endblock %}

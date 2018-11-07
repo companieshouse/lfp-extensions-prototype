@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+
 {% block pageTitle %}
   {% if errorList.length > 0 %}
     Error:
@@ -14,7 +15,7 @@
 }) }}
   {{ govukBackLink({
   text: "Back",
-  href: "company-number"
+  href: "start"
 }) }}
 {% endblock %}
 {% block content %}
@@ -50,6 +51,7 @@
               value: email
             }) }}
         {% endif %}
+
         {% if passwordErr.flag %}
           {{ govukInput({
               label: {
@@ -74,16 +76,18 @@
               value: password
             }) }}
         {% endif %}
+
         {{ govukButton({
               text: "Sign in"
             }) }}
         <p class="govuk-body">
-          <a href="" class="govuk-link">Register</a>
+          <a href="" class="govuk-link">Register a new account</a>
         </p>
         <p class="govuk-body">
-          <a href="" class="govuk-link">Forgotten your password?</a>
+          <a href="" class="govuk-link">I've forgotten my password</a>
         </p>
       </form>
     </div>
   </div>
+
 {% endblock %}
