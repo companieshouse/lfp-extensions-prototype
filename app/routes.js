@@ -180,7 +180,7 @@ router.post('/choose-reason', function (req, res) {
   if (typeof extensionReason === 'undefined') {
     extensionReasonErr.type = 'blank'
     extensionReasonErr.text = 'You must select a reason'
-    extensionReasonErr.href = '#choose-reason'
+    extensionReasonErr.href = '#choose-reason-1'
     extensionReasonErr.flag = true
   }
   if (extensionReason === 'other' && otherReason === '') {
@@ -270,7 +270,7 @@ router.post('/illness/who-was-ill', function (req, res) {
   if (typeof illPerson === 'undefined') {
     illPersonErr.type = 'blank'
     illPersonErr.text = 'You must select a person'
-    illPersonErr.href = '#ill-person'
+    illPersonErr.href = '#ill-person-1'
     illPersonErr.flag = true
   }
   if (illPerson === 'Someone else' && otherPerson === '') {
@@ -382,7 +382,10 @@ router.post('/illness/illness-start-date', function (req, res) {
   }
 })
 router.get('/illness/continued-illness', function (req, res) {
+  var reasonObject = req.session.extensionReasons[req.session.extensionReasons.length - 1]
   res.render('illness/continued-illness', {
+    scenario: req.session.scenario,
+    startDate: reasonObject.illnessStartDate
   })
 })
 router.post('/illness/continued-illness', function (req, res) {
@@ -397,7 +400,7 @@ router.post('/illness/continued-illness', function (req, res) {
   if (typeof continuedIllness === 'undefined') {
     Err.type = 'blank'
     Err.text = 'You must tell us if this is a continued illness'
-    Err.href = '#continued-illness'
+    Err.href = '#continued-illness-1'
     Err.flag = true
   }
   if (Err.flag) {
@@ -405,9 +408,12 @@ router.post('/illness/continued-illness', function (req, res) {
     errorFlag = true
   }
   if (errorFlag === true) {
+    reasonObject = req.session.extensionReasons[req.session.extensionReasons.length - 1]
     res.render('illness/continued-illness', {
       errorList: errorList,
-      Err: Err
+      Err: Err,
+      scenario: req.session.scenario,
+      startDate: reasonObject.illnessStartDate
     })
   } else {
     switch (req.body.continuedIllness) {
@@ -494,7 +500,8 @@ router.post('/illness/illness-end-date', function (req, res) {
       endDay: endDay,
       endMonth: endMonth,
       endYear: endYear,
-      inputClasses: inputClasses
+      inputClasses: inputClasses,
+      reason: reasonObject
     })
   } else {
     illnessEndDate.day = req.body['illnessEndDate-day']
@@ -517,7 +524,7 @@ router.post('/illness/illness-pre-information', function (req, res) {
   if (typeof provideDetail === 'undefined') {
     Err.type = 'blank'
     Err.text = 'You must tell us if you would like to provide more information'
-    Err.href = '#provide-information'
+    Err.href = '#provide-detail-1'
     Err.flag = true
   }
   if (Err.flag) {
@@ -555,7 +562,7 @@ router.post('/add-extension-reason', function (req, res) {
   if (typeof addExtensionReason === 'undefined') {
     Err.type = 'blank'
     Err.text = 'You must tell us if there is another reason for your extension'
-    Err.href = '#add-extension-reason'
+    Err.href = '#add-extension-reason-1'
     Err.flag = true
   }
   if (Err.flag) {
@@ -622,7 +629,7 @@ router.post('/evidence', function (req, res) {
   if (typeof supportingEvidence === 'undefined') {
     Err.type = 'blank'
     Err.text = 'You must tell us if you want to upload evidence'
-    Err.href = '#supporting-evidence'
+    Err.href = '#supporting-evidence-1'
     Err.flag = true
   }
   if (Err.flag) {

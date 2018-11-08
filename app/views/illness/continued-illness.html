@@ -37,6 +37,13 @@
           {% set continuedIllnessError = false %}
         {% endif %}
 
+        {% set hintHTML %}
+        You told us the illness started on
+        {{ startDate.day }}
+        {{ startDate.month | displayMonth }}
+        {{ startDate.year }}
+        {% endset -%}
+
         {{ govukRadios({
               classes: "govuk-radios--inline",
               idPrefix: "continued-illness",
