@@ -59,12 +59,12 @@
         {% endset %}
 
         {{ govukRadios({
-                idPrefix: "extension-reason",
+                idPrefix: "choose-reason",
                 name: "extensionReason",
                 errorMessage: extensionReasonError,
                 fieldset: {
                   legend: {
-                    text: 'Tell us why you\'re applying for an extension',
+                    text: 'Why are you applying for an extension?',
                     isPageHeading: true,
                     classes: 'govuk-fieldset__legend--xl'
                   }
@@ -109,11 +109,11 @@
                 ]
               }) }}
 
-          {{ govukButton({
+        {{ govukButton({
             text: "Continue"
           }) }}
-        </form>
-      </div>
+      </form>
     </div>
+  </div>
 
 {% endblock %}
