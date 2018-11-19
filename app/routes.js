@@ -523,7 +523,7 @@ router.post('/illness/illness-pre-information', function (req, res) {
 
   if (typeof provideDetail === 'undefined') {
     Err.type = 'blank'
-    Err.text = 'You must tell us if you would like to provide more information'
+    Err.text = 'You must tell us if you want to provide more information'
     Err.href = '#provide-detail-1'
     Err.flag = true
   }
@@ -818,38 +818,6 @@ router.post('/computer-problem/reason-computer-problem', function (req, res) {
   } else {
     var reasonObject = req.session.extensionReasons.pop()
     reasonObject.computerProblem = req.body.computerProblem
-    req.session.extensionReasons.push(reasonObject)
-    res.redirect('/evidence')
-  }
-  // death
-})
-router.get('/death/reason-death', function (req, res) {
-  res.render('death/reason-death')
-})
-router.post('/death/reason-death', function (req, res) {
-  var death = req.body.death
-  var errorFlag = false
-  var Err = {}
-  var errorList = []
-
-  if (death === '') {
-    Err.type = 'blank'
-    Err.text = 'You must give us more information'
-    Err.href = '#death'
-    Err.flag = true
-  }
-  if (Err.flag) {
-    errorList.push(Err)
-    errorFlag = true
-  }
-  if (errorFlag === true) {
-    res.render('death/reason-death', {
-      errorList: errorList,
-      Err: Err
-    })
-  } else {
-    var reasonObject = req.session.extensionReasons.pop()
-    reasonObject.death = req.body.death
     req.session.extensionReasons.push(reasonObject)
     res.redirect('/evidence')
   }
