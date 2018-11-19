@@ -24,8 +24,8 @@
       {% set overdueHTML %}
       {{scenario.company.accountsDue}}
       {% if scenario.company.deadlineStatus === 'Overdue' %}
-        <br/>Your accounts are overdue
-      {% else %}
+        <br/>
+        <span class="govuk-!-font-weight-bold">Your accounts are overdue</span>
       {% endif %}
       {% endset %}
 
