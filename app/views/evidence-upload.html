@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-  Add evidence to support your application
+  Add documents to support your application
 {% endblock %}
 
 {% block beforeContent %}
@@ -22,7 +22,7 @@
     <div class="govuk-grid-column-two-thirds">
       <form action="" method="post">
         <h1 class="govuk-heading-xl">
-          Add evidence to support your application
+          Add documents to support your application
         </h1>
         <p class="govuk-body"></p>
 
@@ -47,7 +47,7 @@
         {% endset -%}
 
         {{ govukTable({
-              caption: "Attached evidence",
+              caption: "Attached documents",
               firstCellIsHeader: false,
               rows: [
                 [
