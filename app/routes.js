@@ -159,12 +159,60 @@ router.post('/filing-deadline', function (req, res) {
 // choose reason
 
 router.get('/choose-reason', function (req, res) {
+  console.log('/// CHOOSE REASON ///')
+  console.log(req.query)
+  console.log(req.session.scenario)
   var companyNumber = req.session.scenario.company.number
+  var id = 0
+  var reasonObject = {}
+  var checkedIllness = false
+  var checkedDamage = false
+  var checkedComputer = false
+  var checkedAccounts = false
+  var checkedCompany = false
+  var checkedDisaster = false
+
   if (req.query.restart === 'yes') {
+    console.log('/// RESTART ///')
     req.session.extensionReasons = []
     del('public/saved-sessions/' + companyNumber + '.json')
     res.render('choose-reason')
+  } else if (req.query.id) {
+    console.log('/// EDIT MODE ///')
+    id = req.query.id
+    console.log(req.session.extensionReasons)
+    reasonObject = req.session.extensionReasons[id]
+    switch (reasonObject.reason) {
+      case 'illness':
+        checkedIllness = true
+        break
+      case 'damage':
+        checkedDamage = true
+        break
+      case 'computerProblem':
+        checkedComputer = true
+        break
+      case 'accounts':
+        checkedAccounts = true
+        break
+      case 'companyChanges':
+        checkedCompany = true
+        break
+      case 'disaster':
+        checkedDisaster = true
+        break
+    }
+    res.render('choose-reason', {
+      checkedIllness: checkedIllness,
+      checkedDamage: checkedDamage,
+      checkedComputer: checkedComputer,
+      checkedAccounts: checkedAccounts,
+      checkedCompany: checkedCompany,
+      checkedDisaster: checkedDisaster,
+      id: id
+    })
   } else {
+    console.log('/// NUTHIN ///')
     res.render('choose-reason')
   }
 })
@@ -172,6 +220,7 @@ router.post('/choose-reason', function (req, res) {
   var reasonObject = {}
   var extensionReason = req.body.extensionReason
   var otherReason = req.body.otherReason
+  var editId = req.body.editId
   var errorFlag = false
   var extensionReasonErr = {}
   var otherReasonErr = {}
@@ -210,37 +259,65 @@ router.post('/choose-reason', function (req, res) {
     switch (req.body.extensionReason) {
       case 'illness':
         reasonObject.reason = req.body.extensionReason
-        req.session.extensionReasons.push(reasonObject)
+        if (editId !== '') {
+          req.session.extensionReasons[editId].reason = reasonObject.reason
+        } else {
+          req.session.extensionReasons.push(reasonObject)
+        }
         res.redirect('/illness/who-was-ill')
         break
       case 'damage':
         reasonObject.reason = req.body.extensionReason
-        req.session.extensionReasons.push(reasonObject)
+        if (editId !== '') {
+          req.session.extensionReasons[editId].reason = reasonObject.reason
+        } else {
+          req.session.extensionReasons.push(reasonObject)
+        }
         res.redirect('/theft-criminal-damage/reason-damage')
         break
       case 'disaster':
         reasonObject.reason = req.body.extensionReason
-        req.session.extensionReasons.push(reasonObject)
+        if (editId !== '') {
+          req.session.extensionReasons[editId].reason = reasonObject.reason
+        } else {
+          req.session.extensionReasons.push(reasonObject)
+        }
         res.redirect('/natural-disaster/reason-natural-disaster')
         break
       case 'accounts':
         reasonObject.reason = req.body.extensionReason
-        req.session.extensionReasons.push(reasonObject)
+        if (editId !== '') {
+          req.session.extensionReasons[editId].reason = reasonObject.reason
+        } else {
+          req.session.extensionReasons.push(reasonObject)
+        }
         res.redirect('/accounts/reason-accounts')
         break
       case 'companyChanges':
         reasonObject.reason = req.body.extensionReason
-        req.session.extensionReasons.push(reasonObject)
+        if (editId !== '') {
+          req.session.extensionReasons[editId].reason = reasonObject.reason
+        } else {
+          req.session.extensionReasons.push(reasonObject)
+        }
         res.redirect('/company-changes/reason-company-changes')
         break
       case 'computerProblem':
         reasonObject.reason = req.body.extensionReason
-        req.session.extensionReasons.push(reasonObject)
+        if (editId !== '') {
+          req.session.extensionReasons[editId].reason = reasonObject.reason
+        } else {
+          req.session.extensionReasons.push(reasonObject)
+        }
         res.redirect('/computer-problem/reason-computer-problem')
         break
       case 'death':
         reasonObject.reason = req.body.extensionReason
-        req.session.extensionReasons.push(reasonObject)
+        if (editId !== '') {
+          req.session.extensionReasons[editId].reason = reasonObject.reason
+        } else {
+          req.session.extensionReasons.push(reasonObject)
+        }
         res.redirect('/death/reason-death')
         break
       case 'other':
@@ -645,7 +722,6 @@ router.post('/evidence', function (req, res) {
     reasonObject = req.session.extensionReasons.pop()
     reasonObject.supportingEvidence = req.body.supportingEvidence
     req.session.extensionReasons.push(reasonObject)
-    console.log(req.session.extensionReasons)
     switch (req.body.supportingEvidence) {
       case 'yes':
         res.redirect('/evidence-upload')
@@ -792,10 +868,22 @@ router.post('/company-changes/reason-company-changes', function (req, res) {
   // computer problems
 })
 router.get('/computer-problem/reason-computer-problem', function (req, res) {
-  res.render('computer-problem/reason-computer-problem')
+  var id = 0
+  var info = ''
+  if (req.query.id) {
+    id = req.query.id
+    info = req.session.extensionReasons[id].computerProblem
+    res.render('computer-problem/reason-computer-problem', {
+      id: id,
+      info: info
+    })
+  } else {
+    res.render('computer-problem/reason-computer-problem')
+  }
 })
 router.post('/computer-problem/reason-computer-problem', function (req, res) {
   var computerProblem = req.body.computerProblem
+  var editId = req.body.editId
   var errorFlag = false
   var Err = {}
   var errorList = []
@@ -816,10 +904,15 @@ router.post('/computer-problem/reason-computer-problem', function (req, res) {
       Err: Err
     })
   } else {
-    var reasonObject = req.session.extensionReasons.pop()
-    reasonObject.computerProblem = req.body.computerProblem
-    req.session.extensionReasons.push(reasonObject)
-    res.redirect('/evidence')
+    if (req.body.editId !== '') {
+      req.session.extensionReasons[editId].computerProblem = computerProblem
+      res.redirect('/check-your-answers')
+    } else {
+      var reasonObject = req.session.extensionReasons.pop()
+      reasonObject.computerProblem = req.body.computerProblem
+      req.session.extensionReasons.push(reasonObject)
+      res.redirect('/evidence')
+    }
   }
 })
 router.get('/other/reason-other', function (req, res) {
@@ -856,7 +949,6 @@ router.post('/other/reason-other', function (req, res) {
 
 // End of journey
 router.get('/check-your-answers', function (req, res) {
-  console.log(req.session.extensionReasons)
   res.render('check-your-answers', {
     scenario: req.session.scenario,
     extensionReasons: req.session.extensionReasons,
@@ -876,7 +968,6 @@ router.get('/sign-out', function (req, res) {
   application.scenario = req.session.scenario
   application.extensionReasons = req.session.extensionReasons
   jsonName = application.scenario.company.number
-  console.log(application)
   json = JSON.stringify(application, null, '\t')
   fs.writeFile('public/saved-sessions/' + jsonName + '.json', json, 'utf8')
 

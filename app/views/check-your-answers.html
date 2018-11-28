@@ -88,7 +88,7 @@
                 {{ reason.reason | capitalize }}
               </dd>
               <dd class="app-check-your-answers__change">
-                <a href="/choose-reason">Change</a>
+                <a href="choose-reason?id={{loop.index0}}">Change</a>
               </dd>
             </div>
             <div class="app-check-your-answers__contents">
@@ -172,7 +172,7 @@
                 Theft or criminal damage
               </dd>
               <dd class="app-check-your-answers__change">
-                <a href="/choose-reason">Change</a>
+                <a href="choose-reason?id={{loop.index0}}">Remove</a>
               </dd>
             </div>
             <div class="app-check-your-answers__contents">
@@ -182,7 +182,9 @@
               <dd class="app-check-your-answers__answer">
                 {{ reason.damage }}
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/theft-criminal-damage/reason-damage?id={{loop.index0}}">Change</a>
+              </dd>
             </div>
             {% if reason.supportingEvidence === 'yes' %}
               <div class="app-check-your-answers__contents">
@@ -206,7 +208,7 @@
                 {{ reason.reason | capitalize }}
               </dd>
               <dd class="app-check-your-answers__change">
-                <a href="/choose-reason">Change</a>
+                <a href="choose-reason?id={{loop.index0}}">Remove</a>
               </dd>
             </div>
             <div class="app-check-your-answers__contents">
@@ -216,7 +218,9 @@
               <dd class="app-check-your-answers__answer">
                 {{ reason.naturalDisaster}}
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/natural-disaster/reason-natural-disaster?id={{loop.index0}}">Change</a>
+              </dd>
             </div>
             {% if reason.supportingEvidence === 'yes' %}
               <div class="app-check-your-answers__contents">
@@ -240,7 +244,7 @@
                 Accounting issues
               </dd>
               <dd class="app-check-your-answers__change">
-                <a href="/choose-reason">Change</a>
+                <a href="choose-reason?id={{loop.index0}}">Remove</a>
               </dd>
             </div>
             <div class="app-check-your-answers__contents">
@@ -250,7 +254,9 @@
               <dd class="app-check-your-answers__answer">
                 {{ reason.accounts}}
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/accounts/reason-accounts?id={{loop.index0}}">Change</a>
+              </dd>
             </div>
             {% if reason.supportingEvidence === 'yes' %}
               <div class="app-check-your-answers__contents">
@@ -274,7 +280,7 @@
                 Changes to the company
               </dd>
               <dd class="app-check-your-answers__change">
-                <a href="/choose-reason">Change</a>
+                <a href="choose-reason?id={{loop.index0}}">Remove</a>
               </dd>
             </div>
             <div class="app-check-your-answers__contents">
@@ -284,7 +290,9 @@
               <dd class="app-check-your-answers__answer">
                 {{ reason.companyChanges}}
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
+              <dd class="app-check-your-answers__change">
+                <a href="/company-changes/reason-company-changes?id={{loop.index0}}">Change</a>
+              </dd>
             </div>
             {% if reason.supportingEvidence === 'yes' %}
               <div class="app-check-your-answers__contents">
@@ -308,7 +316,7 @@
                 Problems filing online
               </dd>
               <dd class="app-check-your-answers__change">
-                <a href="/choose-reason">Change</a>
+                <a href="choose-reason?id={{loop.index0}}">Remove</a>
               </dd>
             </div>
             <div class="app-check-your-answers__contents">
@@ -318,41 +326,9 @@
               <dd class="app-check-your-answers__answer">
                 {{ reason.computerProblem}}
               </dd>
-              <dd class="app-check-your-answers__change"></dd>
-            </div>
-            {% if reason.supportingEvidence === 'yes' %}
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Supporting documents
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                </dd>
-                <dd class="app-check-your-answers__change"></dd>
-              </div>
-            {% endif %}
-          </dl>
-        {% elif reason.reason === 'death' %}
-          <dl class="app-check-your-answers app-check-your-answers--long">
-            <div class="app-check-your-answers__contents">
-              <dt class="app-check-your-answers__question">
-                Reason for extension
-              </dt>
-              <dd class="app-check-your-answers__answer">
-                Death
-              </dd>
               <dd class="app-check-your-answers__change">
-                <a href="/choose-reason">Change</a>
+                <a href="/computer-problem/reason-computer-problem?id={{loop.index0}}">Change</a>
               </dd>
-            </div>
-            <div class="app-check-your-answers__contents">
-              <dt class="app-check-your-answers__question">
-                Further information
-              </dt>
-              <dd class="app-check-your-answers__answer">
-                {{ reason.death}}
-              </dd>
-              <dd class="app-check-your-answers__change"></dd>
             </div>
             {% if reason.supportingEvidence === 'yes' %}
               <div class="app-check-your-answers__contents">
@@ -376,7 +352,7 @@
                 {{ reason.otherReason }}
               </dd>
               <dd class="app-check-your-answers__change">
-                <a href="/choose-reason">Change</a>
+                <a href="choose-reason">Remove</a>
               </dd>
             </div>
             {% if reason.otherInformation != null %}
@@ -387,7 +363,9 @@
                 <dd class="app-check-your-answers__answer">
                   {{ reason.otherInformation }}
                 </dd>
-                <dd class="app-check-your-answers__change"></dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="/other/reason-other?id={{loop.index0}}">Change</a>
+                </dd>
               </div>
             {% endif %}
             {% if reason.supportingEvidence === 'yes' %}

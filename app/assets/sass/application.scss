@@ -31,3 +31,9 @@ $govuk-global-styles: true;
 .govuk-input--company-number {
   max-width: 13ex;
 }
+
+.change-button {
+  @include govuk-link-common;
+  @include govuk-link-style-default;
+  @include govuk-link-print-friendly;
+}

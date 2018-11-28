@@ -252,7 +252,6 @@ if (promoMode === 'true') {
   app.use(function (req, res, next) {
     // Setting headers stops pages being indexed even if indexed pages link to them.
     res.setHeader('X-Robots-Tag', 'noindex')
-    res.setHeader('Cache-Control', 'public, max-age=3600')
     next()
   })
 

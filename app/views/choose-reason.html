@@ -72,27 +72,33 @@
                 items: [
                   {
                     value: "illness",
-                    text: "Illness"
+                    text: "Illness",
+                    checked: checkedIllness
                   },
                   {
                     value: "damage",
-                    text: "Theft or criminal damage"
+                    text: "Theft or criminal damage",
+                    checked: checkedDamage
                   },
                   {
                     value: "computerProblem",
-                    text: "Problems filing online"
+                    text: "Problems filing online",
+                    checked: checkedComputer
                   },
                   {
                     value: "accounts",
-                    text: "Accounting issues"
+                    text: "Accounting issues",
+                    checked: checkedAccounts
                   },
                   {
                     value: "companyChanges",
-                    text: "Changes to the company"
+                    text: "Changes to the company",
+                    checked: checkedCompany
                   },
                   {
                     value: "disaster",
-                    text: "Natural disaster"
+                    text: "Natural disaster",
+                    checked: checkedDisaster
                   },
                   {
                     value: "other",
@@ -104,6 +110,13 @@
                   }
                 ]
               }) }}
+
+        {{ govukInput({
+          id: "editId",
+          name: "editId",
+          type: "hidden",
+          value: id
+        }) }}
 
         {{ govukButton({
             text: "Continue"

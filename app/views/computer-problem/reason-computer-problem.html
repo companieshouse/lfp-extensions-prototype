@@ -35,6 +35,7 @@
         {{ govukTextarea({
           name: "computerProblem",
           id: "computer-problem",
+          value: info,
           errorMessage: Err.text,
           rows: '8',
           label: {
@@ -42,6 +43,13 @@
             isPageHeading: true,
             classes: 'govuk-heading-large'
           }
+        }) }}
+
+        {{ govukInput({
+          id: "editId",
+          name: "editId",
+          type: "hidden",
+          value: id
         }) }}
 
         {{ govukButton({
