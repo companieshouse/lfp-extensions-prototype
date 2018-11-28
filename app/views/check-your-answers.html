@@ -12,7 +12,7 @@
 }) }}
   {{ govukBackLink({
   text: "Back",
-  href: backLinkHref
+  href: "add-extension-reason"
 }) }}
 {% endblock %}
 {% block content %}
@@ -180,7 +180,7 @@
                 Further information
               </dt>
               <dd class="app-check-your-answers__answer">
-                {{ reason.damage}}
+                {{ reason.damage }}
               </dd>
               <dd class="app-check-your-answers__change"></dd>
             </div>
