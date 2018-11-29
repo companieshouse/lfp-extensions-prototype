@@ -836,7 +836,18 @@ router.post('/accounts/reason-accounts', function (req, res) {
   // company changes
 })
 router.get('/company-changes/reason-company-changes', function (req, res) {
-  res.render('company-changes/reason-company-changes')
+  var id = 0
+  var info = ''
+  if (req.query.id) {
+    id = req.query.id
+    info = req.session.extensionReasons[id].companyChanges
+    res.render('company-changes/reason-company-changes', {
+      id: id,
+      info: info
+    })
+  } else {
+    res.render('company-changes/reason-company-changes')
+  }
 })
 router.post('/company-changes/reason-company-changes', function (req, res) {
   var companyChanges = req.body.companyChanges
