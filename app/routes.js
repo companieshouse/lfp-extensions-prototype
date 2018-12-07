@@ -300,7 +300,7 @@ router.post('/choose-reason', function (req, res) {
         } else {
           req.session.extensionReasons.push(reasonObject)
         }
-        res.redirect('/company-changes/reason-company-changes')
+        res.redirect('/company-changes/aware-change-date')
         break
       case 'computerProblem':
         reasonObject.reason = req.body.extensionReason
@@ -495,7 +495,7 @@ router.post('/illness/continued-illness', function (req, res) {
   } else {
     switch (req.body.continuedIllness) {
       case 'yes':
-        res.redirect('/illness/illness-pre-information')
+        res.redirect('/illness/illness-information')
         break
       case 'no':
         res.redirect('/illness/illness-end-date')
@@ -586,7 +586,7 @@ router.post('/illness/illness-end-date', function (req, res) {
     illnessEndDate.year = req.body['illnessEndDate-year']
     reasonObject.illnessEndDate = illnessEndDate
     req.session.extensionReasons.push(reasonObject)
-    res.redirect('/illness/illness-pre-information')
+    res.redirect('/illness/illness-information')
   }
 })
 router.get('/illness-pre-information', function (req, res) {
@@ -740,10 +740,22 @@ router.post('/evidence-upload', function (req, res) {
 })
 // Natural disaster
 router.get('/natural-disaster/reason-natural-disaster', function (req, res) {
-  res.render('natural-disaster/reason-natural-disaster')
+  var id = 0
+  var info = ''
+  if (req.query.id) {
+    id = req.query.id
+    info = req.session.extensionReasons[id].naturalDisaster
+    res.render('natural-disaster/reason-natural-disaster', {
+      id: id,
+      info: info
+    })
+  } else {
+    res.render('natural-disaster/reason-natural-disaster')
+  }
 })
 router.post('/natural-disaster/reason-natural-disaster', function (req, res) {
   var naturalDisaster = req.body.naturalDisaster
+  var editId = req.body.editId
   var errorFlag = false
   var Err = {}
   var errorList = []
@@ -764,18 +776,35 @@ router.post('/natural-disaster/reason-natural-disaster', function (req, res) {
       Err: Err
     })
   } else {
-    var reasonObject = req.session.extensionReasons.pop()
-    reasonObject.naturalDisaster = req.body.naturalDisaster
-    req.session.extensionReasons.push(reasonObject)
-    res.redirect('/evidence')
+    if (req.body.editId !== '') {
+      req.session.extensionReasons[editId].naturalDistaster = naturalDisaster
+      res.redirect('/check-your-answers')
+    } else {
+      var reasonObject = req.session.extensionReasons.pop()
+      reasonObject.naturalDisaster = req.body.naturalDisaster
+      req.session.extensionReasons.push(reasonObject)
+      res.redirect('/evidence')
+    }
   }
   // theft or criminal damage
 })
 router.get('/theft-criminal-damage/reason-damage', function (req, res) {
-  res.render('theft-criminal-damage/reason-damage')
+  var id = 0
+  var info = ''
+  if (req.query.id) {
+    id = req.query.id
+    info = req.session.extensionReasons[id].damage
+    res.render('theft-criminal-damage/reason-damage', {
+      id: id,
+      info: info
+    })
+  } else {
+    res.render('theft-criminal-damage/reason-damage')
+  }
 })
 router.post('/theft-criminal-damage/reason-damage', function (req, res) {
   var damage = req.body.damage
+  var editId = req.body.editId
   var errorFlag = false
   var Err = {}
   var errorList = []
@@ -796,18 +825,35 @@ router.post('/theft-criminal-damage/reason-damage', function (req, res) {
       Err: Err
     })
   } else {
-    var reasonObject = req.session.extensionReasons.pop()
-    reasonObject.damage = req.body.damage
-    req.session.extensionReasons.push(reasonObject)
-    res.redirect('/evidence')
+    if (req.body.editId !== '') {
+      req.session.extensionReasons[editId].damage = damage
+      res.redirect('/check-your-answers')
+    } else {
+      var reasonObject = req.session.extensionReasons.pop()
+      reasonObject.damage = req.body.damage
+      req.session.extensionReasons.push(reasonObject)
+      res.redirect('/evidence')
+    }
   }
   // accounts
 })
 router.get('/accounts/reason-accounts', function (req, res) {
-  res.render('accounts/reason-accounts')
+  var id = 0
+  var info = ''
+  if (req.query.id) {
+    id = req.query.id
+    info = req.session.extensionReasons[id].accounts
+    res.render('accounts/reason-accounts', {
+      id: id,
+      info: info
+    })
+  } else {
+    res.render('accounts/reason-accounts')
+  }
 })
 router.post('/accounts/reason-accounts', function (req, res) {
   var accounts = req.body.accounts
+  var editId = req.body.editId
   var errorFlag = false
   var Err = {}
   var errorList = []
@@ -828,12 +874,194 @@ router.post('/accounts/reason-accounts', function (req, res) {
       Err: Err
     })
   } else {
-    var reasonObject = req.session.extensionReasons.pop()
-    reasonObject.accounts = req.body.accounts
-    req.session.extensionReasons.push(reasonObject)
-    res.redirect('/evidence')
+    if (req.body.editId !== '') {
+      req.session.extensionReasons[editId].accounts = accounts
+      res.redirect('/check-your-answers')
+    } else {
+      var reasonObject = req.session.extensionReasons.pop()
+      reasonObject.accounts = req.body.accounts
+      req.session.extensionReasons.push(reasonObject)
+      res.redirect('/evidence')
+    }
   }
   // company changes
+})
+router.get('/company-changes/aware-change-date', function (req, res) {
+  var inputClasses = {}
+  inputClasses.day = 'govuk-input--width-2'
+  inputClasses.month = 'govuk-input--width-2'
+  inputClasses.year = 'govuk-input--width-4'
+  res.render('company-changes/aware-change-date', {
+    inputClasses: inputClasses
+  })
+})
+router.post('/company-changes/aware-change-date', function (req, res) {
+  var reasonObject = req.session.extensionReasons.pop()
+  var awareChangeDay = req.body['awareChangeDate-day']
+  var awareChangeMonth = req.body['awareChangeDate-month']
+  var awareChangeYear = req.body['awareChangeDate-year']
+  var errorFlag = false
+  var awareChangeDayErr = {}
+  var awareChangeMonthErr = {}
+  var awareChangeYearErr = {}
+  var errorList = []
+  var awareChangeDate = {}
+  var inputClasses = {}
+
+  inputClasses.day = 'govuk-input--width-2'
+  inputClasses.month = 'govuk-input--width-2'
+  inputClasses.year = 'govuk-input--width-4'
+
+  if (awareChangeDay === '') {
+    awareChangeDayErr.type = 'blank'
+    awareChangeDayErr.text = 'You must enter a day'
+    awareChangeDayErr.href = '#awareChangeDay'
+    awareChangeDayErr.flag = true
+  }
+  if (awareChangeDayErr.flag) {
+    inputClasses.day = 'govuk-input--width-2 govuk-input--error'
+    errorList.push(awareChangeDayErr)
+    errorFlag = true
+  }
+  if (awareChangeMonth === '') {
+    awareChangeMonthErr.type = 'blank'
+    awareChangeMonthErr.text = 'You must enter a month'
+    awareChangeMonthErr.href = '#awareChangeMonth'
+    awareChangeMonthErr.flag = true
+  }
+  if (awareChangeMonthErr.flag) {
+    inputClasses.month = 'govuk-input--width-2 govuk-input--error'
+    errorList.push(awareChangeMonthErr)
+    errorFlag = true
+  }
+  if (awareChangeYear === '') {
+    awareChangeYearErr.type = 'blank'
+    awareChangeYearErr.text = 'You must enter a year'
+    awareChangeYearErr.href = '#awareChangeYear'
+    awareChangeYearErr.flag = true
+  }
+  if (awareChangeYearErr.flag) {
+    inputClasses.year = 'govuk-input--width-4 govuk-input--error'
+    errorList.push(awareChangeYearErr)
+    errorFlag = true
+  }
+  if (errorFlag === true) {
+    req.session.extensionReasons.push(reasonObject)
+    res.render('company-changes/aware-change-date', {
+      errorList: errorList,
+      awareChangeDayErr: awareChangeDayErr,
+      awareChangeDay: awareChangeDay,
+      awareChangeMonth: awareChangeMonth,
+      awareChangeYear: awareChangeYear,
+      inputClasses: inputClasses
+    })
+  } else {
+    awareChangeDate.day = req.body['awareChangeDate-day']
+    awareChangeDate.month = req.body['awareChangeDate-month']
+    awareChangeDate.year = req.body['awareChangeDate-year']
+    reasonObject.awareChangeDate = awareChangeDate
+    req.session.extensionReasons.push(reasonObject)
+    res.redirect('/company-changes/date-changed')
+  }
+})
+router.get('/company-changes/date-changed', function (req, res) {
+  var currentReason = {}
+  var inputClasses = {}
+  var id = 0
+  var info = ''
+  currentReason = req.session.extensionReasons.pop()
+  req.session.extensionReasons.push(currentReason)
+  inputClasses.day = 'govuk-input--width-2'
+  inputClasses.month = 'govuk-input--width-2'
+  inputClasses.year = 'govuk-input--width-4'
+  if (req.query.id) {
+    id = req.query.id
+    info = req.session.extensionReasons[id].changeDate
+    res.render('company-changes/date-changed', {
+      inputClasses: inputClasses,
+      reason: currentReason,
+      id: id,
+      info: info
+    })
+  } else {
+    res.render('company-changes/date-changed')
+  }
+})
+router.post('/company-changes/date-changed', function (req, res) {
+  var editId = req.body.editId
+  var reasonObject = req.session.extensionReasons.pop()
+  var changeDay = req.body['changeDate-day']
+  var changeMonth = req.body['changeDate-month']
+  var changeYear = req.body['changeDate-year']
+  var errorFlag = false
+  var changeDayErr = {}
+  var changeMonthErr = {}
+  var changeYearErr = {}
+  var errorList = []
+  var changeDate = {}
+  var inputClasses = {}
+
+  inputClasses.day = 'govuk-input--width-2'
+  inputClasses.month = 'govuk-input--width-2'
+  inputClasses.year = 'govuk-input--width-4'
+
+  if (changeDay === '') {
+    changeDayErr.type = 'blank'
+    changeDayErr.text = 'You must enter a day'
+    changeDayErr.href = '#ChangeDay'
+    changeDayErr.flag = true
+  }
+  if (changeDayErr.flag) {
+    inputClasses.day = 'govuk-input--width-2 govuk-input--error'
+    errorList.push(changeDayErr)
+    errorFlag = true
+  }
+  if (changeMonth === '') {
+    changeMonthErr.type = 'blank'
+    changeMonthErr.text = 'You must enter a month'
+    changeMonthErr.href = '#changeMonth'
+    changeMonthErr.flag = true
+  }
+  if (changeMonthErr.flag) {
+    inputClasses.month = 'govuk-input--width-2 govuk-input--error'
+    errorList.push(changeMonthErr)
+    errorFlag = true
+  }
+  if (changeYear === '') {
+    changeYearErr.type = 'blank'
+    changeYearErr.text = 'You must enter a year'
+    changeYearErr.href = '#changeYear'
+    changeYearErr.flag = true
+  }
+  if (changeYearErr.flag) {
+    inputClasses.year = 'govuk-input--width-4 govuk-input--error'
+    errorList.push(changeYearErr)
+    errorFlag = true
+  }
+  if (errorFlag === true) {
+    req.session.extensionReasons.push(reasonObject)
+    res.render('company-changes/date-changed', {
+      errorList: errorList,
+      changeDayErr: changeDayErr,
+      changeDay: changeDay,
+      changeMonth: changeMonth,
+      changeYear: changeYear,
+      inputClasses: inputClasses
+    })
+  } else {
+    if (req.body.editId !== '') {
+      req.session.extensionReasons[editId].changeDate = changeDate
+      res.redirect('/check-your-answers')
+    } else {
+      changeDate.day = req.body['changeDate-day']
+      changeDate.month = req.body['changeDate-month']
+      changeDate.year = req.body['changeDate-year']
+      reasonObject.changeDate = changeDate
+      req.session.extensionReasons.push(reasonObject)
+      console.log(req.session.extensionReasons)
+      res.redirect('/company-changes/reason-company-changes')
+    }
+  }
 })
 router.get('/company-changes/reason-company-changes', function (req, res) {
   var id = 0
@@ -851,6 +1079,7 @@ router.get('/company-changes/reason-company-changes', function (req, res) {
 })
 router.post('/company-changes/reason-company-changes', function (req, res) {
   var companyChanges = req.body.companyChanges
+  var editId = req.body.editId
   var errorFlag = false
   var Err = {}
   var errorList = []
@@ -871,10 +1100,15 @@ router.post('/company-changes/reason-company-changes', function (req, res) {
       Err: Err
     })
   } else {
-    var reasonObject = req.session.extensionReasons.pop()
-    reasonObject.companyChanges = req.body.companyChanges
-    req.session.extensionReasons.push(reasonObject)
-    res.redirect('/evidence')
+    if (req.body.editId !== '') {
+      req.session.extensionReasons[editId].companyChanges = companyChanges
+      res.redirect('/check-your-answers')
+    } else {
+      var reasonObject = req.session.extensionReasons.pop()
+      reasonObject.companyChanges = req.body.companyChanges
+      req.session.extensionReasons.push(reasonObject)
+      res.redirect('/evidence')
+    }
   }
   // computer problems
 })

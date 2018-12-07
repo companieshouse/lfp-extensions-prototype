@@ -11,46 +11,44 @@
 
   {% set shortdeadlineHTML %}
   {% if scenario.company.deadlineStatus === 'Near' %}
-    <br/>
-    <span class="govuk-!-font-weight-bold">You may not hear from us before your accounts are due to be filed. If you are given an extension, it will start from your accounts due date.</span>
-  {% endif %}
-  {% endset %}
+  </br>
+  <span class="govuk-!-font-weight-bold">You may not hear from us before your accounts are due to be filed. If you are given an extension, it will start from your accounts due date.</span>
+{% endif %}
+{% endset %}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
 
-      <div class="govuk-panel govuk-panel--confirmation">
-        <h1 class="govuk-panel__title">Application submitted</h1>
-        <div class="govuk-panel__body">
-          Your reference number is the company number<br>
-          <strong>{{ scenario.company.number }}</strong>
-        </div>
+    <div class="govuk-panel govuk-panel--confirmation">
+      <h1 class="govuk-panel__title">Application submitted</h1>
+      <div class="govuk-panel__body">
+        Your reference number is the company number<br>
+        <strong>{{ scenario.company.number }}</strong>
       </div>
+    </div>
 
-      <p class="govuk-body-l">
-        We've sent a confirmation email to
-        <span class="govuk-body-l govuk-!-font-weight-bold">{{ userEmail }}</span>
-        which contains your reference number and application information.
-      </p>
+    <p class="govuk-body-l">
+      We've sent a confirmation email to
+      <span class="govuk-body-l govuk-!-font-weight-bold">{{ userEmail }}</span>
+      which contains your reference number and application information.
+    </p>
 
-      <p class="govuk-body">
-        You can also
-        <a href="print-application" class="govuk-link">print or save a copy of this application</a>
-      </p>
-
-      {{ govukInsetText({
+    <p class="govuk-body">
+      You can also
+      <a href="print-application" class="govuk-link">print or save a copy of this application</a>
+    </p>
+    {{ govukInsetText({
   html: shortdeadlineHTML
 }) }}
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <p>We'll review the application and make a decision about your extension request. Successful applicants normally receive an extension of one month.</p>
+    <p>It's important that you file your accounts by the due date if possible. You should not wait for a decision about your extension request.</p>
+    <p>We'll contact you by email within 5 working days to confirm the outcome of your extension request. We may also contact you if we need more information.</p>
 
-      <h2 class="govuk-heading-m">What happens next</h2>
-      <p>We'll review the application and make a decision about your extension request. Successful applicants normally receive an extension of one month.</p>
-      <p>It's important that you file your accounts by the due date if possible. You should not wait for a decision about your extension request.</p>
-      <p>We'll contact you by email within 5 working days to confirm the outcome of your extension request. We may also contact you if we need more information.</p>
-
-      <a href="https://www.gov.uk/service-manual/user-centred-design/resources/patterns/feedback-pages.html">What did you think of this service?</a>
-      (takes 30 seconds)
-    </p>
-  </div>
+    <a href="https://www.gov.uk/service-manual/user-centred-design/resources/patterns/feedback-pages.html">What did you think of this service?</a>
+    (takes 30 seconds)
+  </p>
+</div>
 </div>
 
 {% endblock %}
