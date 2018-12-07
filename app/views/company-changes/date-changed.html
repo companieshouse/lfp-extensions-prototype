@@ -25,9 +25,9 @@
       <form action="" method="post">
         {% if errorList.length > 0 %}
           {{ govukErrorSummary({
-                titleText: "There was a problem with the date you gave us",
-                errorList: errorList
-              }) }}
+            titleText: "There was a problem with the date you gave us",
+            errorList: errorList
+          }) }}
         {% endif %}
 
         {% if errorList.length > 0 %}
@@ -46,50 +46,50 @@
         {% endset -%}
 
         {{ govukDateInput({
-            id: "change-date",
-            namePrefix: "changeDate",
-            value: info,
-            errorMessage: changeDateError,
-            fieldset: {
-              legend: {
-                text: "When did the changes to the company happen?",
-                isPageHeading: true,
-                classes: "govuk-fieldset__legend--xl"
-              }
+          id: "change-date",
+          namePrefix: "changeDate",
+          value: info,
+          errorMessage: changeDateError,
+          fieldset: {
+            legend: {
+              text: "When did the changes to the company happen?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            }
+          },
+          hint: {
+            html: hintHTML
+          },
+          items: [
+            {
+              classes: inputClasses.day,
+              name: 'day',
+              value: changeDay
             },
-            hint: {
-                    html: hintHTML
-                    },
-                    items: [
-                      {
-                        classes: inputClasses.day,
-                        name: 'day',
-                        value: endDay
-                      },
-                      {
-                        classes: inputClasses.month,
-                        name: 'month',
-                        value: endMonth
-                      },
-                      {
-                        classes: inputClasses.year,
-                        name: 'year',
-                        value: endYear
-                      }
-                      ]
-                    })
-                  }}
+            {
+              classes: inputClasses.month,
+              name: 'month',
+              value: changeMonth
+            },
+            {
+              classes: inputClasses.year,
+              name: 'year',
+              value: changeYear
+            }
+            ]
+          })
+        }}
 
         {{ govukInput({
-                    id: "editId",
-                    name: "editId",
-                    type: "hidden",
-                    value: id
-                  }) }}
+          id: "editId",
+          name: "editId",
+          type: "hidden",
+          value: id
+        }) }}
 
         {{ govukButton({
-             text: "Continue"
-            }) }}
+         text: "Continue"
+        }) }}
       </form>
     </div>
   </div>
