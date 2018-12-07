@@ -37,3 +37,11 @@ $govuk-global-styles: true;
   @include govuk-link-style-default;
   @include govuk-link-print-friendly;
 }
+
+.app-check-your-answers {
+  margin-bottom: 15px;
+}
+
+.reason-container {
+  margin-bottom: 50px;
+}
