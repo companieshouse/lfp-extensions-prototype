@@ -31,10 +31,11 @@
             errorList: errorList
           }) }}
         {% endif %}
-        <h1 class="govuk-heading-xl">Provide more information to support your extension</h1>
+        <h1 class="govuk-heading-xl">How does this affect your ability to file on time?</h1>
         {{ govukTextarea({
           name: "computerProblem",
           id: "computer-problem",
+          value: info,
           errorMessage: Err.text,
           rows: '8',
           label: {
@@ -42,6 +43,13 @@
             isPageHeading: true,
             classes: 'govuk-heading-large'
           }
+        }) }}
+
+        {{ govukInput({
+          id: "editId",
+          name: "editId",
+          type: "hidden",
+          value: id
         }) }}
 
         {{ govukButton({

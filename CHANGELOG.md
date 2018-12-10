@@ -1,3 +1,57 @@
+# Unreleased
+
+Fixes:
+
+- [#647 Fix link context in step-by-step templates](https://github.com/alphagov/govuk-prototype-kit/pull/647)
+
+Internal:
+
+- [#640 Replace Mocha with Jest](https://github.com/alphagov/govuk-prototype-kit/pull/640)
+
+# 8.4.0
+
+New features:
+
+- [#642 Update GOV.UK Frontend to v2.4.0](https://github.com/alphagov/govuk-prototype-kit/pull/642)
+
+Bug fixes:
+
+- [#634 Avoid double-nested buttons in step-by-step navigation](https://github.com/alphagov/govuk-prototype-kit/pull/634)
+
+- [#638 Make unbranded template available for use in app/views](https://github.com/alphagov/govuk-prototype-kit/pull/638)
+
+# 8.3.0
+
+New features:
+
+- [#628 Update GOV.UK Frontend to v2.3.0](https://github.com/alphagov/govuk-prototype-kit/pull/628)
+
+- [#574 Add Notify integration guidance](https://github.com/alphagov/govuk-prototype-kit/pull/574)
+
+- [Add npm install reminder when prototype crashes](https://github.com/alphagov/govuk-prototype-kit/pull/598)
+
+- [#539 Add step by step navigation](https://github.com/alphagov/govuk-prototype-kit/pull/539)
+
+# 8.2.0
+
+New Features:
+
+- [#609 Update GOV.UK Frontend to v2.2.0](https://github.com/alphagov/govuk-prototype-kit/pull/609)
+
+Also includes a new character-count component
+
+Bug fixes:
+
+- [#605 Set stylesheet media to "all" to allow print styles](https://github.com/alphagov/govuk-prototype-kit/pull/605)
+
+- [#608 Clearing session data now uses a POST request rather than a destructive GET request](https://github.com/alphagov/govuk-prototype-kit/pull/608)
+
+# 8.1.0
+
+New features:
+
+- [#600 Update GOV.UK Frontend to v2.1.0](https://github.com/alphagov/govuk-prototype-kit/pull/600)
+
 # 8.0.0
 
 Breaking changes:
