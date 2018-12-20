@@ -143,7 +143,7 @@ module.exports = function (router) {
           } else {
             req.session.extensionReasons.push(reasonObject)
           }
-          res.redirect('/company-changes/aware-change-date')
+          res.redirect('/company-changes/change-happened')
           break
         case 'computerProblem':
           reasonObject.reason = req.body.extensionReason
@@ -152,7 +152,7 @@ module.exports = function (router) {
           } else {
             req.session.extensionReasons.push(reasonObject)
           }
-          res.redirect('/computer-problem/reason-computer-problem')
+          res.redirect('/computer-problem/choose-computer-problem')
           break
         case 'death':
           reasonObject.reason = req.body.extensionReason

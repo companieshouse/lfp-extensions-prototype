@@ -76,7 +76,7 @@
       {% for reason in extensionReasons %}
         <div class="reason-container">
           {% if reason.reason === 'illness' %}
-            <h3 class="govuk-heading-m">Illness</h3>
+            <h3 class="govuk-heading-m">{{loop.index}}: Illness</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
@@ -89,6 +89,9 @@
                   {% else %}
                     {{ reason.illPerson | capitalize }}
                   {% endif %}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="/?id={{loop.index0}}">Change</a>
                 </dd>
                 <dd class="app-check-your-answers__change"></dd>
               </div>
@@ -160,7 +163,7 @@
               {% endif %}
             </dl>
           {% elif reason.reason === 'damage' %}
-            <h3 class="govuk-heading-m">Theft or criminal damage</h3>
+            <h3 class="govuk-heading-m">{{loop.index}}: Theft or criminal damage</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
@@ -188,7 +191,7 @@
               {% endif %}
             </dl>
           {% elif reason.reason === 'disaster' %}
-            <h3 class="govuk-heading-m">Natural disaster</h3>
+            <h3 class="govuk-heading-m">{{loop.index}}: Natural disaster</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
@@ -216,7 +219,7 @@
               {% endif %}
             </dl>
           {% elif reason.reason === 'accounts' %}
-            <h3 class="govuk-heading-m">Accounting issues</h3>
+            <h3 class="govuk-heading-m">{{loop.index}}: Accounting issues</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
@@ -244,34 +247,54 @@
               {% endif %}
             </dl>
           {% elif reason.reason === 'companyChanges' %}
-            <h3 class="govuk-heading-m">Changes to the company</h3>
+            <h3 class="govuk-heading-m">{{loop.index}}: Changes to the company</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Date you knew about the changes
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.awareChangeDate.day }}
-                  {{ reason.awareChangeDate.month | displayMonth }}
-                  {{ reason.awareChangeDate.year }}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="/company-changes/aware-change-date?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Date changes happened
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.changeDate.day }}
-                  {{ reason.changeDate.month | displayMonth }}
-                  {{ reason.changeDate.year }}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="/company-changes/date-changed?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
+              {% if reason.dateWasChanged != null %}
+                <div class="app-check-your-answers__contents">
+                  <dt class="app-check-your-answers__question">
+                    Date the changes happened
+                  </dt>
+                  <dd class="app-check-your-answers__answer">
+                    {{ reason.dateWasChanged.day }}
+                    {{ reason.dateWasChanged.month | displayMonth }}
+                    {{ reason.dateWasChanged.year }}
+                  </dd>
+                  <dd class="app-check-your-answers__change">
+                    <a href="/company-changes/aware-change-date?id={{loop.index0}}">Change</a>
+                  </dd>
+                </div>
+              {% elseif reason.dateWillChange != null %}
+                <div class="app-check-your-answers__contents">
+                  <dt class="app-check-your-answers__question">
+                    Date the changes will happen
+                  </dt>
+                  <dd class="app-check-your-answers__answer">
+                    {{ reason.dateWillChange.day }}
+                    {{ reason.dateWillChange.month | displayMonth }}
+                    {{ reason.dateWillChange.year }}
+                  </dd>
+                  <dd class="app-check-your-answers__change">
+                    <a href="/company-changes/date-will-change?id={{loop.index0}}">Change</a>
+                  </dd>
+                </div>
+              {% else %}
+              {% endif %}
+              {% if reason.awareChangeDate != null %}
+                <div class="app-check-your-answers__contents">
+                  <dt class="app-check-your-answers__question">
+                    Date aware of change
+                  </dt>
+                  <dd class="app-check-your-answers__answer">
+                    {{ reason.awareChangeDate.day }}
+                    {{ reason.awareChangeDate.month | displayMonth }}
+                    {{ reason.awareChangeDate.year }}
+                  </dd>
+                  <dd class="app-check-your-answers__change">
+                    <a href="/company-changes/aware-change-date?id={{loop.index0}}">Change</a>
+                  </dd>
+                </div>
+              {% else %}
+              {% endif %}
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
                   Further information
@@ -298,8 +321,30 @@
               {% endif %}
             </dl>
           {% elif reason.reason === 'computerProblem' %}
-            <h3 class="govuk-heading-m">Problems filing online</h3>
+            <h3 class="govuk-heading-m">{{loop.index}}: Problems filing online</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Reason
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {{ reason.problemReason | safe | nl2br }}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="/computer-problem/reason-computer-problem?id={{loop.index0}}">Change</a>
+                </dd>
+              </div>
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  You tried to file
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {{ reason.problemDate }}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="/computer-problem/reason-computer-problem?id={{loop.index0}}">Change</a>
+                </dd>
+              </div>
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
                   Further information
@@ -326,7 +371,8 @@
               {% endif %}
             </dl>
           {% else %}
-            <h3 class="govuk-heading-m">{{ reason.otherReason }}</h3>
+            <h3 class="govuk-heading-m">{{loop.index}}:
+              {{ reason.otherReason }}</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
               {% if reason.otherInformation != null %}
                 <div class="app-check-your-answers__contents">
