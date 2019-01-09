@@ -172,7 +172,6 @@ module.exports = function (router) {
         req.session.extensionReasons[editId].awareChangeDate = awareChangeDate
         res.redirect('/check-your-answers')
       } else {
-        req.session.extensionReasons.pop()
         awareChangeDate.day = req.body['awareChangeDate-day']
         awareChangeDate.month = req.body['awareChangeDate-month']
         awareChangeDate.year = req.body['awareChangeDate-year']
@@ -285,7 +284,6 @@ module.exports = function (router) {
         req.session.extensionReasons[editId].dateWasChanged = dateWasChanged
         res.redirect('/check-your-answers')
       } else {
-        req.session.extensionReasons.pop()
         dateWasChanged.day = req.body['dateWasChanged-day']
         dateWasChanged.month = req.body['dateWasChanged-month']
         dateWasChanged.year = req.body['dateWasChanged-year']
@@ -399,7 +397,6 @@ module.exports = function (router) {
         req.session.extensionReasons[editId].dateWillChange = dateWillChange
         res.redirect('/check-your-answers')
       } else {
-        req.session.extensionReasons.pop()
         dateWillChange.day = req.body['dateWillChange-day']
         dateWillChange.month = req.body['dateWillChange-month']
         dateWillChange.year = req.body['dateWillChange-year']
@@ -425,11 +422,18 @@ module.exports = function (router) {
     }
   })
   router.post('/company-changes/reason-company-changes', function (req, res) {
+    var reasonObject = {}
     var companyChanges = req.body.companyChanges
     var editId = req.body.editId
     var errorFlag = false
     var Err = {}
     var errorList = []
+
+    if (req.body.editId !== '') {
+      reasonObject = req.session.extensionReasons[editId]
+    } else {
+      reasonObject = req.session.extensionReasons.pop()
+    }
 
     if (companyChanges === '') {
       Err.type = 'blank'
@@ -451,7 +455,6 @@ module.exports = function (router) {
         req.session.extensionReasons[editId].companyChanges = companyChanges
         res.redirect('/check-your-answers')
       } else {
-        var reasonObject = req.session.extensionReasons.pop()
         reasonObject.companyChanges = req.body.companyChanges
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/evidence')

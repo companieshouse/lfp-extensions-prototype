@@ -15,7 +15,7 @@
 }) }}
   {{ govukBackLink({
   text: "Back",
-  href: "/company-change/reason-computer-problem"
+  href: "/computer-problem/choose-computer-problem"
 }) }}
 {% endblock %}
 {% block content %}
@@ -42,11 +42,44 @@
         For example, 31 8 2018
         {% endset -%}
 
-        {% set chWebsite %}
-        {% if reason.chooseComputerProblem === "chWebsite" %}
-          {{ govukDateInput({
+        {{ govukDateInput({
           id: "problem-date",
           namePrefix: "problemDate",
+          value: info,
+          errorMessage: problemDateError,
+          fieldset: {
+            legend: {
+              text: "When did you try to file online?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            }
+          },
+          hint: {
+                html: hintHTML
+              },
+                items: [
+                    {
+                      classes: "govuk-input--width-2",
+                      name: "day",
+                      value: problemDate.day
+                    },
+                    {
+                      classes: "govuk-input--width-2",
+                      name: "month",
+                      value: problemDate.month
+                    },
+                    {
+                      classes: "govuk-input--width-4",
+                      name: "year",
+                      value: problemDate.year
+                    }
+            ]
+          })
+        }}
+        {% if reason.problemReason === "chWebsite" %}
+          {{ govukDateInput({
+          id: "problem-time",
+          namePrefix: "problemTime",
         items: [
             {
               classes: "govuk-input--width-2",
@@ -63,39 +96,6 @@
         }}
         {% else %}
         {% endif %}
-        {% endset -%}
-
-        {{ govukDateInput({
-          id: "problem-date",
-          namePrefix: "problemDate",
-          value: info,
-          errorMessage: problemDateError,
-          fieldset: {
-            legend: {
-              text: "When did you try to file online?",
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--xl"
-            }
-          },
-          items: [
-              {
-                classes: "govuk-input--width-2",
-                name: "day",
-                value: problemDate.day
-              },
-              {
-                classes: "govuk-input--width-2",
-                name: "month",
-                value: problemDate.month
-              },
-              {
-                classes: "govuk-input--width-4",
-                name: "year",
-                value: problemDate.year
-              }
-            ]
-          })
-        }}
 
         {{ govukInput({
           id: "editId",

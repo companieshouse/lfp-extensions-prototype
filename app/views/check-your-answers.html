@@ -74,9 +74,16 @@
         <h2 class="govuk-heading-l">Extension reason</h2>
       {% endif %}
       {% for reason in extensionReasons %}
+        {% if extensionReasons.length > 1 %}
+          {% set extensionListIndex %}
+          {{loop.index}}:
+          {% endset %}
+        {% else %}
+          {% set extensionListIndex = '' %}
+        {% endif %}
         <div class="reason-container">
           {% if reason.reason === 'illness' %}
-            <h3 class="govuk-heading-m">{{loop.index}}: Illness</h3>
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Illness</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
@@ -85,13 +92,13 @@
                 <dd class="app-check-your-answers__answer">
                   {% if reason.illPerson === 'Someone else' %}
                     Someone else -
-                    {{ reason.otherIllPerson }}
+                    {{ reason.otherPerson }}
                   {% else %}
                     {{ reason.illPerson | capitalize }}
                   {% endif %}
                 </dd>
                 <dd class="app-check-your-answers__change">
-                  <a href="/?id={{loop.index0}}">Change</a>
+                  <a href="illness/who-was-ill/?id={{loop.index0}}">Change</a>
                 </dd>
                 <dd class="app-check-your-answers__change"></dd>
               </div>
@@ -105,7 +112,7 @@
                   {{ reason.illnessStartDate.year }}
                 </dd>
                 <dd class="app-check-your-answers__change">
-                  <a href="/?id={{loop.index0}}">Change</a>
+                  <a href="illness/illness-start-date/?id={{loop.index0}}">Change</a>
                 </dd>
               </div>
               {% if reason.continuedIllness === 'yes' %}
@@ -117,7 +124,7 @@
                     {{ reason.continuedIllness | capitalize }}
                   </dd>
                   <dd class="app-check-your-answers__change">
-                    <a href="/?id={{loop.index0}}">Change</a>
+                    <a href="illness/continued-illness/?id={{loop.index0}}">Change</a>
                   </dd>
                 </div>
               {% else %}
@@ -131,7 +138,7 @@
                     {{ reason.illnessEndDate.year }}
                   </dd>
                   <dd class="app-check-your-answers__change">
-                    <a href="/?id={{loop.index0}}">Change</a>
+                    <a href="illness/illness-end-date/?id={{loop.index0}}">Change</a>
                   </dd>
                 </div>
               {% endif %}
@@ -144,7 +151,7 @@
                     {{ reason.illnessInformation | safe | nl2br }}
                   </dd>
                   <dd class="app-check-your-answers__change">
-                    <a href="/?id={{loop.index0}}">Change</a>
+                    <a href="illness/illness-information/?id={{loop.index0}}">Change</a>
                   </dd>
                 </div>
               {% endif %}
@@ -163,8 +170,21 @@
               {% endif %}
             </dl>
           {% elif reason.reason === 'damage' %}
-            <h3 class="govuk-heading-m">{{loop.index}}: Theft or criminal damage</h3>
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Theft or criminal damage</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Date theft or criminal damage happened
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {{ reason.damageDate.day }}
+                  {{ reason.damageDate.month | displayMonth }}
+                  {{ reason.damageDate.year }}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="theft-criminal-damage/damage-date/?id={{loop.index0}}">Change</a>
+                </dd>
+              </div>
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
                   Further information
@@ -191,8 +211,21 @@
               {% endif %}
             </dl>
           {% elif reason.reason === 'disaster' %}
-            <h3 class="govuk-heading-m">{{loop.index}}: Natural disaster</h3>
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Natural disaster</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Date natural disaster happened
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {{ reason.disasterDate.day }}
+                  {{ reason.disasterDate.month | displayMonth }}
+                  {{ reason.disasterDate.year }}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="natural-disaster/disaster-date/?id={{loop.index0}}">Change</a>
+                </dd>
+              </div>
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
                   Further information
@@ -213,14 +246,27 @@
                     <a href='' class='govuk-link'>evidence-letter.jpg</a>
                   </dd>
                   <dd class="app-check-your-answers__change">
-                    <a href="/?id={{loop.index0}}">Change</a>
+                    <a href="illness/illness-information/?id={{loop.index0}}">Change</a>
                   </dd>
                 </div>
               {% endif %}
             </dl>
           {% elif reason.reason === 'accounts' %}
-            <h3 class="govuk-heading-m">{{loop.index}}: Accounting issues</h3>
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Accounting issues</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Date issue happened
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {{ reason.accountsDate.day }}
+                  {{ reason.accountsDate.month | displayMonth }}
+                  {{ reason.accountsDate.year }}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="accounts/accounts-date/?id={{loop.index0}}">Change</a>
+                </dd>
+              </div>
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
                   Further information
@@ -247,7 +293,7 @@
               {% endif %}
             </dl>
           {% elif reason.reason === 'companyChanges' %}
-            <h3 class="govuk-heading-m">{{loop.index}}: Changes to the company</h3>
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Changes to the company</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
               {% if reason.dateWasChanged != null %}
                 <div class="app-check-your-answers__contents">
@@ -321,17 +367,22 @@
               {% endif %}
             </dl>
           {% elif reason.reason === 'computerProblem' %}
-            <h3 class="govuk-heading-m">{{loop.index}}: Problems filing online</h3>
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Problems filing online</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
                   Reason
                 </dt>
                 <dd class="app-check-your-answers__answer">
-                  {{ reason.problemReason | safe | nl2br }}
+                  {% if reason.problemReason === 'Other reason' %}
+                    Other reason -
+                    {{ reason.otherReason }}
+                  {% else %}
+                    {{ reason.problemReason | safe | nl2br }}
+                  {% endif %}
                 </dd>
                 <dd class="app-check-your-answers__change">
-                  <a href="/computer-problem/reason-computer-problem?id={{loop.index0}}">Change</a>
+                  <a href="/computer-problem/choose-computer-problem?id={{loop.index0}}">Change</a>
                 </dd>
               </div>
               <div class="app-check-your-answers__contents">
@@ -339,10 +390,14 @@
                   You tried to file
                 </dt>
                 <dd class="app-check-your-answers__answer">
-                  {{ reason.problemDate }}
+                  {{ reason.problemDate.day }}
+                  {{ reason.problemDate.month | displayMonth }}
+                  {{ reason.problemDate.year }}
+                  {{ reason.problemTime.hour }}
+                  {{ reason.problemTime.minute }}
                 </dd>
                 <dd class="app-check-your-answers__change">
-                  <a href="/computer-problem/reason-computer-problem?id={{loop.index0}}">Change</a>
+                  <a href="/computer-problem/problem-date?id={{loop.index0}}">Change</a>
                 </dd>
               </div>
               <div class="app-check-your-answers__contents">
@@ -403,7 +458,7 @@
             </dl>
           {% endif %}
           <p class="govuk-body">
-            <a href="/remove-reason" class="govuk-link">Remove this reason</a>
+            <a href="/remove-reason?id={{loop.index0}}" class="govuk-link">Remove this reason</a>
           </p>
         </div>
       {% endfor %}

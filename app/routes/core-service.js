@@ -83,6 +83,7 @@ module.exports = function (router) {
     })
   })
   router.get('/check-your-answers', function (req, res) {
+    console.log(req.session.extensionReasons)
     res.render('check-your-answers', {
       scenario: req.session.scenario,
       extensionReasons: req.session.extensionReasons,
@@ -103,7 +104,8 @@ module.exports = function (router) {
     application.extensionReasons = req.session.extensionReasons
     jsonName = application.scenario.company.number
     json = JSON.stringify(application, null, '\t')
-    fs.writeFile('public/saved-sessions/' + jsonName + '.json', json, 'utf8')
+    fs.writeFile('/public/saved-sessions/' + jsonName + '.json', json, 'utf8')
+    console.log('should have saved my session')
 
     res.render('sign-out', {
       scenario: req.session.scenario,

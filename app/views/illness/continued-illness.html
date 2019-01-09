@@ -39,9 +39,9 @@
 
         {% set hintHTML %}
         You told us the illness started on
-        {{ startDate.day }}
-        {{ startDate.month | displayMonth }}
-        {{ startDate.year }}
+        {{ reason.illnessStartDate.day }}
+        {{ reason.illnessStartDate.month | displayMonth }}
+        {{ reason.illnessStartDate.year }}
         {% endset -%}
 
         {{ govukRadios({
@@ -70,6 +70,13 @@
                 }
               ]
             }) }}
+
+        {{ govukInput({
+                id: "editId",
+                name: "editId",
+                type: "hidden",
+                value: id
+              }) }}
 
         {{ govukButton({
               text: "Continue"

@@ -31,27 +31,27 @@
         {% endif %}
 
         {% if errorList.length > 0 %}
-          {% set extensionReasonError = {
-            text: extensionReasonErr.text
+          {% set problemReasonError = {
+            text: problemReasonErr.text
           } %}
         {% else %}
-          {% set extensionReasonError = false %}
+          {% set problemReasonError = false %}
         {% endif %}
 
         {% if errorList.length > 0 %}
-          {% if extensionReasonErr.type === 'invalid' %}
-            {% set otherReasonError = true %}
+          {% if problemReasonErr.type === 'invalid' %}
+            {% set otherProblemReasonError = true %}
           {% else %}
-            {% set otherReasonError = false %}
+            {% set otherProblemReasonError = false %}
           {% endif %}
         {% endif %}
 
         {% set otherInput %}
         {{ govukInput({
-              id: "other-reason",
-              name: "otherReason",
+              id: "other-problem-reason",
+              name: "otherProblemReason",
               classes: "",
-              errorMessage: otherReasonError,
+              errorMessage: otherProblemReasonError,
               label: {
                 text: "Short description of the reason"
               }

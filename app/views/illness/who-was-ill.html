@@ -40,7 +40,7 @@
         {% endif %}
 
         {% if errorList.length > 0 %}
-          {% if illPersonErr.type === 'invalid' %}
+          {% if otherPersonErr.type === 'invalid' %}
             {% set otherPersonError = true %}
           {% else %}
             {% set otherPersonError = false %}
@@ -51,6 +51,7 @@
         {{ govukInput({
               id: "other-person",
               name: "otherPerson",
+              checked: otherPerson,
               classes: "",
               errorMessage: otherPersonError,
               label: {
@@ -73,19 +74,23 @@
                 items: [
                   {
                     value: "Company director or officer",
-                    text: "A company director or other officer"
+                    text: "A company director or other officer",
+                    checked: checked.officer
                   },
                   {
                     value: "Company accountant or agent",
-                    text: "A company accountant or agent"
+                    text: "A company accountant or agent",
+                    checked: checked.accountant
                   },
                   {
                     value: "Family member",
-                    text: "A family member of a company officer"
+                    text: "A family member of a company officer",
+                    checked: checked.family
                   },
                   {
                     value: "Company employee",
-                    text: "A company employee"
+                    text: "A company employee",
+                    checked: checked.employee
                   },
                   {
                     value: "Someone else",
@@ -96,6 +101,13 @@
                     }
                   }
                 ]
+              }) }}
+
+        {{ govukInput({
+                id: "editId",
+                name: "editId",
+                type: "hidden",
+                value: id
               }) }}
 
         {{ govukButton({

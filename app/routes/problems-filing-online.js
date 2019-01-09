@@ -1,7 +1,10 @@
 module.exports = function (router) {
   router.get('/computer-problem/choose-computer-problem', function (req, res) {
+    var currentReason = {}
     var id = 0
     var info = ''
+    currentReason = req.session.extensionReasons.pop()
+    req.session.extensionReasons.push(currentReason)
     if (req.query.id) {
       id = req.query.id
       info = req.session.extensionReasons[id].problemReason
@@ -16,61 +19,48 @@ module.exports = function (router) {
   router.post('/computer-problem/choose-computer-problem', function (req, res) {
     var reasonObject = {}
     var problemReason = req.body.problemReason
+    var otherProblemReason = req.body.otherProblemReason
     var editId = req.body.editId
     var errorFlag = false
-    var Err = {}
+    var problemReasonErr = {}
     var errorList = []
 
-    if (problemReason === '') {
-      Err.type = 'blank'
-      Err.text = 'You must give us more information'
-      Err.href = '#problemReason'
-      Err.flag = true
+    if (typeof problemReason === 'undefined') {
+      problemReasonErr.type = 'blank'
+      problemReasonErr.text = 'You must choose a reason'
+      problemReasonErr.href = '#problemReason'
+      problemReasonErr.flag = true
     }
-    if (Err.flag) {
-      errorList.push(Err)
+    if (problemReason === 'other' && otherProblemReason === '') {
+      problemReasonErr.type = 'invalid'
+      problemReasonErr.text = 'You must tell us the reason'
+      problemReasonErr.href = '#other-reason'
+      problemReasonErr.flag = true
+    }
+    if (problemReasonErr.flag) {
+      errorList.push(problemReasonErr)
       errorFlag = true
     }
     if (errorFlag === true) {
       res.render('computer-problem/choose-computer-problem', {
         errorList: errorList,
-        Err: Err
+        problemReasonErr: problemReasonErr
       })
     } else {
-      switch (req.body.problemReason) {
-        case 'authCode':
-          reasonObject.problemReason = req.body.problemReason
-          if (editId !== '') {
-            req.session.extensionReasons[editId].problemReason = reasonObject.problemReason
-          } else {
-            req.session.extensionReasons.push(reasonObject)
-          }
-          res.redirect('/computer-problem/problem-date')
-          break
-        case 'chWebsite':
-          reasonObject.problemReason = req.body.problemReason
-          if (editId !== '') {
-            req.session.extensionReasons[editId].problemReason = reasonObject.problemReason
-          } else {
-            req.session.extensionReasons.push(reasonObject)
-          }
-          res.redirect('/computer-problem/problem-date')
-          break
-        case 'computerProblems':
-          reasonObject.problemReason = req.body.problemReason
-          if (editId !== '') {
-            req.session.extensionReasons[editId].problemReason = reasonObject.problemReason
-          } else {
-            req.session.extensionReasons.push(reasonObject)
-          }
-          res.redirect('/computer-problem/problem-date')
-          break
-        case 'other':
-          reasonObject.problemReason = req.body.problemReason
-          reasonObject.otherProblemReason = req.body.otherReason
+      reasonObject = req.session.extensionReasons.pop()
+      if (problemReason === 'authCode' || problemReason === 'chWebsite' || problemReason === 'computerProblem') {
+        reasonObject.problemReason = req.body.problemReason
+        if (editId !== '') {
+          req.session.extensionReasons[editId].problemReason = reasonObject.problemReason
+        } else {
           req.session.extensionReasons.push(reasonObject)
-          res.redirect('/computer-problem/problem-date')
-          break
+        }
+        res.redirect('/computer-problem/problem-date')
+      } else {
+        reasonObject.problemReason = req.body.problemReason
+        reasonObject.otherProblemReason = req.body.otherProblemReason
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/computer-problem/problem-date')
       }
     }
   })
@@ -177,7 +167,6 @@ module.exports = function (router) {
         req.session.extensionReasons[editId].problemDate = problemDate
         res.redirect('/check-your-answers')
       } else {
-        req.session.extensionReasons.pop()
         problemDate.day = req.body['problemDate-day']
         problemDate.month = req.body['problemDate-month']
         problemDate.year = req.body['problemDate-year']
@@ -185,6 +174,7 @@ module.exports = function (router) {
         req.session.extensionReasons.push(reasonObject)
         console.log(req.session.extensionReasons)
         res.redirect('/computer-problem/reason-computer-problem')
+        console.log(reasonObject)
       }
     }
   })
@@ -232,6 +222,7 @@ module.exports = function (router) {
         var reasonObject = req.session.extensionReasons.pop()
         reasonObject.computerProblem = req.body.computerProblem
         req.session.extensionReasons.push(reasonObject)
+        console.log(reasonObject)
         res.redirect('/evidence')
       }
     }

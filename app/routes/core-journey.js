@@ -99,9 +99,9 @@ module.exports = function (router) {
         otherReason: otherReason
       })
     } else {
+      reasonObject.reason = req.body.extensionReason
       switch (req.body.extensionReason) {
         case 'illness':
-          reasonObject.reason = req.body.extensionReason
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
@@ -110,34 +110,30 @@ module.exports = function (router) {
           res.redirect('/illness/who-was-ill')
           break
         case 'damage':
-          reasonObject.reason = req.body.extensionReason
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
             req.session.extensionReasons.push(reasonObject)
           }
-          res.redirect('/theft-criminal-damage/reason-damage')
+          res.redirect('/theft-criminal-damage/damage-date')
           break
         case 'disaster':
-          reasonObject.reason = req.body.extensionReason
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
             req.session.extensionReasons.push(reasonObject)
           }
-          res.redirect('/natural-disaster/reason-natural-disaster')
+          res.redirect('/natural-disaster/disaster-date')
           break
         case 'accounts':
-          reasonObject.reason = req.body.extensionReason
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
             req.session.extensionReasons.push(reasonObject)
           }
-          res.redirect('/accounts/reason-accounts')
+          res.redirect('/accounts/accounts-date')
           break
         case 'companyChanges':
-          reasonObject.reason = req.body.extensionReason
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
@@ -146,16 +142,15 @@ module.exports = function (router) {
           res.redirect('/company-changes/change-happened')
           break
         case 'computerProblem':
-          reasonObject.reason = req.body.extensionReason
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
             req.session.extensionReasons.push(reasonObject)
           }
           res.redirect('/computer-problem/choose-computer-problem')
+          console.log(req.session.extensionReasons)
           break
         case 'death':
-          reasonObject.reason = req.body.extensionReason
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
@@ -164,7 +159,6 @@ module.exports = function (router) {
           res.redirect('/death/reason-death')
           break
         case 'other':
-          reasonObject.reason = req.body.extensionReason
           reasonObject.otherReason = req.body.otherReason
           req.session.extensionReasons.push(reasonObject)
           res.redirect('other/reason-other')
@@ -311,6 +305,59 @@ module.exports = function (router) {
       case 'no':
         res.redirect('start')
         break
+    }
+  })
+  router.get('/remove-reason', function (req, res) {
+    var id = req.query.id
+    var reasonObject = {}
+    reasonObject = req.session.extensionReasons[id]
+    res.render('remove-reason', {
+      scenario: req.session.scenario,
+      extensionReasons: req.session.extensionReasons,
+      reason: reasonObject,
+      id: id
+    })
+  })
+  router.post('/remove-reason', function (req, res) {
+    var id = req.body.id
+    var reasonObject = {}
+    reasonObject = req.session.extensionReasons[id]
+    var removeReason = req.body.removeReason
+    var errorFlag = false
+    var Err = {}
+    var errorList = []
+
+    if (typeof removeReason === 'undefined') {
+      Err.type = 'blank'
+      Err.text = 'You must tell us if you want to remove this reason'
+      Err.href = '#remove-reason-1'
+      Err.flag = true
+    }
+    if (Err.flag) {
+      errorList.push(Err)
+      errorFlag = true
+    }
+    if (errorFlag === true) {
+      res.render('remove-reason', {
+        errorList: errorList,
+        Err: Err,
+        reason: reasonObject,
+        extensionReasons: req.session.extensionReasons
+      })
+    } else {
+      switch (removeReason) {
+        case 'yes':
+          req.session.extensionReasons.splice(id, 1)
+          if (req.session.extensionReasons.length === 0) {
+            res.redirect('/choose-reason')
+          } else {
+            res.redirect('/check-your-answers')
+          }
+          break
+        case 'no':
+          res.redirect('/check-your-answers')
+          break
+      }
     }
   })
 }

@@ -41,6 +41,7 @@
         {{ govukDateInput({
             id: "illness-start",
             namePrefix: "illnessStart",
+            value: info,
             errorMessage: startDateError,
             fieldset: {
               legend: {
@@ -56,21 +57,29 @@
               {
                 classes: inputClasses.day,
                 name: 'day',
-                value: startDay
+                value: illnessStartDay
               },
               {
                 classes: inputClasses.month,
                 name: 'month',
-                value: startMonth
+                value: illnessStartMonth
               },
               {
                 classes: inputClasses.year,
                 name: 'year',
-                value: startYear
+                value: illnessStartYear
               }
             ]
           })
           }}
+
+        {{ govukInput({
+            id: "editId",
+            name: "editId",
+            type: "hidden",
+            value: id
+          }) }}
+
         {{ govukButton({
              text: "Continue"
             }) }}
