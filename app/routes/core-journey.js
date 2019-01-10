@@ -100,6 +100,7 @@ module.exports = function (router) {
       })
     } else {
       reasonObject.reason = req.body.extensionReason
+      reasonObject.complete = false
       switch (req.body.extensionReason) {
         case 'illness':
           if (editId !== '') {
@@ -113,6 +114,7 @@ module.exports = function (router) {
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
+            reasonObject.nextStep = '/theft-criminal-damage/damage-date'
             req.session.extensionReasons.push(reasonObject)
           }
           res.redirect('/theft-criminal-damage/damage-date')
@@ -233,6 +235,7 @@ module.exports = function (router) {
       req.session.extensionReasons.push(reasonObject)
       switch (req.body.supportingEvidence) {
         case 'yes':
+          reasonObject.nextStep = 'evidence-upload'
           res.redirect('/evidence-upload')
           break
         case 'no':
@@ -245,6 +248,9 @@ module.exports = function (router) {
     res.render('evidence-upload')
   })
   router.post('/evidence-upload', function (req, res) {
+    var reasonObject = {}
+
+    reasonObject.nextStep = 'complete'
     res.redirect('/add-extension-reason')
   })
   router.get('/accountsnotdue', function (req, res) {

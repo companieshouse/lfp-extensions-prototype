@@ -11,6 +11,7 @@ module.exports = {
     extensionOneWeek: '27 November 2018',
     extensionTwoWeek: '4 December 2018',
     extensionFourWeek: '18 December 2018',
-    deadlineStatus: 'Far'
+    deadlineStatus: 'Far',
+    startDate: '10 January 2019'
   }
 }

@@ -74,20 +74,38 @@ module.exports = function (router) {
     res.render('resume-application', {
       scenario: scenario,
       userEmail: userEmail,
-      extensionReasons: extensionReasons
+      extensionReasons: extensionReasons,
+      mode: true
     })
   })
   router.post('/resume-application', function (req, res) {
-    res.render('confirm-company', {
-      scenario: req.session.scenario
-    })
+    var i = 0
+    var reasonPos = 0
+    var falseReason = false
+
+    for (i = 0; i < req.session.extensionReasons.length; i++) {
+      if (req.session.extensionReasons[i].complete === false) {
+        reasonPos = i
+        falseReason = true
+        break
+      }
+    }
+    if (falseReason) {
+      res.redirect(req.session.extensionReasons[i].nextStep)
+    } else {
+      res.redirect('check-your-answers')
+    }
   })
   router.get('/check-your-answers', function (req, res) {
+    var i
+
+    for (i = 0; i < req.session.extensionReasons.length; i++) {
+      req.session.extensionReasons[i].complete = true
+    }
     console.log(req.session.extensionReasons)
     res.render('check-your-answers', {
       scenario: req.session.scenario,
       extensionReasons: req.session.extensionReasons,
-      extensionLength: req.session.extensionLength,
       userEmail: req.session.userEmail
     })
   })
@@ -104,7 +122,7 @@ module.exports = function (router) {
     application.extensionReasons = req.session.extensionReasons
     jsonName = application.scenario.company.number
     json = JSON.stringify(application, null, '\t')
-    fs.writeFile('/public/saved-sessions/' + jsonName + '.json', json, 'utf8')
+    fs.writeFile('public/saved-sessions/' + jsonName + '.json', json, 'utf8')
     console.log('should have saved my session')
 
     res.render('sign-out', {

@@ -18,9 +18,15 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">
-        Check your application
-      </h1>
+      {% if mode %}
+        <h1 class="govuk-heading-xl">
+          You already have an application in progress
+        </h1>
+      {% else %}
+        <h1 class="govuk-heading-xl">
+          Check your application
+        </h1>
+      {% endif %}
       <dl class="app-check-your-answers app-check-your-answers--long govuk-!-margin-bottom-8">
         <div class="app-check-your-answers__contents">
           <dt class="app-check-your-answers__question">
@@ -465,18 +471,32 @@
       <p class="govuk-!-margin-bottom-7 govuk-!-margin-top-7">
         <a href="/choose-reason" class="govuk-link">Add another reason</a>
       </p>
-      <h2 class="govuk-heading-m">Submit your application for an extension</h2>
-      <p>
-        By submitting this application you are confirming that, to the best of your knowledge, the details you are providing are true.
-      </p>
-      <form action="" method="post">
-        {{ govukButton({
-        text: "Confirm and submit"
-      }) }}
+      {% if mode %}
+        <form action="" method="post">
+          {{ govukButton({
+            text: "Continue with this application"
+          }) }}
+          <p>
+            <a href="choose-reason?restart=yes" class="govuk-link">Start a new application</a>
+          </p>
+          <p>
+            <a href="sign-out" class="govuk-link">Sign out</a>
+          </p>
+        </form>
+      {% else %}
+        <h2 class="govuk-heading-m">Submit your application for an extension</h2>
         <p>
-          <a href="sign-out" class="govuk-link">Save and sign out</a>
+          By submitting this application you are confirming that, to the best of your knowledge, the details you are providing are true.
         </p>
-      </form>
+        <form action="" method="post">
+          {{ govukButton({
+            text: "Confirm and submit"
+          }) }}
+          <p>
+            <a href="sign-out" class="govuk-link">Save and sign out</a>
+          </p>
+        </form>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

@@ -106,6 +106,7 @@ module.exports = function (router) {
         damageDate.month = req.body['damageDate-month']
         damageDate.year = req.body['damageDate-year']
         reasonObject.damageDate = damageDate
+        reasonObject.nextStep = '/theft-criminal-damage/reason-damage'
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/theft-criminal-damage/reason-damage')
       }
@@ -160,6 +161,7 @@ module.exports = function (router) {
         res.redirect('/check-your-answers')
       } else {
         reasonObject.damage = req.body.damage
+        reasonObject.nextStep = 'evidence'
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/evidence')
       }
