@@ -208,7 +208,12 @@ module.exports = function (router) {
   router.get('/illness/continued-illness', function (req, res) {
     var id = 0
     var info = ''
+    var currentReason = {}
     var reasonObject = req.session.extensionReasons[req.session.extensionReasons.length - 1]
+    reasonObject.continuedIllness = req.body.continuedIllness
+    currentReason = req.session.extensionReasons.pop()
+    req.session.extensionReasons.push(currentReason)
+
     if (req.query.id) {
       id = req.query.id
       info = req.session.extensionReasons[id].continuedIllness
@@ -471,6 +476,7 @@ module.exports = function (router) {
       } else {
         var reasonObject = req.session.extensionReasons.pop()
         reasonObject.illnessInformation = req.body.illnessInformation
+        reasonObject.nextStep = 'evidence'
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/evidence')
       }

@@ -221,6 +221,7 @@ module.exports = function (router) {
       } else {
         var reasonObject = req.session.extensionReasons.pop()
         reasonObject.computerProblem = req.body.computerProblem
+        reasonObject.nextStep = 'evidence'
         req.session.extensionReasons.push(reasonObject)
         console.log(reasonObject)
         res.redirect('/evidence')

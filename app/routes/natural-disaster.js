@@ -160,6 +160,7 @@ module.exports = function (router) {
         res.redirect('/check-your-answers')
       } else {
         reasonObject.naturalDisaster = req.body.naturalDisaster
+        reasonObject.nextStep = 'evidence'
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/evidence')
       }
