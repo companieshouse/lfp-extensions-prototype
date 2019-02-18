@@ -133,6 +133,16 @@ module.exports = function (router) {
       userEmail: req.session.userEmail
     })
   })
+  router.get('/get-session', function (req, res) {
+    var application = {}
+    // var json = ''
+
+    application.userEmail = req.session.userEmail
+    application.scenario = req.session.scenario
+    application.extensionReasons = req.session.extensionReasons
+    // json = JSON.stringify(application, null, '\t')
+    res.send(application)
+  })
   router.get('/confirmation', function (req, res) {
     var scenario = req.session.scenario
     var extensionReasons = req.session.extensionReasons

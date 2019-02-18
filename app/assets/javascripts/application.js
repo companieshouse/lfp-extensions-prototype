@@ -8,6 +8,17 @@ if (window.console && window.console.info) {
 $(document).ready(function () {
   window.GOVUKFrontend.initAll()
 
+  $('a[href="/sign-out"]').click(function () {
+    $.get('/get-session', {}).done(function (data) {
+      console.log(data)
+      localStorage.setItem('application', JSON.stringify(data, null, '\t'))
+    })
+    window.location.replace('http://stackoverflow.com')
+  })
+
+  $('.session-check').click(function () {
+  })
+
   $('#illness-information').on('input', function (e) {
     if ($('#illness-information').val() === 'lorem') {
       $('#illness-information').val('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. \n\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.')
