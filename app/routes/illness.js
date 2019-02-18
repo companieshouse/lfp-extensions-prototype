@@ -89,6 +89,7 @@ module.exports = function (router) {
         reasonObject = req.session.extensionReasons.pop()
         reasonObject.illPerson = req.body.illPerson
         reasonObject.otherPerson = req.body.otherPerson
+        reasonObject.nextStep = 'illness/illness-start-date'
         req.session.extensionReasons.push(reasonObject)
         console.log(req.session.extensionReasons)
         res.redirect('/illness/illness-start-date')
@@ -200,6 +201,7 @@ module.exports = function (router) {
         illnessStartDate.month = req.body['illnessStart-month']
         illnessStartDate.year = req.body['illnessStart-year']
         reasonObject.illnessStartDate = illnessStartDate
+        reasonObject.nextStep = 'illness/continued-illness'
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/illness/continued-illness')
       }
@@ -208,23 +210,25 @@ module.exports = function (router) {
   router.get('/illness/continued-illness', function (req, res) {
     var id = 0
     var info = ''
-    var currentReason = {}
-    var reasonObject = req.session.extensionReasons[req.session.extensionReasons.length - 1]
-    reasonObject.continuedIllness = req.body.continuedIllness
-    currentReason = req.session.extensionReasons.pop()
-    req.session.extensionReasons.push(currentReason)
+    var reasonObject = {}
+
+    reasonObject = req.session.extensionReasons.pop()
+    req.session.extensionReasons.push(reasonObject)
 
     if (req.query.id) {
       id = req.query.id
       info = req.session.extensionReasons[id].continuedIllness
       res.render('illness/continued-illness', {
         scenario: req.session.scenario,
-        startDate: reasonObject.illnessStartDate,
+        reason: reasonObject,
         id: id,
         info: info
       })
     } else {
-      res.render('illness/continued-illness')
+      res.render('illness/continued-illness', {
+        scenario: req.session.scenario,
+        reason: reasonObject
+      })
     }
   })
   router.post('/illness/continued-illness', function (req, res) {
@@ -253,7 +257,7 @@ module.exports = function (router) {
         errorList: errorList,
         Err: Err,
         scenario: req.session.scenario,
-        startDate: reasonObject.illnessStartDate
+        reason: reasonObject
       })
     } else {
       switch (req.body.continuedIllness) {
@@ -264,6 +268,7 @@ module.exports = function (router) {
           } else {
             req.session.extensionReasons.pop()
             reasonObject.continuedIllness = req.body.continuedIllness
+            reasonObject.nextStep = 'illness/illness-information'
             req.session.extensionReasons.push(reasonObject)
             res.redirect('/illness/illness-information')
           }
@@ -275,6 +280,7 @@ module.exports = function (router) {
           } else {
             reasonObject = req.session.extensionReasons.pop()
             reasonObject.continuedIllness = req.body.continuedIllness
+            reasonObject.nextStep = 'illness/illness-end-date'
             req.session.extensionReasons.push(reasonObject)
             res.redirect('/illness/illness-end-date')
             break
@@ -393,6 +399,7 @@ module.exports = function (router) {
         illnessEndDate.month = req.body['illnessEndDate-month']
         illnessEndDate.year = req.body['illnessEndDate-year']
         reasonObject.illnessEndDate = illnessEndDate
+        reasonObject.nextStep = 'illness/illness-information'
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/illness/illness-information')
       }

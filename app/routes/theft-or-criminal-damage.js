@@ -106,7 +106,7 @@ module.exports = function (router) {
         damageDate.month = req.body['damageDate-month']
         damageDate.year = req.body['damageDate-year']
         reasonObject.damageDate = damageDate
-        reasonObject.nextStep = '/theft-criminal-damage/reason-damage'
+        reasonObject.nextStep = 'theft-criminal-damage/reason-damage'
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/theft-criminal-damage/reason-damage')
       }

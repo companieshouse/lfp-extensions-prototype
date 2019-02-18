@@ -106,6 +106,7 @@ module.exports = function (router) {
         accountsDate.month = req.body['accountsDate-month']
         accountsDate.year = req.body['accountsDate-year']
         reasonObject.accountsDate = accountsDate
+        reasonObject.nextStep = 'accounts/reason-accounts'
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/accounts/reason-accounts')
       }

@@ -106,6 +106,7 @@ module.exports = function (router) {
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
+            reasonObject.nextStep = 'illness/who-was-ill'
             req.session.extensionReasons.push(reasonObject)
           }
           res.redirect('/illness/who-was-ill')
@@ -123,6 +124,7 @@ module.exports = function (router) {
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
+            reasonObject.nextStep = '/natural-disaster/disaster-date'
             req.session.extensionReasons.push(reasonObject)
           }
           res.redirect('/natural-disaster/disaster-date')
@@ -131,6 +133,7 @@ module.exports = function (router) {
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
+            reasonObject.nextStep = '/accounts/accounts-date'
             req.session.extensionReasons.push(reasonObject)
           }
           res.redirect('/accounts/accounts-date')
@@ -139,6 +142,7 @@ module.exports = function (router) {
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
+            reasonObject.nextStep = '/company-changes/change-happened'
             req.session.extensionReasons.push(reasonObject)
           }
           res.redirect('/company-changes/change-happened')
@@ -147,6 +151,7 @@ module.exports = function (router) {
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
+            reasonObject.nextStep = '/computer-problem/choose-computer-problem'
             req.session.extensionReasons.push(reasonObject)
           }
           res.redirect('/computer-problem/choose-computer-problem')
@@ -162,6 +167,7 @@ module.exports = function (router) {
           break
         case 'other':
           reasonObject.otherReason = req.body.otherReason
+          reasonObject.nextStep = 'other/reason-other'
           req.session.extensionReasons.push(reasonObject)
           res.redirect('other/reason-other')
           break
@@ -239,6 +245,7 @@ module.exports = function (router) {
           res.redirect('/evidence-upload')
           break
         case 'no':
+          reasonObject.nextStep = 'add-extension-reason'
           res.redirect('/add-extension-reason')
           break
       }

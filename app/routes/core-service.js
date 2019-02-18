@@ -1,4 +1,5 @@
 const fs = require('graceful-fs')
+const postmark = require('postmark')
 
 module.exports = function (router) {
   // Sign in pages
@@ -133,6 +134,30 @@ module.exports = function (router) {
     })
   })
   router.get('/confirmation', function (req, res) {
+    var scenario = req.session.scenario
+    var extensionReasons = req.session.extensionReasons
+    var userEmail = req.session.userEmail
+
+    if (process.env.POSTMARK_API_KEY) {
+      var client = new postmark.Client(process.env.POSTMARK_API_KEY)
+
+      client.sendEmailWithTemplate({
+        'From': 'owilliams@companieshouse.gov.uk',
+        'To': userEmail,
+        'TemplateId': process.env.ETID_CONFIRMATION,
+        'TemplateModel': {
+          'scenario': scenario,
+          'extensionReasons': extensionReasons,
+          'userEmail': userEmail
+        }
+      }, function (error, success) {
+        if (error) {
+          console.error('Unable to send via postmark: ' + error.message)
+        }
+      })
+    } else {
+      console.log('No Postmrk API key detected. To test emails run app locally with `heroku local web`')
+    }
     res.render('confirmation', {
       scenario: req.session.scenario,
       extensionReasons: req.session.extensionReasons,

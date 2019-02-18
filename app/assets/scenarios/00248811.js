@@ -7,7 +7,7 @@ module.exports = {
     incorporationDate: '25 May 2016',
     companyType: 'Private Limited Company',
     address: '25 Happy Road\nLeeds\nLD1 2SS',
-    accountsDue: '15 December 2018',
+    accountsDue: '22 February 2019',
     extensionOneWeek: '31 October 2018',
     extensionTwoWeek: '7 November 2018',
     extensionFourWeek: '21 November 2018',

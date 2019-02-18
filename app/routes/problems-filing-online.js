@@ -59,6 +59,7 @@ module.exports = function (router) {
       } else {
         reasonObject.problemReason = req.body.problemReason
         reasonObject.otherProblemReason = req.body.otherProblemReason
+        reasonObject.nextStep = 'computer-problem/problem-date'
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/computer-problem/problem-date')
       }
@@ -171,6 +172,7 @@ module.exports = function (router) {
         problemDate.month = req.body['problemDate-month']
         problemDate.year = req.body['problemDate-year']
         reasonObject.problemDate = problemDate
+        reasonObject.nextStep = 'computer-problem/reason-computer-problem'
         req.session.extensionReasons.push(reasonObject)
         console.log(req.session.extensionReasons)
         res.redirect('/computer-problem/reason-computer-problem')

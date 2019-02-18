@@ -7,6 +7,7 @@ module.exports = function (router) {
     var errorFlag = false
     var Err = {}
     var errorList = []
+    var reasonObject = {}
 
     if (typeof changeHappened === 'undefined') {
       Err.type = 'blank'
@@ -24,11 +25,16 @@ module.exports = function (router) {
         Err: Err
       })
     } else {
+      reasonObject = req.session.extensionReasons.pop()
       switch (req.body.changeHappened) {
         case 'yes':
+          reasonObject.nextStep = 'company-changes/date-was-changed'
+          req.session.extensionReasons.push(reasonObject)
           res.redirect('/company-changes/date-was-changed')
           break
         case 'no':
+          reasonObject.nextStep = 'company-changes/date-will-change'
+          req.session.extensionReasons.push(reasonObject)
           res.redirect('/company-changes/date-will-change')
           break
       }
@@ -42,6 +48,7 @@ module.exports = function (router) {
     var errorFlag = false
     var Err = {}
     var errorList = []
+    var reasonObject = {}
 
     if (typeof awareOfChange === 'undefined') {
       Err.type = 'blank'
@@ -59,11 +66,16 @@ module.exports = function (router) {
         Err: Err
       })
     } else {
+      reasonObject = req.session.extensionReasons.pop()
       switch (req.body.awareOfChange) {
         case 'yes':
+          reasonObject.nextStep = 'company-changes/aware-change-date'
+          req.session.extensionReasons.push(reasonObject)
           res.redirect('/company-changes/aware-change-date')
           break
         case 'no':
+          reasonObject.nextStep = 'company-changes/reason-company-changes'
+          req.session.extensionReasons.push(reasonObject)
           res.redirect('/company-changes/reason-company-changes')
           break
       }
@@ -176,6 +188,7 @@ module.exports = function (router) {
         awareChangeDate.month = req.body['awareChangeDate-month']
         awareChangeDate.year = req.body['awareChangeDate-year']
         reasonObject.awareChangeDate = awareChangeDate
+        reasonObject.nextStep = 'company-changes/reason-company-changes'
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/company-changes/reason-company-changes')
       }
@@ -288,6 +301,7 @@ module.exports = function (router) {
         dateWasChanged.month = req.body['dateWasChanged-month']
         dateWasChanged.year = req.body['dateWasChanged-year']
         reasonObject.dateWasChanged = dateWasChanged
+        reasonObject.nextStep = 'company-changes/aware-of-change'
         req.session.extensionReasons.push(reasonObject)
         console.log(req.session.extensionReasons)
         res.redirect('/company-changes/aware-of-change')
@@ -401,6 +415,7 @@ module.exports = function (router) {
         dateWillChange.month = req.body['dateWillChange-month']
         dateWillChange.year = req.body['dateWillChange-year']
         reasonObject.dateWillChange = dateWillChange
+        reasonObject.nextStep = 'company-changes/aware-change-date'
         req.session.extensionReasons.push(reasonObject)
         console.log(req.session.extensionReasons)
         res.redirect('/company-changes/aware-change-date')
@@ -456,6 +471,7 @@ module.exports = function (router) {
         res.redirect('/check-your-answers')
       } else {
         reasonObject.companyChanges = req.body.companyChanges
+        reasonObject.nextStep = 'evidence'
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/evidence')
       }
