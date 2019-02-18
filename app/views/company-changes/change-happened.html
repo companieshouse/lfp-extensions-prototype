@@ -4,66 +4,48 @@
   {% if errorList.length > 0 %}
     Error:
   {% endif %}
-  Add documents to support your application
+  Extension due to changes to the company: Has the change happened yet?
 {% endblock %}
-
 {% block beforeContent %}
   {{ govukPhaseBanner({
-    tag: {
-      text: "alpha"
-    },
-    html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
-  }) }}
-
-  {% set backLinkHref %}
-  {{ backLink }}
-  {% endset -%}
-
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
   {{ govukBackLink({
-    text: "Back",
-    href: ''
-  }) }}
+  text: "Back",
+  href: 'choose-reason'
+}) }}
 {% endblock %}
-
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-
       {% if errorList.length > 0 %}
         {{ govukErrorSummary({
-              titleText: "There was a problem with the information you gave us",
-              errorList: errorList
-            }) }}
+          titleText: "There was a problem with the information you gave us",
+          errorList: errorList
+        }) }}
       {% endif %}
-
+      {% if errorList.length > 0 %}
+        {% set Error = {
+          text: Err.text
+        } %}
+      {% else %}
+        {% set Error = false %}
+      {% endif %}
       <form action="" method="post">
-
-        {% if errorList.length > 0 %}
-          {% set supportingEvidenceError = {
-            text: supportingEvidenceErr.text
-          } %}
-        {% else %}
-          {% set supportingEvidenceError = false %}
-        {% endif %}
-
-        {% set hintHTML %}
-        Anything you give us to support your application will be kept confidential.
-        {% endset -%}
-
         {{ govukRadios({
               classes: "govuk-radios--inline",
-              idPrefix: "supporting-evidence",
-              name: "supportingEvidence",
-              errorMessage: supportingEvidenceError,
+              idPrefix: "change-happened",
+              name: "changeHappened",
+              errorMessage: changeHappenedError,
               fieldset: {
                 legend: {
-                  text: 'Do you want to add documents to support your application?',
+                  text: 'Has the change to the company happened yet?',
                   isPageHeading: true,
                   classes: 'govuk-fieldset__legend--xl'
                 }
-              },
-              hint: {
-                html: hintHTML
               },
               items: [
                 {
