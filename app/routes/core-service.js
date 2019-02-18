@@ -1,4 +1,5 @@
 const fs = require('graceful-fs')
+const postmark = require('postmark')
 
 module.exports = function (router) {
   // Sign in pages
@@ -74,19 +75,38 @@ module.exports = function (router) {
     res.render('resume-application', {
       scenario: scenario,
       userEmail: userEmail,
-      extensionReasons: extensionReasons
+      extensionReasons: extensionReasons,
+      mode: true
     })
   })
   router.post('/resume-application', function (req, res) {
-    res.render('confirm-company', {
-      scenario: req.session.scenario
-    })
+    var i = 0
+    var reasonPos = 0
+    var falseReason = false
+
+    for (i = 0; i < req.session.extensionReasons.length; i++) {
+      if (req.session.extensionReasons[i].complete === false) {
+        reasonPos = i
+        falseReason = true
+        break
+      }
+    }
+    if (falseReason) {
+      res.redirect(req.session.extensionReasons[i].nextStep)
+    } else {
+      res.redirect('check-your-answers')
+    }
   })
   router.get('/check-your-answers', function (req, res) {
+    var i
+
+    for (i = 0; i < req.session.extensionReasons.length; i++) {
+      req.session.extensionReasons[i].complete = true
+    }
+    console.log(req.session.extensionReasons)
     res.render('check-your-answers', {
       scenario: req.session.scenario,
       extensionReasons: req.session.extensionReasons,
-      extensionLength: req.session.extensionLength,
       userEmail: req.session.userEmail
     })
   })
@@ -104,6 +124,7 @@ module.exports = function (router) {
     jsonName = application.scenario.company.number
     json = JSON.stringify(application, null, '\t')
     fs.writeFile('public/saved-sessions/' + jsonName + '.json', json, 'utf8')
+    console.log('should have saved my session')
 
     res.render('sign-out', {
       scenario: req.session.scenario,
@@ -113,6 +134,30 @@ module.exports = function (router) {
     })
   })
   router.get('/confirmation', function (req, res) {
+    var scenario = req.session.scenario
+    var extensionReasons = req.session.extensionReasons
+    var userEmail = req.session.userEmail
+
+    if (process.env.POSTMARK_API_KEY) {
+      var client = new postmark.Client(process.env.POSTMARK_API_KEY)
+
+      client.sendEmailWithTemplate({
+        'From': 'owilliams@companieshouse.gov.uk',
+        'To': userEmail,
+        'TemplateId': process.env.ETID_CONFIRMATION,
+        'TemplateModel': {
+          'scenario': scenario,
+          'extensionReasons': extensionReasons,
+          'userEmail': userEmail
+        }
+      }, function (error, success) {
+        if (error) {
+          console.error('Unable to send via postmark: ' + error.message)
+        }
+      })
+    } else {
+      console.log('No Postmrk API key detected. To test emails run app locally with `heroku local web`')
+    }
     res.render('confirmation', {
       scenario: req.session.scenario,
       extensionReasons: req.session.extensionReasons,

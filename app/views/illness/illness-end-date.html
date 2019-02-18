@@ -48,6 +48,7 @@
         {{ govukDateInput({
   id: "illness-end-date",
   namePrefix: "illnessEndDate",
+  value: info,
   errorMessage: endDateError,
   fieldset: {
     legend: {
@@ -60,16 +61,28 @@
             html: hintHTML
             },
             items: [
-              { classes: inputClasses.day, name: 'day', value: endDay },
-              { classes: inputClasses.month, name: 'month', value: endMonth },
-              { classes: inputClasses.year, name: 'year', value: endYear }
+              { classes: inputClasses.day, name: 'day', value: illnessEndDay },
+              { classes: inputClasses.month, name: 'month', value: illnessEndMonth },
+              { classes: inputClasses.year, name: 'year', value: illnessEndYear }
               ]
             })
           }}
 
+        {{ govukInput({
+              id: "editId",
+              name: "editId",
+              type: "hidden",
+              value: id
+            }) }}
+
         {{ govukButton({
               text: "Continue"
             }) }}
+
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
+
       </form>
     </div>
   </div>

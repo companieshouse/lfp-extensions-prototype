@@ -47,6 +47,7 @@
           {{ govukTextarea({
               name: "illnessInformation",
               id: "illness-information",
+              value: info,
               rows: '8',
               label: {
                 text: "Anything you tell us to support your application will be kept confidential.",
@@ -55,9 +56,20 @@
               }
             }) }}
         {% endif %}
+
+        {{ govukInput({
+          id: "editId",
+          name: "editId",
+          type: "hidden",
+          value: id
+        }) }}
+
         {{ govukButton({
               text: "Continue"
             }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
       </form>
     </div>
   </div>

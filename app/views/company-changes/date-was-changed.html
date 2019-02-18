@@ -39,26 +39,27 @@
         {% endif %}
 
         {% set hintHTML %}
-        You told us you first knew of the change on
-        {{ reason.awareChangeDate.day }}
-        {{ reason.awareChangeDate.month | displayMonth }}
-        {{ reason.awareChangeDate.year }}
+        {% if reason.dateWasChanged != null %}
+          You told us you were aware of the change
+          {{ reason.awareChangeDate.day }}
+          {{ reason.awareChangeDate.month | displayMonth }}
+          {{ reason.awareChangeDate.year }}
+        {% else %}
+          For example, 31 8 2018
+        {% endif %}
         {% endset -%}
 
         {{ govukDateInput({
           id: "change-date",
-          namePrefix: "changeDate",
+          namePrefix: "dateWasChanged",
           value: info,
-          errorMessage: changeDateError,
+          errorMessage: dateWasChangedError,
           fieldset: {
             legend: {
               text: "When did the changes to the company happen?",
               isPageHeading: true,
               classes: "govuk-fieldset__legend--xl"
             }
-          },
-          hint: {
-            html: hintHTML
           },
           items: [
             {
@@ -90,6 +91,9 @@
         {{ govukButton({
          text: "Continue"
         }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
       </form>
     </div>
   </div>

@@ -15,7 +15,7 @@
 }) }}
   {{ govukBackLink({
   text: "Back",
-  href: "/choose-reason"
+  href: "/change-happened"
 }) }}
 {% endblock %}
 {% block content %}
@@ -38,9 +38,26 @@
           {% set awareChangeDateError = false %}
         {% endif %}
 
+        {% set hintHTML %}
+        {% if reason.dateWasChanged != null %}
+          You told us the change happened
+          {{ reason.dateWasChanged.day }}
+          {{ reason.dateWasChanged.month | displayMonth }}
+          {{ reason.dateWasChanged.year }}
+        {% elseif reason.dateWillChange != null %}
+          You told us the change will happen
+          {{ reason.dateWillChange.day }}
+          {{ reason.dateWillChange.month | displayMonth }}
+          {{ reason.dateWillChange.year }}
+        {% else %}
+          For example, 31 8 2018
+        {% endif %}
+        {% endset -%}
+
         {{ govukDateInput({
             id: "aware-change-date",
             namePrefix: "awareChangeDate",
+            value: info,
             errorMessage: awareChangeDateError,
             fieldset: {
               legend: {
@@ -50,7 +67,7 @@
               }
             },
             hint: {
-              text: "For example, 31 8 2018"
+              html: hintHTML
             },
             items: [
               {
@@ -71,9 +88,20 @@
             ]
           })
           }}
+
+        {{ govukInput({
+            id: "editId",
+            name: "editId",
+            type: "hidden",
+            value: id
+          }) }}
+
         {{ govukButton({
              text: "Continue"
             }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
       </form>
     </div>
   </div>
