@@ -9,14 +9,35 @@ $(document).ready(function () {
   window.GOVUKFrontend.initAll()
 
   $('a[href="/sign-out"]').click(function () {
-    $.get('/get-session', {}).done(function (data) {
-      console.log(data)
-      localStorage.setItem('application', JSON.stringify(data, null, '\t'))
+    var application = ''
+
+    $.get('/get-session').done(function (data) {
+      application = JSON.parse(data, null, '\t')
+      console.log(application)
+      localStorage.setItem('application' + application.scenario.company.number, data)
+      window.location.replace('/sign-out')
     })
-    window.location.replace('http://stackoverflow.com')
+    return false
   })
 
   $('.session-check').click(function () {
+    var companyNumber = ''
+    var application = ''
+
+    if ($('.govuk-input--company-number').val() !== '') {
+      companyNumber = $('.govuk-input--company-number').val()
+      if (localStorage.getItem('application' + companyNumber) !== null) {
+        application = localStorage.getItem('application' + companyNumber)
+        $.get('/set-session', {application: application}).done(function (data) {
+          // console.log(application)
+          window.location = '/resume-application'
+          return false
+        })
+      } else {
+        $('#companyForm').submit()
+        return false
+      }
+    }
   })
 
   $('#illness-information').on('input', function (e) {
