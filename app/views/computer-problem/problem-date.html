@@ -39,7 +39,7 @@
         {% endif %}
 
         {% set hintHTML %}
-        For example, 31 8 2018
+        For example, 31 8 2018, around 10am
         {% endset -%}
 
         {{ govukDateInput({
@@ -82,14 +82,9 @@
           namePrefix: "problemTime",
         items: [
             {
-              classes: "govuk-input--width-2",
-              name: "hour",
-              value: problemDate.hour
-            },
-            {
-              classes: "govuk-input--width-2",
-              name: "minute",
-              value: problemDate.minute
+              classes: "govuk-input--width-10",
+              name: "Time",
+              value: problemDate.time
             }
             ]
           })
