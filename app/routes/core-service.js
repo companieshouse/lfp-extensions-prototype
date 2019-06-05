@@ -72,6 +72,8 @@ module.exports = function (router) {
     var scenario = req.session.scenario
     var extensionReasons = req.session.extensionReasons
 
+    console.log(extensionReasons)
+
     res.render('resume-application', {
       scenario: scenario,
       userEmail: userEmail,
@@ -123,7 +125,7 @@ module.exports = function (router) {
     application.extensionReasons = req.session.extensionReasons
     jsonName = application.scenario.company.number
     json = JSON.stringify(application, null, '\t')
-    fs.writeFile('public/saved-sessions/' + jsonName + '.json', json, 'utf8')
+    // fs.writeFile('public/saved-sessions/' + jsonName + '.json', json, 'utf8')
     console.log('should have saved my session')
 
     res.render('sign-out', {
@@ -132,6 +134,26 @@ module.exports = function (router) {
       extensionLength: req.session.extensionLength,
       userEmail: req.session.userEmail
     })
+  })
+  router.get('/get-session', function (req, res) {
+    var application = {}
+    // var json = ''
+
+    application.userEmail = req.session.userEmail
+    application.scenario = req.session.scenario
+    application.extensionReasons = req.session.extensionReasons
+    // json = JSON.stringify(application, null, '\t')
+    res.send(JSON.stringify(application))
+  })
+  router.get('/set-session', function (req, res) {
+    var application = {}
+
+    application = JSON.parse(req.query.application)
+    console.log(application.scenario)
+    req.session.userEmail = application.userEmail
+    req.session.scenario = application.scenario
+    req.session.extensionReasons = application.extensionReasons
+    res.send(true)
   })
   router.get('/confirmation', function (req, res) {
     var scenario = req.session.scenario
