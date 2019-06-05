@@ -15,7 +15,7 @@
 }) }}
   {{ govukBackLink({
   text: "Back",
-  href: "illness-pre-information"
+  href: "continued-illness"
 }) }}
 {% endblock %}
 {% block content %}
@@ -27,7 +27,7 @@
         errorList: errorList
       }) }}
       {% endif %}
-      <h1 class="govuk-heading-xl">Tell us about the illness</h1>
+      <h1 class="govuk-heading-xl">How does this affect your ability to file on time?</h1>
       <form action="" method="post">
         {% if Err.flag %}
           {{ govukTextarea({
@@ -39,9 +39,6 @@
                 isPageHeading: true,
                 classes: 'govuk-heading-large'
               },
-              hint: {
-                text: "Useful information could include symptoms, whether the illness was diagnosed by a GP and any medications taken."
-              },
               errorMessage: {
                 text: "Enter information"
               }
@@ -50,20 +47,29 @@
           {{ govukTextarea({
               name: "illnessInformation",
               id: "illness-information",
+              value: info,
               rows: '8',
               label: {
                 text: "Anything you tell us to support your application will be kept confidential.",
                 isPageHeading: true,
                 classes: 'govuk-heading-large'
-              },
-              hint: {
-                text: "Useful information could include symptoms, whether the illness was diagnosed by a GP and any medications taken."
               }
             }) }}
         {% endif %}
+
+        {{ govukInput({
+          id: "editId",
+          name: "editId",
+          type: "hidden",
+          value: id
+        }) }}
+
         {{ govukButton({
               text: "Continue"
             }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
       </form>
     </div>
   </div>

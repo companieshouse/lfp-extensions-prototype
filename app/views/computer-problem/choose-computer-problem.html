@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Choose a reason for your extension
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "/choose-reason"
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="" method="post">
+
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
+                titleText: "There is an error on the page",
+                errorList: errorList
+              }) }}
+        {% endif %}
+
+        {% if errorList.length > 0 %}
+          {% set problemReasonError = {
+            text: problemReasonErr.text
+          } %}
+        {% else %}
+          {% set problemReasonError = false %}
+        {% endif %}
+
+        {% if errorList.length > 0 %}
+          {% if problemReasonErr.type === 'invalid' %}
+            {% set otherProblemReasonError = true %}
+          {% else %}
+            {% set otherProblemReasonError = false %}
+          {% endif %}
+        {% endif %}
+
+        {% set otherInput %}
+        {{ govukInput({
+              id: "other-problem-reason",
+              name: "otherProblemReason",
+              classes: "",
+              errorMessage: otherProblemReasonError,
+              label: {
+                text: "Short description of the reason"
+              }
+            }) }}
+        {% endset %}
+
+        {{ govukRadios({
+                idPrefix: "problem-reason",
+                name: "problemReason",
+                errorMessage: problemReasonError,
+                fieldset: {
+                  legend: {
+                    text: 'What was the problem?',
+                    isPageHeading: true,
+                    classes: 'govuk-fieldset__legend--xl'
+                  }
+                },
+                items: [
+                  {
+                    value: "Authentication code",
+                    text: "I don't know my authentication code"
+                  },
+                  {
+                    value: "Companies House website",
+                    text: "The Companies House website was down"
+                  },
+                  {
+                    value: "Computer problem",
+                    text: "I had computer problems"
+                  },
+                  {
+                    value: "other",
+                    text: "I'm applying for another reason",
+                    conditional: {
+                      html: otherInput
+                    }
+                  }
+                ]
+              }) }}
+
+        {{ govukInput({
+          id: "editId",
+          name: "editId",
+          type: "hidden",
+          value: id
+        }) }}
+
+        {{ govukButton({
+            text: "Continue"
+          }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

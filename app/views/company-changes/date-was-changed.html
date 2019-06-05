@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Applying for an extension due to company change: Tell us when the change happened
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "/company-change/aware-change-date"
+}) }}
+{% endblock %}
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="" method="post">
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
+            titleText: "There was a problem with the date you gave us",
+            errorList: errorList
+          }) }}
+        {% endif %}
+
+        {% if errorList.length > 0 %}
+          {% set ChangeDateError = {
+            text: ChangeDateErr.text
+          } %}
+        {% else %}
+          {% set ChangeDateError = false %}
+        {% endif %}
+
+        {% set hintHTML %}
+        {% if reason.dateWasChanged != null %}
+          You told us you were aware of the change
+          {{ reason.awareChangeDate.day }}
+          {{ reason.awareChangeDate.month | displayMonth }}
+          {{ reason.awareChangeDate.year }}
+        {% else %}
+          For example, 31 8 2018
+        {% endif %}
+        {% endset -%}
+
+        {{ govukDateInput({
+          id: "change-date",
+          namePrefix: "dateWasChanged",
+          value: info,
+          errorMessage: dateWasChangedError,
+          fieldset: {
+            legend: {
+              text: "When did the changes to the company happen?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            }
+          },
+          items: [
+            {
+              classes: inputClasses.day,
+              name: 'day',
+              value: changeDay
+            },
+            {
+              classes: inputClasses.month,
+              name: 'month',
+              value: changeMonth
+            },
+            {
+              classes: inputClasses.year,
+              name: 'year',
+              value: changeYear
+            }
+            ]
+          })
+        }}
+
+        {{ govukInput({
+          id: "editId",
+          name: "editId",
+          type: "hidden",
+          value: id
+        }) }}
+
+        {{ govukButton({
+         text: "Continue"
+        }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

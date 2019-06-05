@@ -31,10 +31,11 @@
             errorList: errorList
           }) }}
         {% endif %}
-        <h1 class="govuk-heading-xl">Provide more information to support your extension</h1>
+        <h1 class="govuk-heading-xl">How does this affect your ability to file on time?</h1>
         {{ govukTextarea({
           name: "accounts",
           id: "accounts",
+          value: info,
           errorMessage: Err.text,
           rows: '8',
           label: {
@@ -44,9 +45,19 @@
           }
         }) }}
 
+        {{ govukInput({
+          id: "editId",
+          name: "editId",
+          type: "hidden",
+          value: id
+        }) }}
+
         {{ govukButton({
           text: "Continue"
         }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
       </form>
     </div>
   </div>

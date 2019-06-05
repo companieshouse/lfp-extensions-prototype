@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Extension due to changes to the company: Were you aware of the change?
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: 'choose-reason'
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if errorList.length > 0 %}
+        {{ govukErrorSummary({
+          titleText: "There was a problem with the information you gave us",
+          errorList: errorList
+        }) }}
+      {% endif %}
+      {% if errorList.length > 0 %}
+        {% set Error = {
+          text: Err.text
+        } %}
+      {% else %}
+        {% set Error = false %}
+      {% endif %}
+      <form action="" method="post">
+        {{ govukRadios({
+              classes: "govuk-radios--inline",
+              idPrefix: "aware-of-change",
+              name: "awareOfChange",
+              errorMessage: awareOfChangeError,
+              fieldset: {
+                legend: {
+                  text: 'Were you aware of the change before it happened?',
+                  isPageHeading: true,
+                  classes: 'govuk-fieldset__legend--xl'
+                }
+              },
+              items: [
+                {
+                  value: "yes",
+                  text: "Yes"
+                },
+                {
+                  value: "no",
+                  text: "No"
+                }
+              ]
+            }) }}
+
+        {{ govukButton({
+              text: "Continue"
+            }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

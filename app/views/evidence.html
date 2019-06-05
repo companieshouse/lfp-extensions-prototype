@@ -4,7 +4,7 @@
   {% if errorList.length > 0 %}
     Error:
   {% endif %}
-  Add evidence to support your application
+  Add documents to support your application
 {% endblock %}
 
 {% block beforeContent %}
@@ -47,7 +47,7 @@
         {% endif %}
 
         {% set hintHTML %}
-        Anything you give us to support your application will be kept confidential.
+        Anything you upload will be kept confidential.
         {% endset -%}
 
         {{ govukRadios({
@@ -57,7 +57,7 @@
               errorMessage: supportingEvidenceError,
               fieldset: {
                 legend: {
-                  text: 'Do you want to add evidence to support your application?',
+                  text: 'Do you want to add documents to support your application?',
                   isPageHeading: true,
                   classes: 'govuk-fieldset__legend--xl'
                 }
@@ -80,6 +80,9 @@
         {{ govukButton({
               text: "Continue"
             }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
       </form>
     </div>
   </div>

@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Applying for an extension due to problems filing online: Tell us when the problem happened
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "/computer-problem/choose-computer-problem"
+}) }}
+{% endblock %}
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="" method="post">
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
+            titleText: "There was a problem with the date you gave us",
+            errorList: errorList
+          }) }}
+        {% endif %}
+
+        {% if errorList.length > 0 %}
+          {% set problemDateError = {
+            text: problemDateErr.text
+          } %}
+        {% else %}
+          {% set problemDateError = false %}
+        {% endif %}
+
+        {% set hintHTML %}
+        For example, 31 8 2018, around 10am
+        {% endset -%}
+
+        {{ govukDateInput({
+          id: "problem-date",
+          namePrefix: "problemDate",
+          value: info,
+          errorMessage: problemDateError,
+          fieldset: {
+            legend: {
+              text: "When did you try to file online?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            }
+          },
+          hint: {
+                html: hintHTML
+              },
+                items: [
+                    {
+                      classes: "govuk-input--width-2",
+                      name: "day",
+                      value: problemDate.day
+                    },
+                    {
+                      classes: "govuk-input--width-2",
+                      name: "month",
+                      value: problemDate.month
+                    },
+                    {
+                      classes: "govuk-input--width-4",
+                      name: "year",
+                      value: problemDate.year
+                    }
+            ]
+          })
+        }}
+        {% if reason.problemReason === "Companies House website" %}
+          {{ govukDateInput({
+          id: "problem-time",
+          namePrefix: "problemTime",
+        items: [
+            {
+              classes: "govuk-input--width-10",
+              name: "Time",
+              value: problemDate.time
+            }
+            ]
+          })
+        }}
+        {% else %}
+        {% endif %}
+
+        {{ govukInput({
+          id: "editId",
+          name: "editId",
+          type: "hidden",
+          value: id
+        }) }}
+
+        {{ govukButton({
+         text: "Continue"
+        }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

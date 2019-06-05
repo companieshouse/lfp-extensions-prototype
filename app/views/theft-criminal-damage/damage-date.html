@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Applying for an extension due to theft or criminal damage: Tell us when the damage happened
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "/choose-reason"
+}) }}
+{% endblock %}
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="" method="post">
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
+            titleText: "There was a problem with the date you gave us",
+            errorList: errorList
+          }) }}
+        {% endif %}
+
+        {% if errorList.length > 0 %}
+          {% set damageDateError = {
+            text: damageDateErr.text
+          } %}
+        {% else %}
+          {% set damageDateError = false %}
+        {% endif %}
+
+        {% set hintHTML %}
+        For example, 31 8 2018
+        {% endset -%}
+
+        {{ govukDateInput({
+          id: "damage-date",
+          namePrefix: "damageDate",
+          value: info,
+          errorMessage: damageDateError,
+          fieldset: {
+            legend: {
+              text: "When did the theft or criminal damage happen?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            }
+          },
+          items: [
+            {
+              classes: inputClasses.day,
+              name: 'day',
+              value: damageDay
+            },
+            {
+              classes: inputClasses.month,
+              name: 'month',
+              value: damageMonth
+            },
+            {
+              classes: inputClasses.year,
+              name: 'year',
+              value: damageYear
+            }
+            ]
+          })
+        }}
+
+        {{ govukInput({
+          id: "editId",
+          name: "editId",
+          type: "hidden",
+          value: id
+        }) }}
+
+        {{ govukButton({
+         text: "Continue"
+        }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

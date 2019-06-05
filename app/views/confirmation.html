@@ -9,6 +9,10 @@
 
 {% block content %}
 
+  {% set shortdeadlineHTML %}
+  <span class="govuk-!-font-weight-bold">You may not hear from us before your accounts are due. If your application is accepted, the extension period will start from the date your accounts are due.</span>
+  {% endset %}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
@@ -27,16 +31,21 @@
       </p>
 
       <p class="govuk-body">
-        You can also
-        <a href="print-application" class="govuk-link">print or save a copy of this application</a>
+        <a href="print-application" class="govuk-link">Print or save a copy of this application</a>
       </p>
 
+      {% if scenario.company.deadlineStatus === 'Near' %}
+        {{ govukInsetText({
+          html: shortdeadlineHTML
+        }) }}
+      {% endif %}
       <h2 class="govuk-heading-m">What happens next</h2>
-      <p>We'll review the application and make a decision about your extension request. Extensions may be granted for up to one month except in extreme circumstances.</p>
+      <p>We'll review the application and make a decision about your extension request. Accepted applications normally receive an extension of 28 days.</p>
       <p>It's important that you file your accounts by the due date if possible. You should not wait for a decision about your extension request.</p>
       <p>We'll contact you by email within 5 working days to confirm the outcome of your extension request. We may also contact you if we need more information.</p>
-      <p>
-        <a href="https://www.gov.uk/service-manual/user-centred-design/resources/patterns/feedback-pages.html">What did you think of this service?</a>
+
+      <p class="govuk-body">
+        <a href="https://www.gov.uk/service-manual/user-centred-design/resources/patterns/feedback-pages.html" class="govuk-link">What did you think of this service?</a>
         (takes 30 seconds)
       </p>
     </div>
