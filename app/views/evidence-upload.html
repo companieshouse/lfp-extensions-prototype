@@ -24,7 +24,11 @@
         <h1 class="govuk-heading-xl">
           Add documents to support your application
         </h1>
-        <p>Accepted document file types include .doc, .docx, .pdf, .png, .jpg</p>
+        {% set fileTypeErr %}
+        {% if fileTypeErr === 'true' %}
+          We do not accept the file type .exe
+        {% endif %}
+        {% endset %}
         <p class="govuk-body"></p>
 
         {% set uploadText %}
@@ -44,7 +48,7 @@
             }) }}
 
         {% set removeLink %}
-        <a href="" class="govuk-link">Remove</a>
+        <a href="remove-document" class="govuk-link">Remove</a>
         {% endset -%}
 
         {{ govukTable({

@@ -260,6 +260,43 @@ module.exports = function (router) {
     reasonObject.nextStep = 'complete'
     res.redirect('/add-extension-reason')
   })
+  router.post('/remove-document', function (req, res) {
+    var id = req.body.id
+    var reasonObject = {}
+    reasonObject = req.session.extensionReasons[id]
+    var removeDocument = req.body.removeDocument
+    var errorFlag = false
+    var Err = {}
+    var errorList = []
+
+    if (typeof removeDocument === 'undefined') {
+      Err.type = 'blank'
+      Err.text = 'You must tell us if you want to remove the document'
+      Err.href = '#remove-document'
+      Err.flag = true
+    }
+    if (Err.flag) {
+      errorList.push(Err)
+      errorFlag = true
+    }
+    if (errorFlag === true) {
+      res.render('remove-document', {
+        errorList: errorList,
+        Err: Err,
+        reason: reasonObject,
+        extensionReasons: req.session.extensionReasons
+      })
+    } else {
+      switch (removeDocument) {
+        case 'yes':
+          res.redirect('/evidence-upload')
+          break
+        case 'no':
+          res.redirect('/evidence-upload')
+          break
+      }
+    }
+  })
   router.get('/accountsnotdue', function (req, res) {
     res.render('accountsnotdue', {
       scenario: req.session.scenario
