@@ -8,6 +8,23 @@ if (window.console && window.console.info) {
 $(document).ready(function () {
   window.GOVUKFrontend.initAll()
 
+  $('.govuk-file-upload').change(function () {
+    $('.upload-status').show()
+    $('.upload-status-heading').show()
+    $('.file-upload').hide()
+    $('.indicator').animate({
+      width: '100%'
+    }, {
+      duration: 5000,
+      step: function (now, fx) {
+        $('.upload-status__value').html(Math.ceil(now))
+      },
+      complete: function () {
+        $('#file-upload-form').submit()
+      }
+    })
+  })
+
   $('a[href="/sign-out"]').click(function () {
     var application = ''
 

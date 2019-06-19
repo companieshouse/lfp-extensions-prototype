@@ -20,7 +20,7 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="" method="post">
+      <form action="handle-file-upload" method="post" id="file-upload-form">
         <h1 class="govuk-heading-xl">
           Add documents to support your application
         </h1>
@@ -38,34 +38,53 @@
           Add a document
         {% endif %}
         {% endset -%}
-
-        {{ govukFileUpload({
-              id: "file-upload-1",
-              name: "file-upload-1",
+        <div class='file-upload'>
+          {{ govukFileUpload({
+              id: "file-upload",
+              name: "fileUpload",
               label: {
                 text: uploadText
-              }
+              },
+              value: ""
             }) }}
+        </div>
+        <div class="upload-status-heading">
+          <h4 class="govuk-heading-s">Uploading document</h4>
+        </div>
+        <div class="upload-status">
+          <h2 class="govuk-heading-m upload-status__title">document.docx</h4>
+          <p class="govuk-body upload-status__status">
+            <span class='upload-status__value'>0</span>% uploaded</p>
+          <a href='#' class="govuk-link upload-status__link">Cancel</a>
+          <div class="progress-bar">
+            <div class="indicator"></div>
+          </div>
+        </div>
 
         {% set removeLink %}
         <a href="remove-document" class="govuk-link">Remove</a>
         {% endset -%}
-
-        {{ govukTable({
-              caption: "Attached documents",
-              firstCellIsHeader: false,
-              rows: [
-                [
-                  {
-                    html: "<a href='' class='govuk-link'>evidence-letter.jpg</a>"
-                  },
-                  {
-                    html: removeLink
-                  }
-                ]
-              ]
-            }) }}
-
+        {% if reasonObject.documents.length > 0 %}
+          <dl class="govuk-upload-list">
+            {% for document in reasonObject.documents %}
+              <div class="ch-upload-list__row uploaded-file-{{loop.index0}}">
+                <dt class="ch-upload-list__key govuk-visually-hidden">
+                  Uploaded file
+                </dt>
+                <dd class="ch-upload-list__value">
+                  <a href="#" class="govuk-link">{{ document }}</a>
+                </dd>
+                <dd class="ch-upload-list__actions">
+                  <a class="govuk-link" href="remove-document">
+                    Remove
+                  </a>
+                </dd>
+              </div>
+            {% endfor %}
+          </dl>
+        {% endif %}
+      </form>
+      <form method="POST" action="">
         {{ govukButton({
               text: "Continue"
             }) }}

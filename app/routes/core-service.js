@@ -161,6 +161,16 @@ module.exports = function (router) {
     var scenario = req.session.scenario
     var extensionReasons = req.session.extensionReasons
     var userEmail = req.session.userEmail
+    var authCodeFlag = false
+    var i = 0
+
+    for (i = 0; i < extensionReasons.length; i++) {
+      if (extensionReasons[i].reason === 'computerProblem') {
+        if (extensionReasons[i].problemReason === 'Authentication code') {
+          authCodeFlag = true
+        }
+      }
+    }
 
     if (process.env.POSTMARK_API_KEY) {
       var client = new postmark.Client(process.env.POSTMARK_API_KEY)
@@ -202,7 +212,8 @@ module.exports = function (router) {
       scenario: req.session.scenario,
       extensionReasons: req.session.extensionReasons,
       extensionLength: req.session.extensionLength,
-      userEmail: req.session.userEmail
+      userEmail: req.session.userEmail,
+      authCodeFlag: authCodeFlag
     })
   })
   router.get('/print-application', function (req, res) {

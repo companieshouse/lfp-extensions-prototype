@@ -68,6 +68,7 @@ module.exports = function (router) {
     var extensionReasonErr = {}
     var otherReasonErr = {}
     var errorList = []
+    reasonObject.documents = []
 
     if (typeof extensionReason === 'undefined') {
       extensionReasonErr.type = 'blank'
@@ -252,13 +253,29 @@ module.exports = function (router) {
     }
   })
   router.get('/evidence-upload', function (req, res) {
-    res.render('evidence-upload')
+    var reasonObject = {}
+
+    reasonObject = req.session.extensionReasons.pop()
+    req.session.extensionReasons.push(reasonObject)
+    res.render('evidence-upload', {
+      reasonObject: reasonObject
+    })
   })
   router.post('/evidence-upload', function (req, res) {
     var reasonObject = {}
 
+    console.log(req.body)
     reasonObject.nextStep = 'complete'
     res.redirect('/add-extension-reason')
+  })
+  router.post('/handle-file-upload', function (req, res) {
+    var reasonObject = {}
+    var doc = req.body.fileUpload
+
+    reasonObject = req.session.extensionReasons.pop()
+    reasonObject.documents.push(doc)
+    req.session.extensionReasons.push(reasonObject)
+    res.redirect('/evidence-upload')
   })
   router.post('/remove-document', function (req, res) {
     var id = req.body.id
