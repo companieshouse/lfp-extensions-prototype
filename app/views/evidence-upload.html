@@ -66,7 +66,7 @@
         {% endset -%}
         {% if reasonObject.documents.length > 0 %}
           <dl class="govuk-upload-list">
-            {% for document in reasonObject.documents %}
+            {% for document in reasonObject.documents | reverse %}
               <div class="ch-upload-list__row uploaded-file-{{loop.index0}}">
                 <dt class="ch-upload-list__key govuk-visually-hidden">
                   Uploaded file

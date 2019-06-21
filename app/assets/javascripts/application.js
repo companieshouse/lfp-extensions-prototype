@@ -9,11 +9,17 @@ $(document).ready(function () {
   window.GOVUKFrontend.initAll()
 
   $('.govuk-file-upload').change(function () {
+    var documentPathArray = []
+
+    console.log($(this).val())
+    documentPathArray = $(this).val().split('\\')
+    console.log(documentPathArray)
+    $('.upload-status__title').html(documentPathArray[2])
     $('.upload-status').show()
     $('.upload-status-heading').show()
     $('.file-upload').hide()
     $('.indicator').animate({
-      width: '100%'
+      width: ['100%', 'easeInOutCirc']
     }, {
       duration: 5000,
       step: function (now, fx) {
