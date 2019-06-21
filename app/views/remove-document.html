@@ -35,6 +35,11 @@
           {% set Err = false %}
         {% endif %}
 
+        {% set fileNameTitle %}
+        Are you sure you want to remove
+        {{fileName}}?
+        {% endset -%}
+
         {{ govukRadios({
           classes: "govuk-radios--inline",
           idPrefix: "remove-document",
@@ -42,7 +47,7 @@
           errorMessage: Err,
           fieldset: {
             legend: {
-              text: "Are you sure you want to remove evidence-letter.jpg?",
+              html: fileNameTitle,
               isPageHeading: true,
               classes: "govuk-fieldset__legend--xl"
             }

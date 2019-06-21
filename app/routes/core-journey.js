@@ -277,19 +277,31 @@ module.exports = function (router) {
     req.session.extensionReasons.push(reasonObject)
     res.redirect('/evidence-upload')
   })
+  router.get('/remove-document', function (req, res) {
+    var id = req.query.id
+    var reasonObject = {}
+
+    reasonObject = req.session.extensionReasons.pop()
+    req.session.extensionReasons.push(reasonObject)
+    res.render('remove-document', {
+      id: id,
+      fileName: reasonObject.documents[id]
+    })
+  })
   router.post('/remove-document', function (req, res) {
     var id = req.body.id
     var reasonObject = {}
-    reasonObject = req.session.extensionReasons[id]
     var removeDocument = req.body.removeDocument
     var errorFlag = false
     var Err = {}
     var errorList = []
 
+    reasonObject = req.session.extensionReasons.pop()
+
     if (typeof removeDocument === 'undefined') {
       Err.type = 'blank'
       Err.text = 'You must tell us if you want to remove the document'
-      Err.href = '#remove-document'
+      Err.href = '#remove-document-1'
       Err.flag = true
     }
     if (Err.flag) {
@@ -297,18 +309,22 @@ module.exports = function (router) {
       errorFlag = true
     }
     if (errorFlag === true) {
+      req.session.extensionReasons.push(reasonObject)
       res.render('remove-document', {
         errorList: errorList,
         Err: Err,
-        reason: reasonObject,
-        extensionReasons: req.session.extensionReasons
+        id: id,
+        fileName: reasonObject.documents[id]
       })
     } else {
       switch (removeDocument) {
         case 'yes':
+          reasonObject.documents.splice(id, 1)
+          req.session.extensionReasons.push(reasonObject)
           res.redirect('/evidence-upload')
           break
         case 'no':
+          req.session.extensionReasons.push(reasonObject)
           res.redirect('/evidence-upload')
           break
       }
@@ -388,11 +404,12 @@ module.exports = function (router) {
   router.post('/remove-reason', function (req, res) {
     var id = req.body.id
     var reasonObject = {}
-    reasonObject = req.session.extensionReasons[id]
     var removeReason = req.body.removeReason
     var errorFlag = false
     var Err = {}
     var errorList = []
+
+    reasonObject = req.session.extensionReasons[id]
 
     if (typeof removeReason === 'undefined') {
       Err.type = 'blank'

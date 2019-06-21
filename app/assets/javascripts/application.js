@@ -31,6 +31,17 @@ $(document).ready(function () {
     })
   })
 
+  $('.upload-status__link').click(function () {
+    $('.indicator').stop()
+    $('.upload-status').hide()
+    $('.indicator').width('0')
+    $('.upload-status__value').html('0')
+    $('.upload-status-heading').hide()
+    $('.file-upload').show()
+    $('.govuk-file-upload').val('')
+    return false
+  })
+
   $('a[href="/sign-out"]').click(function () {
     var application = ''
 
