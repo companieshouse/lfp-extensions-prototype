@@ -263,19 +263,71 @@ module.exports = function (router) {
   })
   router.post('/evidence-upload', function (req, res) {
     var reasonObject = {}
+    var doc = req.body.fileUpload
+    var fileName = []
+    var errorFlag = false
+    var Err = {}
+    var errorList = []
 
-    console.log(req.body)
-    reasonObject.nextStep = 'complete'
-    res.redirect('/add-extension-reason')
+    fileName = doc.split('.')
+    fileName = fileName.pop()
+    console.log(fileName)
+
+    if (fileName === 'txt') {
+      Err.type = 'unsupported'
+      Err.text = 'We don\'t support files with an extension of \'.' + fileName + '\''
+      Err.href = '#file-upload'
+      Err.flag = true
+      errorList.push(Err)
+      errorFlag = true
+    }
+    if (errorFlag === true) {
+      req.session.extensionReasons.push(reasonObject)
+      res.render('evidence-upload', {
+        errorList: errorList,
+        Err: Err,
+        doc: doc.split('\\')
+      })
+    } else {
+      reasonObject = req.session.extensionReasons.pop()
+      reasonObject.documents.push(doc)
+      req.session.extensionReasons.push(reasonObject)
+      res.redirect('/evidence-upload')
+    }
   })
   router.post('/handle-file-upload', function (req, res) {
     var reasonObject = {}
     var doc = req.body.fileUpload
+    var fileName = []
+    var errorFlag = false
+    var Err = {}
+    var errorList = []
 
-    reasonObject = req.session.extensionReasons.pop()
-    reasonObject.documents.push(doc)
-    req.session.extensionReasons.push(reasonObject)
-    res.redirect('/evidence-upload')
+    fileName = doc.split('.')
+    fileName = fileName.pop()
+    console.log(fileName)
+
+    if (fileName === 'txt') {
+      Err.type = 'unsupported'
+      Err.text = 'We don\'t support files with an extension of \'.' + fileName
+      Err.href = '#file-upload'
+      Err.flag = true
+      errorList.push(Err)
+      errorFlag = true
+    }
+    if (errorFlag === true) {
+      req.session.extensionReasons.push(reasonObject)
+      res.render('evidence-upload', {
+        errorList: errorList,
+        Err: Err,
+        doc: doc.split('\\')
+      })
+    } else {
+      reasonObject = req.session.extensionReasons.pop()
+      reasonObject.documents.push(doc)
+      req.session.extensionReasons.push(reasonObject)
+      res.redirect('/evidence-upload')
+    }
   })
   router.get('/remove-document', function (req, res) {
     var id = req.query.id

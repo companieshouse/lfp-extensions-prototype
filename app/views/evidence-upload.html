@@ -20,7 +20,23 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="handle-file-upload" method="post" id="file-upload-form">
+      <form action="" method="post" id="file-upload-form">
+
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
+                titleText: "There was a problem with the document you added",
+                errorList: errorList
+              }) }}
+        {% endif %}
+
+        {% if errorList.length > 0 %}
+          {% set Err = {
+            text: Err.text
+          } %}
+        {% else %}
+          {% set Err = false %}
+        {% endif %}
+
         <h1 class="govuk-heading-xl">
           Add documents to support your application
         </h1>
@@ -42,6 +58,7 @@
           {{ govukFileUpload({
               id: "file-upload",
               name: "fileUpload",
+              errorMessage: Err,
               label: {
                 text: uploadText
               },
@@ -84,7 +101,7 @@
           </dl>
         {% endif %}
       </form>
-      <form method="POST" action="">
+      <form method="POST" action="add-extension-reason">
         {{ govukButton({
               text: "Continue"
             }) }}
