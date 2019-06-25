@@ -48,7 +48,15 @@ module.exports = function (router) {
       })
     } else {
       reasonObject = req.session.extensionReasons.pop()
-      if (problemReason === 'authCode' || problemReason === 'chWebsite' || problemReason === 'computerProblem') {
+      if (problemReason === 'Authentication code') {
+        reasonObject.problemReason = req.body.problemReason
+        if (editId !== '') {
+          req.session.extensionReasons[editId].problemReason = reasonObject.problemReason
+        } else {
+          req.session.extensionReasons.push(reasonObject)
+        }
+        res.redirect('/add-extension-reason')
+      } else if (problemReason === 'Companies House website' || problemReason === 'Computer problems') {
         reasonObject.problemReason = req.body.problemReason
         if (editId !== '') {
           req.session.extensionReasons[editId].problemReason = reasonObject.problemReason
