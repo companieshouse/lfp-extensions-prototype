@@ -49,7 +49,7 @@
           errorMessage: disasterDateError,
           fieldset: {
             legend: {
-              text: "When did the natural disaster happen?",
+              text: "When did the fire, flood or other natural disaster happen?",
               isPageHeading: true,
               classes: "govuk-fieldset__legend--xl"
             }
@@ -84,6 +84,9 @@
         {{ govukButton({
          text: "Continue"
         }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
       </form>
     </div>
   </div>

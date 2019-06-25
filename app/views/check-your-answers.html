@@ -167,7 +167,11 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                      <li>
+                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                      </li>
+                    </ul>
                   </dd>
                   <dd class="app-check-your-answers__change">
                     <a href="/?id={{loop.index0}}">Change</a>
@@ -208,7 +212,11 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                      <li>
+                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                      </li>
+                    </ul>
                   </dd>
                   <dd class="app-check-your-answers__change">
                     <a href="/?id={{loop.index0}}">Change</a>
@@ -249,7 +257,11 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                      <li>
+                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                      </li>
+                    </ul>
                   </dd>
                   <dd class="app-check-your-answers__change">
                     <a href="illness/illness-information/?id={{loop.index0}}">Change</a>
@@ -290,7 +302,11 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                      <li>
+                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                      </li>
+                    </ul>
                   </dd>
                   <dd class="app-check-your-answers__change">
                     <a href="/?id={{loop.index0}}">Change</a>
@@ -364,7 +380,11 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                      <li>
+                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                      </li>
+                    </ul>
                   </dd>
                   <dd class="app-check-your-answers__change">
                     <a href="/?id={{loop.index0}}">Change</a>
@@ -380,9 +400,9 @@
                   Reason
                 </dt>
                 <dd class="app-check-your-answers__answer">
-                  {% if reason.problemReason === 'Other reason' %}
+                  {% if reason.problemReason === 'other' %}
                     Other reason -
-                    {{ reason.otherReason }}
+                    {{ reason.otherProblemReason }}
                   {% else %}
                     {{ reason.problemReason | safe | nl2br }}
                   {% endif %}
@@ -391,44 +411,50 @@
                   <a href="/computer-problem/choose-computer-problem?id={{loop.index0}}">Change</a>
                 </dd>
               </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  You tried to file
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.problemDate.day }}
-                  {{ reason.problemDate.month | displayMonth }}
-                  {{ reason.problemDate.year }}
-                  {{ reason.problemTime.hour }}
-                  {{ reason.problemTime.minute }}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="/computer-problem/problem-date?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Further information
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.computerProblem | safe | nl2br }}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="/computer-problem/reason-computer-problem?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              {% if reason.supportingEvidence === 'yes' %}
+              {% if reason.problemReason !== 'Authentication code' %}
                 <div class="app-check-your-answers__contents">
                   <dt class="app-check-your-answers__question">
-                    Supporting documents
+                    You tried to file
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                    {{ reason.problemDate.day }}
+                    {{ reason.problemDate.month | displayMonth }}
+                    {{ reason.problemDate.year }}
+                    {{ reason.problemTime.hour }}
+                    {{ reason.problemTime.minute }}
                   </dd>
                   <dd class="app-check-your-answers__change">
-                    <a href="/?id={{loop.index0}}">Change</a>
+                    <a href="/computer-problem/problem-date?id={{loop.index0}}">Change</a>
                   </dd>
                 </div>
+                <div class="app-check-your-answers__contents">
+                  <dt class="app-check-your-answers__question">
+                    Further information
+                  </dt>
+                  <dd class="app-check-your-answers__answer">
+                    {{ reason.computerProblem | safe | nl2br }}
+                  </dd>
+                  <dd class="app-check-your-answers__change">
+                    <a href="/computer-problem/reason-computer-problem?id={{loop.index0}}">Change</a>
+                  </dd>
+                </div>
+                {% if reason.supportingEvidence === 'yes' %}
+                  <div class="app-check-your-answers__contents">
+                    <dt class="app-check-your-answers__question">
+                      Supporting documents
+                    </dt>
+                    <dd class="app-check-your-answers__answer">
+                      <ul class="govuk-list govuk-list--bullet">
+                        <li>
+                          <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                        </li>
+                      </ul>
+                    </dd>
+                    <dd class="app-check-your-answers__change">
+                      <a href="/?id={{loop.index0}}">Change</a>
+                    </dd>
+                  </div>
+                {% endif %}
               {% endif %}
             </dl>
           {% else %}
@@ -454,7 +480,11 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                      <li>
+                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                      </li>
+                    </ul>
                   </dd>
                   <dd class="app-check-your-answers__change">
                     <a href="/?id={{loop.index0}}">Change</a>

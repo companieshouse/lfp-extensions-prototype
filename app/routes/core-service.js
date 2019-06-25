@@ -105,6 +105,8 @@ module.exports = function (router) {
     for (i = 0; i < req.session.extensionReasons.length; i++) {
       req.session.extensionReasons[i].complete = true
     }
+    console.log(req.session.scenario)
+    console.log(req.session.userEmail)
     console.log(req.session.extensionReasons)
     res.render('check-your-answers', {
       scenario: req.session.scenario,
@@ -159,14 +161,40 @@ module.exports = function (router) {
     var scenario = req.session.scenario
     var extensionReasons = req.session.extensionReasons
     var userEmail = req.session.userEmail
+    var authCodeFlag = false
+    var i = 0
+
+    for (i = 0; i < extensionReasons.length; i++) {
+      if (extensionReasons[i].reason === 'computerProblem') {
+        if (extensionReasons[i].problemReason === 'Authentication code') {
+          authCodeFlag = true
+        }
+      }
+    }
 
     if (process.env.POSTMARK_API_KEY) {
       var client = new postmark.Client(process.env.POSTMARK_API_KEY)
 
+      // SEND CONFIRMATION EMAIL
       client.sendEmailWithTemplate({
-        'From': 'owilliams@companieshouse.gov.uk',
-        'To': userEmail,
+        'From': process.env.FROM_EMAIL,
+        'To': process.env.TO_EMAIL,
         'TemplateId': process.env.ETID_CONFIRMATION,
+        'TemplateModel': {
+          'scenario': scenario,
+          'extensionReasons': extensionReasons,
+          'userEmail': userEmail
+        }
+      }, function (error, success) {
+        if (error) {
+          console.error('Unable to send via postmark: ' + error.message)
+        }
+      })
+      // SEND SUBMISSION EMAIL
+      client.sendEmailWithTemplate({
+        'From': process.env.FROM_EMAIL,
+        'To': process.env.TO_EMAIL,
+        'TemplateId': process.env.ETID_SUBMISSION,
         'TemplateModel': {
           'scenario': scenario,
           'extensionReasons': extensionReasons,
@@ -184,7 +212,8 @@ module.exports = function (router) {
       scenario: req.session.scenario,
       extensionReasons: req.session.extensionReasons,
       extensionLength: req.session.extensionLength,
-      userEmail: req.session.userEmail
+      userEmail: req.session.userEmail,
+      authCodeFlag: authCodeFlag
     })
   })
   router.get('/print-application', function (req, res) {

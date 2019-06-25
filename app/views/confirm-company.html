@@ -21,11 +21,23 @@
       <h1 class="govuk-heading-xl">Check company details</h1>
       <h2 class="govuk-heading-l">{{scenario.company.name}}</h2>
 
+      {% set inactiveHTML %}
+      {% if scenario.company.status === 'Inactive' %}
+        <span class="govuk-!-font-weight-bold">Dissolved</span>
+      {% else %}
+        {{scenario.company.status}}
+      {% endif %}
+      {% endset %}
+
       {% set overdueHTML %}
-      {{scenario.company.accountsDue}}
       {% if scenario.company.deadlineStatus === 'Overdue' %}
+        {{scenario.company.accountsDue}}
         <br/>
         <span class="govuk-!-font-weight-bold">Your accounts are overdue</span>
+      {% elseif scenario.company.accountsDue === 'inactive' %}
+        You don’t have to file final accounts with Companies House
+      {% else %}
+        {{scenario.company.accountsDue}}
       {% endif %}
       {% endset %}
 
@@ -47,7 +59,7 @@
         text: "Status"
       },
       {
-        text: scenario.company.status
+        html: inactiveHTML
       }
     ],
     [
@@ -95,6 +107,7 @@ href: "ptf/ptf"
 text: "Continue",
 href: "accountsnotdue"
 }) }}
+      {% elif scenario.company.deadlineStatus === 'inactive' %}
       {% else %}
         {{ govukButton({
 text: "Continue",
