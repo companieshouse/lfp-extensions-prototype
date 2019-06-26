@@ -37,15 +37,26 @@
           {% set Err = false %}
         {% endif %}
 
+        {% if Err %}
+          {% set fileTypes %}
+          <p class="govuk-body-l">
+            Documents are supported in a number of formats
+          </p>
+          <ul class="govuk-list govuk-list--bullet">
+            <li>Text (doc, docx, pdf, txt)</li>
+            <li>Images (jpg, gif, tiff)</li>
+            <li>Video (mpeg,avi, mov, mp4, wmv)</li>
+          </ul>
+          {% endset %}
+        {% endif %}
+
         <h1 class="govuk-heading-xl">
           Add documents to support your application
         </h1>
-        {% set fileTypeErr %}
-        {% if fileTypeErr === 'true' %}
-          We do not accept the file type .exe
+
+        {% if Err %}
+          {{ fileTypes | safe }}
         {% endif %}
-        {% endset %}
-        <p class="govuk-body"></p>
 
         {% set uploadText %}
         {% if evidence.length > 0 %}
@@ -101,17 +112,16 @@
           </dl>
         {% endif %}
       </form>
-      <form method="POST" action="add-extension-reason">
-        {{ govukButton({
-              text: "Continue"
-            }) }}
-        <p>
-          <a href="/add-extension-reason" class="govuk-link">Continue without adding documents</a>
-        </p>
-        <p>
-          <a href="/sign-out" class="govuk-link">Save and sign out</a>
-        </p>
-      </form>
+      {{ govukButton({
+        text: "Continue",
+        href: "add-extension-reason"
+      }) }}
+      <p>
+        <a href="/add-extension-reason" class="govuk-link">Continue without adding documents</a>
+      </p>
+      <p>
+        <a href="/sign-out" class="govuk-link">Save and sign out</a>
+      </p>
     </div>
   </div>
 

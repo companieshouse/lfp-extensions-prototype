@@ -269,9 +269,8 @@ module.exports = function (router) {
     var Err = {}
     var errorList = []
 
-    fileName = doc.split('.')
-    fileName = fileName.pop()
-    console.log(fileName)
+    reasonObject = req.session.extensionReasons.pop()
+    fileName = doc.split('.').pop()
 
     if (fileName === 'txt') {
       Err.type = 'unsupported'
@@ -286,44 +285,10 @@ module.exports = function (router) {
       res.render('evidence-upload', {
         errorList: errorList,
         Err: Err,
-        doc: doc.split('\\')
+        doc: doc.split('\\'),
+        reasonObject: reasonObject
       })
     } else {
-      reasonObject = req.session.extensionReasons.pop()
-      reasonObject.documents.push(doc)
-      req.session.extensionReasons.push(reasonObject)
-      res.redirect('/evidence-upload')
-    }
-  })
-  router.post('/handle-file-upload', function (req, res) {
-    var reasonObject = {}
-    var doc = req.body.fileUpload
-    var fileName = []
-    var errorFlag = false
-    var Err = {}
-    var errorList = []
-
-    fileName = doc.split('.')
-    fileName = fileName.pop()
-    console.log(fileName)
-
-    if (fileName === 'txt') {
-      Err.type = 'unsupported'
-      Err.text = 'We don\'t support files with an extension of \'.' + fileName
-      Err.href = '#file-upload'
-      Err.flag = true
-      errorList.push(Err)
-      errorFlag = true
-    }
-    if (errorFlag === true) {
-      req.session.extensionReasons.push(reasonObject)
-      res.render('evidence-upload', {
-        errorList: errorList,
-        Err: Err,
-        doc: doc.split('\\')
-      })
-    } else {
-      reasonObject = req.session.extensionReasons.pop()
       reasonObject.documents.push(doc)
       req.session.extensionReasons.push(reasonObject)
       res.redirect('/evidence-upload')
