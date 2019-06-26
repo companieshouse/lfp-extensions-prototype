@@ -161,23 +161,33 @@
                   </dd>
                 </div>
               {% endif %}
-              {% if reason.supportingEvidence === 'yes' %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Supporting documents
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
+
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting documents
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {% if reason.documents.length > 0 %}
                     <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                      </li>
+                      {% for document in reason.documents %}
+                        <li>
+                          <a href='' class='govuk-link'>{{ document }}</a>
+                        </li>
+                      {% endfor %}
                     </ul>
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="/?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% endif %}
+                  {% else %}
+                    None
+                  {% endif %}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  {% if reason.documents.length > 0 %}
+                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
+                  {% else %}
+                    <a href="evidence?id={{loop.index0}}">Change</a>
+                  {% endif %}
+                </dd>
+              </div>
+
             </dl>
           {% elif reason.reason === 'damage' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Theft or criminal damage</h3>
