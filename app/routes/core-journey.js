@@ -2,9 +2,6 @@ const del = require('del')
 
 module.exports = function (router) {
   router.get('/choose-reason', function (req, res) {
-    console.log('/// CHOOSE REASON ///')
-    console.log(req.query)
-    console.log(req.session.scenario)
     var companyNumber = req.session.scenario.company.number
     var id = 0
     var reasonObject = {}
@@ -16,12 +13,10 @@ module.exports = function (router) {
     var checkedDisaster = false
 
     if (req.query.restart === 'yes') {
-      console.log('/// RESTART ///')
       req.session.extensionReasons = []
       del('public/saved-sessions/' + companyNumber + '.json')
       res.render('choose-reason')
     } else if (req.query.id) {
-      console.log('/// EDIT MODE ///')
       id = req.query.id
       console.log(req.session.extensionReasons)
       reasonObject = req.session.extensionReasons[id]
@@ -55,7 +50,6 @@ module.exports = function (router) {
         id: id
       })
     } else {
-      console.log('/// NUTHIN ///')
       res.render('choose-reason')
     }
   })
@@ -156,7 +150,6 @@ module.exports = function (router) {
             req.session.extensionReasons.push(reasonObject)
           }
           res.redirect('/computer-problem/choose-computer-problem')
-          console.log(req.session.extensionReasons)
           break
         case 'death':
           if (editId !== '') {
@@ -246,30 +239,55 @@ module.exports = function (router) {
           res.redirect('/evidence-upload')
           break
         case 'no':
-          reasonObject.nextStep = 'add-extension-reason'
-          res.redirect('/add-extension-reason')
+          if (req.session.extensionReasons.length > 1) {
+            reasonObject.nextStep = 'check-your-answers'
+            res.redirect('/check-your-answers')
+          } else {
+            reasonObject.nextStep = 'add-extension-reason'
+            res.redirect('/add-extension-reason')
+          }
           break
       }
     }
   })
   router.get('/evidence-upload', function (req, res) {
     var reasonObject = {}
+    var id = req.query.id
+    var continueLink = ''
 
-    reasonObject = req.session.extensionReasons.pop()
-    req.session.extensionReasons.push(reasonObject)
+    console.log(id)
+
+    if (req.query.id) {
+      reasonObject = req.session.extensionReasons[id]
+      continueLink = 'check-your-answers'
+    } else {
+      reasonObject = req.session.extensionReasons.pop()
+      req.session.extensionReasons.push(reasonObject)
+      if (req.session.extensionReasons.length > 1) {
+        continueLink = 'check-your-answers'
+      } else {
+        continueLink = 'add-extension-reason'
+      }
+    }
+
     res.render('evidence-upload', {
-      reasonObject: reasonObject
+      reasonObject: reasonObject,
+      id: id,
+      continueLink: continueLink
     })
   })
   router.post('/evidence-upload', function (req, res) {
     var reasonObject = {}
     var doc = req.body.fileUpload
+    var id = req.body.id
     var fileName = []
     var errorFlag = false
     var Err = {}
     var errorList = []
+    var continueLink = ''
 
-    reasonObject = req.session.extensionReasons.pop()
+    console.log(id)
+
     fileName = doc.split('.').pop()
 
     if (fileName === 'txt') {
@@ -281,39 +299,70 @@ module.exports = function (router) {
       errorFlag = true
     }
     if (errorFlag === true) {
-      req.session.extensionReasons.push(reasonObject)
+      if (req.body.id) {
+        reasonObject = req.session.extensionReasons[id]
+        continueLink = 'check-your-answers'
+      } else {
+        reasonObject = req.session.extensionReasons.pop()
+        req.session.extensionReasons.push(reasonObject)
+        if (req.session.extensionReasons.length > 1) {
+          continueLink = 'check-your-answers'
+        } else {
+          continueLink = 'add-extension-reason'
+        }
+      }
       res.render('evidence-upload', {
         errorList: errorList,
         Err: Err,
         doc: doc.split('\\'),
-        reasonObject: reasonObject
+        reasonObject: reasonObject,
+        id: id,
+        continueLink: continueLink
       })
     } else {
-      reasonObject.documents.push(doc)
-      req.session.extensionReasons.push(reasonObject)
-      res.redirect('/evidence-upload')
+      if (req.body.id) {
+        req.session.extensionReasons[id].documents.push(doc)
+        res.redirect('/evidence-upload?id=' + id)
+      } else {
+        reasonObject = req.session.extensionReasons.pop()
+        reasonObject.documents.push(doc)
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/evidence-upload')
+      }
     }
   })
   router.get('/remove-document', function (req, res) {
-    var id = req.query.id
+    var documentID = req.query.documentID
+    var reasonID = req.query.reasonID
     var reasonObject = {}
 
-    reasonObject = req.session.extensionReasons.pop()
-    req.session.extensionReasons.push(reasonObject)
+    if (reasonID === '') {
+      reasonObject = req.session.extensionReasons.pop()
+      req.session.extensionReasons.push(reasonObject)
+    } else {
+      reasonObject = req.session.extensionReasons[reasonID]
+    }
+
     res.render('remove-document', {
-      id: id,
-      fileName: reasonObject.documents[id]
+      documentID: documentID,
+      reasonID: reasonID,
+      fileName: reasonObject.documents[documentID]
     })
   })
   router.post('/remove-document', function (req, res) {
-    var id = req.body.id
+    var documentID = req.body.documentID
+    var reasonID = req.body.reasonID
     var reasonObject = {}
     var removeDocument = req.body.removeDocument
     var errorFlag = false
     var Err = {}
     var errorList = []
 
-    reasonObject = req.session.extensionReasons.pop()
+    if (reasonID === '') {
+      reasonObject = req.session.extensionReasons.pop()
+    } else {
+      reasonObject = req.session.extensionReasons[reasonID]
+    }
 
     if (typeof removeDocument === 'undefined') {
       Err.type = 'blank'
@@ -326,24 +375,37 @@ module.exports = function (router) {
       errorFlag = true
     }
     if (errorFlag === true) {
-      req.session.extensionReasons.push(reasonObject)
+      if (reasonID === '') {
+        req.session.extensionReasons.push(reasonObject)
+      }
       res.render('remove-document', {
         errorList: errorList,
         Err: Err,
-        id: id,
-        fileName: reasonObject.documents[id]
+        documentID: documentID,
+        reasonID: reasonID,
+        fileName: reasonObject.documents[documentID]
       })
     } else {
       switch (removeDocument) {
         case 'yes':
-          reasonObject.documents.splice(id, 1)
-          req.session.extensionReasons.push(reasonObject)
-          res.redirect('/evidence-upload')
+          if (reasonID === '') {
+            reasonObject.documents.splice(documentID, 1)
+            req.session.extensionReasons.push(reasonObject)
+          } else {
+            reasonObject.documents.splice(documentID, 1)
+            req.session.extensionReasons[reasonID] = reasonObject
+          }
           break
         case 'no':
-          req.session.extensionReasons.push(reasonObject)
-          res.redirect('/evidence-upload')
+          if (reasonID === '') {
+            req.session.extensionReasons.push(reasonObject)
+          }
           break
+      }
+      if (reasonID === '') {
+        res.redirect('/evidence-upload')
+      } else {
+        res.redirect('/evidence-upload?id=' + reasonID)
       }
     }
   })

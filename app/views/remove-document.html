@@ -22,9 +22,9 @@
 
         {% if errorList.length > 0 %}
           {{ govukErrorSummary({
-                titleText: "There is an error on the page",
-                errorList: errorList
-              }) }}
+              titleText: "There is an error on the page",
+              errorList: errorList
+            }) }}
         {% endif %}
 
         {% if errorList.length > 0 %}
@@ -65,10 +65,17 @@
         }) }}
 
         {{ govukInput({
-          id: "id",
-          name: "id",
+          id: "document-ID",
+          name: "documentID",
           type: "hidden",
-          value: id
+          value: documentID
+        }) }}
+
+        {{ govukInput({
+          id: "reason-ID",
+          name: "reasonID",
+          type: "hidden",
+          value: reasonID
         }) }}
 
         {{ govukButton({ text: "Continue" }) }}

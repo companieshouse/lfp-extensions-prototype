@@ -24,9 +24,9 @@
 
         {% if errorList.length > 0 %}
           {{ govukErrorSummary({
-                titleText: "There was a problem with the document you added",
-                errorList: errorList
-              }) }}
+              titleText: "There was a problem with the document you added",
+              errorList: errorList
+            }) }}
         {% endif %}
 
         {% if errorList.length > 0 %}
@@ -37,8 +37,11 @@
           {% set Err = false %}
         {% endif %}
 
+        <h1 class="govuk-heading-xl">
+          Add documents to support your application
+        </h1>
+
         {% if Err %}
-          {% set fileTypes %}
           <p class="govuk-body-l">
             Documents are supported in a number of formats
           </p>
@@ -47,15 +50,6 @@
             <li>Images (jpg, gif, tiff)</li>
             <li>Video (mpeg,avi, mov, mp4, wmv)</li>
           </ul>
-          {% endset %}
-        {% endif %}
-
-        <h1 class="govuk-heading-xl">
-          Add documents to support your application
-        </h1>
-
-        {% if Err %}
-          {{ fileTypes | safe }}
         {% endif %}
 
         {% set uploadText %}
@@ -89,9 +83,6 @@
           </div>
         </div>
 
-        {% set removeLink %}
-        <a href="remove-document" class="govuk-link">Remove</a>
-        {% endset -%}
         {% if reasonObject.documents.length > 0 %}
           <dl class="govuk-upload-list">
             {% for document in reasonObject.documents | reverse %}
@@ -103,7 +94,7 @@
                   <a href="#" class="govuk-link">{{ document }}</a>
                 </dd>
                 <dd class="ch-upload-list__actions">
-                  <a class="govuk-link" href="remove-document?id={{loop.revindex0}}">
+                  <a class="govuk-link" href="remove-document?documentID={{loop.revindex0}}&reasonID={{ id }}">
                     Remove
                   </a>
                 </dd>
@@ -111,13 +102,19 @@
             {% endfor %}
           </dl>
         {% endif %}
+        {{ govukInput({
+          id: "id",
+          name: "id",
+          type: "hidden",
+          value: id
+        }) }}
       </form>
       {{ govukButton({
         text: "Continue",
-        href: "add-extension-reason"
+        href: continueLink
       }) }}
       <p>
-        <a href="/add-extension-reason" class="govuk-link">Continue without adding documents</a>
+        <a href="/{{ continueLink }}" class="govuk-link">Continue without adding documents</a>
       </p>
       <p>
         <a href="/sign-out" class="govuk-link">Save and sign out</a>
