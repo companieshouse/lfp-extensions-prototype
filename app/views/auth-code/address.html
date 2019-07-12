@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-  Remove document
+  Confirm registered office
 {% endblock %}
 {% block beforeContent %}
   {{ govukPhaseBanner({
@@ -12,7 +12,7 @@
 }) }}
   {{ govukBackLink({
   text: "Back",
-  href: "evidence-upload"
+  href: "choose-reason"
 }) }}
 {% endblock %}
 {% block content %}
@@ -35,22 +35,26 @@
           {% set Err = false %}
         {% endif %}
 
-        {% set fileNameTitle %}
-        Are you sure you want to remove
-        {{fileName}}?
+        {% set addressTitle %}
+        Is the registered office
+        <br>
+        {{ scenario.company.address | nl2br | safe }}?
         {% endset -%}
 
         {{ govukRadios({
           classes: "govuk-radios--inline",
-          idPrefix: "remove-document",
-          name: "removeDocument",
+          idPrefix: "confirm-address",
+          name: "confirmAddress",
           errorMessage: Err,
           fieldset: {
             legend: {
-              html: fileNameTitle,
+              html: addressTitle,
               isPageHeading: true,
               classes: "govuk-fieldset__legend--xl"
             }
+          },
+          hint: {
+            text: "We'll send a new authentication code to the registered office."
           },
           items: [
             {
@@ -62,13 +66,6 @@
               text: "No"
             }
           ]
-        }) }}
-
-        {{ govukInput({
-          id: "document-ID",
-          name: "documentID",
-          type: "hidden",
-          value: documentID
         }) }}
 
         {{ govukInput({

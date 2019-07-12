@@ -42,6 +42,7 @@ module.exports = function (router) {
       }
       res.render('choose-reason', {
         checkedIllness: checkedIllness,
+        checkedAuthCode: checkedAuthCode,
         checkedDamage: checkedDamage,
         checkedComputer: checkedComputer,
         checkedAccounts: checkedAccounts,
@@ -106,6 +107,15 @@ module.exports = function (router) {
           }
           res.redirect('/illness/who-was-ill')
           break
+        case 'authCode':
+          if (editId !== '') {
+            req.session.extensionReasons[editId].reason = reasonObject.reason
+          } else {
+            reasonObject.nextStep = '/auth-code/address'
+            req.session.extensionReasons.push(reasonObject)
+          }
+          res.redirect('/auth-code/address')
+          break
         case 'damage':
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
@@ -167,6 +177,50 @@ module.exports = function (router) {
           break
       }
     }
+  })
+  router.get('/auth-code/address', function (req, res) {
+    res.render('auth-code/address', {
+      scenario: req.session.scenario
+    })
+  })
+  router.post('/auth-code/address', function (req, res) {
+    var confirmAddress = req.body.confirmAddress
+    var errorFlag = false
+    var Err = {}
+    var errorList = []
+
+    if (typeof confirmAddress === 'undefined') {
+      Err.type = 'blank'
+      Err.text = 'You must confirm the registered office'
+      Err.href = '#auth-code-1'
+      Err.flag = true
+    }
+    if (Err.flag) {
+      errorList.push(Err)
+      errorFlag = true
+    }
+    if (errorFlag === true) {
+      res.render('auth-code/address', {
+        scenario: req.session.scenario,
+        errorList: errorList,
+        Err: Err
+      })
+    } else {
+      switch (confirmAddress) {
+        case 'yes':
+          res.redirect('/add-extension-reason')
+          break
+        case 'no':
+          res.redirect('/auth-code/change-address')
+          break
+      }
+    }
+  })
+  router.get('/auth-code/change-address', function (req, res) {
+    res.render('auth-code/change-address')
+  })
+  router.post('/auth-code/change-address', function (req, res) {
+    res.render('auth-code/change-address')
   })
   router.get('/add-extension-reason', function (req, res) {
     res.render('add-extension-reason')
