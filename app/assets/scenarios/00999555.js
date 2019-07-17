@@ -8,7 +8,7 @@ module.exports = {
     companyType: 'Private Limited Company',
     address: '3 Place Street\nTelford\nTR1 3BM',
     accountRegistration: '31 December 2018',
-    accountsDue: '30 December 2019',
+    accountsDue: '30 May 2020',
     extensionOneWeek: '27 November 2018',
     extensionTwoWeek: '4 December 2018',
     extensionFourWeek: '18 December 2018',

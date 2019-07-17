@@ -45,3 +45,186 @@ $govuk-global-styles: true;
 .reason-container {
   margin-bottom: 50px;
 }
+
+.upload-status-heading {
+  display: none;
+}
+
+.upload-status {
+  border: 1px solid $govuk-border-colour;
+  display: none;
+  @include govuk-responsive-padding(2);
+  @include govuk-font($size: 19);
+  @include govuk-responsive-margin(3, bottom);
+}
+
+.upload-status--active {
+  display: block;
+}
+
+.upload-status__title {}
+
+.upload-status__link,
+.upload-status__status {
+  display: inline-block;
+}
+
+.upload-status__status {
+  width: 79%;
+}
+
+.upload-status__link {
+  text-align: right;
+  width: 20%;
+}
+
+.progress-bar {
+  height: 20px;
+  background-color: lighten(govuk-colour("blue"), 55%);
+}
+
+.indicator {
+  height: 20px;
+  background-color: govuk-colour("blue");
+  width: 0;
+}
+
+.ch-upload-list {
+  @include govuk-font($size: 19);
+  @include govuk-text-colour;
+  @include govuk-media-query($from: tablet) {
+    width: 100%;
+  }
+  margin: 0; // Reset default user agent styles
+  @include govuk-responsive-margin(6, 'bottom');
+}
+
+.ch-upload-list__row {
+  @include govuk-responsive-padding(2);
+  @include govuk-media-query($until:tablet) {
+    margin-bottom: govuk-spacing(2);
+    border: 1px solid $govuk-border-colour;
+  }
+  @include govuk-media-query($from: tablet) {
+    margin-bottom: govuk-spacing(2);
+    border: 1px solid $govuk-border-colour;
+  }
+}
+
+.ch-upload-list__actions,
+.ch-upload-list__key,
+.ch-upload-list__value {
+  display: inline-block;
+  margin: 0; // Reset default user agent styles
+  @include govuk-responsive-padding(1, 'top');
+  @include govuk-responsive-padding(1, 'bottom');
+  @include govuk-font($size: 19);
+  @include govuk-media-query($from: tablet) {}
+}
+
+.ch-upload-list__actions {
+  @include govuk-media-query($from: tablet) {
+    width: 20%;
+    text-align: right;
+  }
+}
+
+.ch-upload-list__key,
+.ch-upload-list__value {
+  // Automatic wrapping for unbreakable text (e.g. URLs)
+  word-wrap: break-word; // Fallback for older browsers only
+  overflow-wrap: break-word;
+  width: 79%;
+}
+
+.ch-upload-list__key {
+  margin-bottom: govuk-spacing(1);
+  @include govuk-typography-weight-bold;
+  @include govuk-media-query($from: tablet) {
+    width: 0;
+  }
+}
+
+.ch-upload-list__value {
+  @include govuk-media-query($until: tablet) {
+    margin-bottom: govuk-spacing(3);
+  }
+  @include govuk-media-query($from: tablet) {
+    width: 79%;
+  }
+}
+
+// Expand width when value is last column (no action)
+.ch-upload-list__value:last-child {
+  @include govuk-media-query($from: tablet) {
+    width: 70%;
+  }
+}
+
+.ch-upload-list__value > p {
+  margin-bottom: govuk-spacing(2);
+}
+
+.ch-upload-list__value > :last-child {
+  margin-bottom: 0;
+}
+
+.ch-upload-list__actions-list {
+  width: 100%;
+  margin: 0; // Reset default user agent styles
+  padding: 0; // Reset default user agent styles
+}
+
+.ch-upload-list__actions-list-item {
+  display: inline;
+  margin-right: govuk-spacing(2);
+  padding-right: govuk-spacing(2);
+}
+
+// In older browsers such as IE8, :last-child is not available,
+// so only show the border divider where it is available.
+.ch-upload-list__actions-list-item:not(:last-child) {
+  border-right: 1px solid $govuk-border-colour;
+}
+
+.ch-upload-list__actions-list-item:last-child {
+  margin-right: 0;
+  padding-right: 0;
+  border: 0;
+}
+
+// No border on entire summary list
+.ch-upload-list--no-border {
+  @include govuk-media-query($until: tablet) {
+    .ch-upload-list__row {
+      border: 0;
+    }
+  }
+
+  @include govuk-media-query($from: tablet) {
+    .ch-upload-list__actions,
+    .ch-upload-list__key,
+    .ch-upload-list__value {
+      // Remove 1px border, add 1px height back on
+      padding-bottom: govuk-spacing(2) + 1px;
+      border: 0;
+    }
+  }
+}
+
+// No border on specific rows
+.ch-upload-list__row--no-border {
+  @include govuk-media-query($until: tablet) {
+    border: 0;
+  }
+
+  @include govuk-media-query($from: tablet) {
+    .ch-upload-list__actions,
+    .ch-upload-list__key,
+    .ch-upload-list__value {
+      // Remove 1px border, add 1px height back on
+      padding-bottom: govuk-spacing(2) + 1px;
+      border: 0;
+    }
+  }
+}

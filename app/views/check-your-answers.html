@@ -3,6 +3,7 @@
 {% block pageTitle %}
   Check your answers before sending your application
 {% endblock %}
+
 {% block beforeContent %}
   {{ govukPhaseBanner({
   tag: {
@@ -15,6 +16,7 @@
   href: "add-extension-reason"
 }) }}
 {% endblock %}
+
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -150,10 +152,10 @@
               {% endif %}
               {% if reason.illnessInformation != null %}
                 <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
+                  <dt class="app-check-your-answers__question app-check-your-answers__question-full-width">
                     Further information
                   </dt>
-                  <dd class="app-check-your-answers__answer">
+                  <dd class="app-check-your-answers__answer app-check-your-answers__question--full-width">
                     {{ reason.illnessInformation | safe | nl2br }}
                   </dd>
                   <dd class="app-check-your-answers__change">
@@ -161,26 +163,50 @@
                   </dd>
                 </div>
               {% endif %}
-              {% if reason.supportingEvidence === 'yes' %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Supporting documents
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="/?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% endif %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting documents
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {% if reason.documents.length > 0 %}
+                    <ul class="govuk-list govuk-list--bullet">
+                      {% for document in reason.documents | reverse %}
+                        <li>
+                          <a href='' class='govuk-link' download="download">{{ document }}</a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    None
+                  {% endif %}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  {% if reason.documents.length > 0 %}
+                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
+                  {% else %}
+                    <a href="evidence?id={{loop.index0}}">Change</a>
+                  {% endif %}
+                </dd>
+              </div>
+            </dl>
+          {% elif reason.reason === 'authCode' %}
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Authentication code</h3>
+            <dl class="app-check-your-answers app-check-your-answers--long">
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Registered address
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {{ scenario.company.address | nl2br | safe }}
+                </dd>
+              </div>
             </dl>
           {% elif reason.reason === 'damage' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Theft or criminal damage</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
-                  Date theft or criminal damage happened
+                  Date of incident
                 </dt>
                 <dd class="app-check-your-answers__answer">
                   {{ reason.damageDate.day }}
@@ -202,19 +228,31 @@
                   <a href="/theft-criminal-damage/reason-damage?id={{loop.index0}}">Change</a>
                 </dd>
               </div>
-              {% if reason.supportingEvidence === 'yes' %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Supporting documents
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="/?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% endif %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting documents
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {% if reason.documents.length > 0 %}
+                    <ul class="govuk-list govuk-list--bullet">
+                      {% for document in reason.documents | reverse %}
+                        <li>
+                          <a href='' class='govuk-link' download="download">{{ document }}</a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    None
+                  {% endif %}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  {% if reason.documents.length > 0 %}
+                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
+                  {% else %}
+                    <a href="evidence?id={{loop.index0}}">Change</a>
+                  {% endif %}
+                </dd>
+              </div>
             </dl>
           {% elif reason.reason === 'disaster' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Natural disaster</h3>
@@ -249,7 +287,11 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                      <li>
+                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                      </li>
+                    </ul>
                   </dd>
                   <dd class="app-check-your-answers__change">
                     <a href="illness/illness-information/?id={{loop.index0}}">Change</a>
@@ -290,7 +332,11 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                      <li>
+                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                      </li>
+                    </ul>
                   </dd>
                   <dd class="app-check-your-answers__change">
                     <a href="/?id={{loop.index0}}">Change</a>
@@ -364,7 +410,11 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                      <li>
+                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                      </li>
+                    </ul>
                   </dd>
                   <dd class="app-check-your-answers__change">
                     <a href="/?id={{loop.index0}}">Change</a>
@@ -424,7 +474,11 @@
                       Supporting documents
                     </dt>
                     <dd class="app-check-your-answers__answer">
-                      <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                      <ul class="govuk-list govuk-list--bullet">
+                        <li>
+                          <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                        </li>
+                      </ul>
                     </dd>
                     <dd class="app-check-your-answers__change">
                       <a href="/?id={{loop.index0}}">Change</a>
@@ -456,7 +510,11 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                    <ul class="govuk-list govuk-list--bullet">
+                      <li>
+                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
+                      </li>
+                    </ul>
                   </dd>
                   <dd class="app-check-your-answers__change">
                     <a href="/?id={{loop.index0}}">Change</a>

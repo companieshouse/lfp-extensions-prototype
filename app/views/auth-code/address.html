@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Confirm registered office
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "choose-reason"
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="" method="post">
+
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
+              titleText: "There is an error on the page",
+              errorList: errorList
+            }) }}
+        {% endif %}
+
+        {% if errorList.length > 0 %}
+          {% set Err = {
+            text: Err.text
+          } %}
+        {% else %}
+          {% set Err = false %}
+        {% endif %}
+
+        {% set addressTitle %}
+        Is the registered office
+        <br>
+        {{ scenario.company.address | nl2br | safe }}?
+        {% endset -%}
+
+        {{ govukRadios({
+          classes: "govuk-radios--inline",
+          idPrefix: "confirm-address",
+          name: "confirmAddress",
+          errorMessage: Err,
+          fieldset: {
+            legend: {
+              html: addressTitle,
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            }
+          },
+          hint: {
+            text: "We'll send a new authentication code to the registered office."
+          },
+          items: [
+            {
+              value: "yes",
+              text: "Yes"
+            },
+            {
+              value: "no",
+              text: "No"
+            }
+          ]
+        }) }}
+
+        {{ govukInput({
+          id: "reason-ID",
+          name: "reasonID",
+          type: "hidden",
+          value: reasonID
+        }) }}
+
+        {{ govukButton({ text: "Continue" }) }}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

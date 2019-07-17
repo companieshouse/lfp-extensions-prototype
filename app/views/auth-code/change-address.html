@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Change registered office
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "/confirm-company"
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">Change the registered office</h1>
+      <h2 class="govuk-heading-m">What to do next</h2>
+      <p>You need to
+        <a href="https://www.gov.uk/government/publications/change-a-registered-office-address-ad01">update the registered office</a>
+        for
+        {{scenario.company.name}}.
+      </p>
+      <p>Once you have updated the registered office, you'll need to
+        <a href="resume-application">resume your application</a>
+        to extend the filing deadline.</p>
+    </div>
+  </div>
+{% endblock %}

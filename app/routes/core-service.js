@@ -72,8 +72,6 @@ module.exports = function (router) {
     var scenario = req.session.scenario
     var extensionReasons = req.session.extensionReasons
 
-    console.log(extensionReasons)
-
     res.render('resume-application', {
       scenario: scenario,
       userEmail: userEmail,
@@ -105,7 +103,6 @@ module.exports = function (router) {
     for (i = 0; i < req.session.extensionReasons.length; i++) {
       req.session.extensionReasons[i].complete = true
     }
-    console.log(req.session.extensionReasons)
     res.render('check-your-answers', {
       scenario: req.session.scenario,
       extensionReasons: req.session.extensionReasons,
@@ -126,7 +123,6 @@ module.exports = function (router) {
     jsonName = application.scenario.company.number
     json = JSON.stringify(application, null, '\t')
     // fs.writeFile('public/saved-sessions/' + jsonName + '.json', json, 'utf8')
-    console.log('should have saved my session')
 
     res.render('sign-out', {
       scenario: req.session.scenario,
@@ -149,7 +145,6 @@ module.exports = function (router) {
     var application = {}
 
     application = JSON.parse(req.query.application)
-    console.log(application.scenario)
     req.session.userEmail = application.userEmail
     req.session.scenario = application.scenario
     req.session.extensionReasons = application.extensionReasons
@@ -159,14 +154,40 @@ module.exports = function (router) {
     var scenario = req.session.scenario
     var extensionReasons = req.session.extensionReasons
     var userEmail = req.session.userEmail
+    var authCodeFlag = false
+    var i = 0
+
+    for (i = 0; i < extensionReasons.length; i++) {
+      if (extensionReasons[i].reason === 'computerProblem') {
+        if (extensionReasons[i].problemReason === 'Authentication code') {
+          authCodeFlag = true
+        }
+      }
+    }
 
     if (process.env.POSTMARK_API_KEY) {
       var client = new postmark.Client(process.env.POSTMARK_API_KEY)
 
+      // SEND CONFIRMATION EMAIL
       client.sendEmailWithTemplate({
-        'From': 'owilliams@companieshouse.gov.uk',
-        'To': userEmail,
+        'From': process.env.FROM_EMAIL,
+        'To': process.env.TO_EMAIL,
         'TemplateId': process.env.ETID_CONFIRMATION,
+        'TemplateModel': {
+          'scenario': scenario,
+          'extensionReasons': extensionReasons,
+          'userEmail': userEmail
+        }
+      }, function (error, success) {
+        if (error) {
+          console.error('Unable to send via postmark: ' + error.message)
+        }
+      })
+      // SEND SUBMISSION EMAIL
+      client.sendEmailWithTemplate({
+        'From': process.env.FROM_EMAIL,
+        'To': process.env.TO_EMAIL,
+        'TemplateId': process.env.ETID_SUBMISSION,
         'TemplateModel': {
           'scenario': scenario,
           'extensionReasons': extensionReasons,
@@ -184,7 +205,8 @@ module.exports = function (router) {
       scenario: req.session.scenario,
       extensionReasons: req.session.extensionReasons,
       extensionLength: req.session.extensionLength,
-      userEmail: req.session.userEmail
+      userEmail: req.session.userEmail,
+      authCodeFlag: authCodeFlag
     })
   })
   router.get('/print-application', function (req, res) {
@@ -195,5 +217,9 @@ module.exports = function (router) {
       userEmail: req.session.userEmail,
       backLinkHref: 'confirmation'
     })
+  })
+  // DOCUMENT DOWNLOAD
+  router.get('/download', function (req, res) {
+    res.render('download')
   })
 }

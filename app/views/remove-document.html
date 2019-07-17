@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Remove document
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "evidence-upload"
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="" method="post">
+
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
+              titleText: "There is an error on the page",
+              errorList: errorList
+            }) }}
+        {% endif %}
+
+        {% if errorList.length > 0 %}
+          {% set Err = {
+            text: Err.text
+          } %}
+        {% else %}
+          {% set Err = false %}
+        {% endif %}
+
+        {% set fileNameTitle %}
+        Are you sure you want to remove
+        {{fileName}}?
+        {% endset -%}
+
+        {{ govukRadios({
+          classes: "govuk-radios--inline",
+          idPrefix: "remove-document",
+          name: "removeDocument",
+          errorMessage: Err,
+          fieldset: {
+            legend: {
+              html: fileNameTitle,
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            }
+          },
+          items: [
+            {
+              value: "yes",
+              text: "Yes"
+            },
+            {
+              value: "no",
+              text: "No"
+            }
+          ]
+        }) }}
+
+        {{ govukInput({
+          id: "document-ID",
+          name: "documentID",
+          type: "hidden",
+          value: documentID
+        }) }}
+
+        {{ govukInput({
+          id: "reason-ID",
+          name: "reasonID",
+          type: "hidden",
+          value: reasonID
+        }) }}
+
+        {{ govukButton({ text: "Continue" }) }}
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
