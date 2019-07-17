@@ -185,9 +185,11 @@ module.exports = function (router) {
   })
   router.post('/auth-code/address', function (req, res) {
     var confirmAddress = req.body.confirmAddress
+    var authCodeFlag = true
     var errorFlag = false
     var Err = {}
     var errorList = []
+    var reasonObject = {}
 
     if (typeof confirmAddress === 'undefined') {
       Err.type = 'blank'
@@ -208,6 +210,9 @@ module.exports = function (router) {
     } else {
       switch (confirmAddress) {
         case 'yes':
+          reasonObject = req.session.extensionReasons.pop()
+          reasonObject.flag = authCodeFlag
+          req.session.extensionReasons.push(reasonObject)
           res.redirect('/add-extension-reason')
           break
         case 'no':
@@ -217,7 +222,9 @@ module.exports = function (router) {
     }
   })
   router.get('/auth-code/change-address', function (req, res) {
-    res.render('auth-code/change-address')
+    res.render('auth-code/change-address', {
+      scenario: req.session.scenario
+    })
   })
   router.post('/auth-code/change-address', function (req, res) {
     res.render('auth-code/change-address')
@@ -375,9 +382,11 @@ module.exports = function (router) {
       })
     } else {
       if (req.body.id) {
+        reasonObject.nextStep = 'check-your-answers'
         req.session.extensionReasons[id].documents.push(doc)
         res.redirect('/evidence-upload?id=' + id)
       } else {
+        reasonObject.nextStep = 'evidence-upload'
         reasonObject = req.session.extensionReasons.pop()
         reasonObject.documents.push(doc)
         req.session.extensionReasons.push(reasonObject)
