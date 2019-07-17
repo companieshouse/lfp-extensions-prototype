@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block head %}
+  <meta http-equiv="refresh" content="5;URL='https://whp-aus1.cold.extweb.hp.com/pub/softlib/software12/COL11309/pl-117804-1/hpdj4000wx64glen.exe'"/>
+  <!--[if lte IE 8]><link href="/public/stylesheets/application-ie8.css" rel="stylesheet" type="text/css" /><![endif]-->
+  <!--[if gt IE 8]><!--><link href="/public/stylesheets/application.css" media="all" rel="stylesheet" type="text/css"/>
+  <!--<![endif]-->
+{% endblock %}
+
+{% block pageTitle %}
+  {% if errorList.length > 0 %}
+    Error:
+  {% endif %}
+  Sign in
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">Your document download will start soon</h1>
+      <p class="govuk-body-l">
+        <a href="https://ftp.hp.com/pub/softlib/software12/COL11309/pl-117804-1/hpdj4000wx64glen.exe" class="govuk-link" download="download">Click here to download your document</a>
+        if the download does not start in 10 seconds.</p>
+    </div>
+  </div>
+{% endblock %}

@@ -80,18 +80,15 @@ module.exports = function (router) {
       })
     } else {
       if (req.body.editId !== '') {
-        console.log(req.body.editId)
         req.session.extensionReasons[editId].illPerson = illPerson
         req.session.extensionReasons[editId].otherPerson = otherPerson
         res.redirect('/check-your-answers')
       } else {
-        console.log('normalmode')
         reasonObject = req.session.extensionReasons.pop()
         reasonObject.illPerson = req.body.illPerson
         reasonObject.otherPerson = req.body.otherPerson
         reasonObject.nextStep = 'illness/illness-start-date'
         req.session.extensionReasons.push(reasonObject)
-        console.log(req.session.extensionReasons)
         res.redirect('/illness/illness-start-date')
       }
     }
