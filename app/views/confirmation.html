@@ -34,14 +34,14 @@
         <a href="print-application" class="govuk-link">Print or save a copy of this application</a>
       </p>
 
-      {% if scenario.company.deadlineStatus === 'Near'%}
+      {% if (scenario.company.deadlineStatus === 'Near') and (authCodeFlag === false) %}
         {{ govukInsetText({
           html: shortdeadlineHTML
         }) }}
       {% endif %}
       <h2 class="govuk-heading-m">What happens next</h2>
       {% if authCodeFlag === true %}
-        <p>You should receive your Authentication Code within 5 working days.</p>
+        <p>You should receive the Authentication Code at the registered office within 5 working days.</p>
         {% if scenario.company.deadlineStatus === 'Near' %}
           <p>You have an extension of 14 days. Your filing deadline is now
             <b>{{scenario.company.extensionTwoWeek}}</b>.
