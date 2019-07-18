@@ -158,10 +158,9 @@ module.exports = function (router) {
     var i = 0
 
     for (i = 0; i < extensionReasons.length; i++) {
-      if (extensionReasons[i].reason === 'computerProblem') {
-        if (extensionReasons[i].problemReason === 'Authentication code') {
-          authCodeFlag = true
-        }
+      if (extensionReasons[i].reason === 'authCode') {
+        console.log('auth code flag 2')
+        authCodeFlag = true
       }
     }
 
