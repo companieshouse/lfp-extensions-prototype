@@ -159,6 +159,7 @@ module.exports = function (router) {
 
     for (i = 0; i < extensionReasons.length; i++) {
       if (extensionReasons[i].reason === 'authCode') {
+        console.log('auth code flag 2')
         authCodeFlag = true
       }
     }

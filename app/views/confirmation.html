@@ -34,7 +34,7 @@
         <a href="print-application" class="govuk-link">Print or save a copy of this application</a>
       </p>
 
-      {% if scenario.company.deadlineStatus === 'Near'%}
+      {% if (scenario.company.deadlineStatus === 'Near') and (authCodeFlag === false) %}
         {{ govukInsetText({
           html: shortdeadlineHTML
         }) }}

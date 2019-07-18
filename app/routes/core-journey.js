@@ -213,7 +213,11 @@ module.exports = function (router) {
           reasonObject = req.session.extensionReasons.pop()
           reasonObject.flag = authCodeFlag
           req.session.extensionReasons.push(reasonObject)
-          res.redirect('/add-extension-reason')
+          if (req.session.extensionReasons.length > 1) {
+            res.redirect('/check-your-answers')
+          } else {
+            res.redirect('/add-extension-reason')
+          }
           break
         case 'no':
           res.redirect('/auth-code/change-address')
