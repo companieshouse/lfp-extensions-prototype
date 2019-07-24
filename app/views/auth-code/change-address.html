@@ -21,8 +21,8 @@
       <h1 class="govuk-heading-xl">Change the registered office</h1>
       <h2 class="govuk-heading-m">What to do next</h2>
       <p>You need to
-        <a href="https://www.gov.uk/government/publications/change-a-registered-office-address-ad01">update the registered office</a>
-        for
+        <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/287369/AD01_change_of_registered_office_address.pdf">print an application</a>
+        to update the registered office for
         {{ scenario.company.name }}.
       </p>
       <p>We'll send a new authentication code to the registered office.</p>
@@ -31,4 +31,13 @@
         to extend the filing deadline.</p>
     </div>
   </div>
+  {{ govukInput({
+    id: "id",
+    name: "id",
+    type: "hidden",
+    value: id
+  }) }}
+  <p>
+    <a href="/sign-out" class="govuk-link">Save and sign out</a>
+  </p>
 {% endblock %}
