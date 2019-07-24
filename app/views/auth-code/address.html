@@ -69,13 +69,16 @@
         }) }}
 
         {{ govukInput({
-          id: "reason-ID",
-          name: "reasonID",
+          id: "id",
+          name: "id",
           type: "hidden",
-          value: reasonID
+          value: id
         }) }}
 
         {{ govukButton({ text: "Continue" }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
       </form>
     </div>
   </div>

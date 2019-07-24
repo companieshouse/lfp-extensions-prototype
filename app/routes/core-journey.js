@@ -190,6 +190,7 @@ module.exports = function (router) {
     var Err = {}
     var errorList = []
     var reasonObject = {}
+    var id = req.body.id
 
     if (typeof confirmAddress === 'undefined') {
       Err.type = 'blank'
@@ -231,7 +232,13 @@ module.exports = function (router) {
     })
   })
   router.post('/auth-code/change-address', function (req, res) {
+    var reasonObject = {}
+    var id = req.body.id
+
     res.render('auth-code/change-address')
+    reasonObject = req.session.extensionReasons.pop()
+    req.session.extensionReasons.push(reasonObject)
+    reasonObject.nextStep = '/auth-code/address'
   })
   router.get('/add-extension-reason', function (req, res) {
     res.render('add-extension-reason')
