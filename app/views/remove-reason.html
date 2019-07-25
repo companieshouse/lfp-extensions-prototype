@@ -73,7 +73,7 @@
         {% endif %}
 
         {% if reason.reason === 'illness' %}
-          <h3 class="govuk-heading-m">{{extensionListIndex}}Illness</h3>
+          <h2 class="govuk-heading-m">{{extensionListIndex}}Illness</h2>
           <dl class="app-check-your-answers app-check-your-answers--long">
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
@@ -145,7 +145,7 @@
             {% endif %}
           </dl>
         {% elif reason.reason === 'damage' %}
-          <h3 class="govuk-heading-m">{{extensionListIndex}}Theft or criminal damage</h3>
+          <h2 class="govuk-heading-m">{{extensionListIndex}}Theft or criminal damage</h2>
           <dl class="app-check-your-answers app-check-your-answers--long">
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
@@ -181,7 +181,7 @@
             {% endif %}
           </dl>
         {% elif reason.reason === 'disaster' %}
-          <h3 class="govuk-heading-m">{{extensionListIndex}}Natural disaster</h3>
+          <h2 class="govuk-heading-m">{{extensionListIndex}}Natural disaster</h2>
           <dl class="app-check-your-answers app-check-your-answers--long">
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
@@ -217,7 +217,7 @@
             {% endif %}
           </dl>
         {% elif reason.reason === 'accounts' %}
-          <h3 class="govuk-heading-m">{{extensionListIndex}}Accounting issues</h3>
+          <h2 class="govuk-heading-m">{{extensionListIndex}}Accounting issues</h2>
           <dl class="app-check-your-answers app-check-your-answers--long">
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
@@ -253,7 +253,7 @@
             {% endif %}
           </dl>
         {% elif reason.reason === 'companyChanges' %}
-          <h3 class="govuk-heading-m">{{extensionListIndex}}Changes to the company</h3>
+          <h2 class="govuk-heading-m">{{extensionListIndex}}Changes to the company</h2>
           <dl class="app-check-your-answers app-check-your-answers--long">
             {% if reason.dateWasChanged != null %}
               <div class="app-check-your-answers__contents">
@@ -316,7 +316,7 @@
             {% endif %}
           </dl>
         {% elif reason.reason === 'computerProblem' %}
-          <h3 class="govuk-heading-m">{{extensionListIndex}}Problems filing online</h3>
+          <h2 class="govuk-heading-m">{{extensionListIndex}}Problems filing online</h2>
           <dl class="app-check-your-answers app-check-your-answers--long">
             <div class="app-check-your-answers__contents">
               <dt class="app-check-your-answers__question">
@@ -381,8 +381,8 @@
             {% endif %}
           </dl>
         {% else %}
-          <h3 class="govuk-heading-m">{{loop.index}}:
-            {{ reason.otherReason }}</h3>
+          <h2 class="govuk-heading-m">{{loop.index}}:
+            {{ reason.otherReason }}</h2>
           <dl class="app-check-your-answers app-check-your-answers--long">
             {% if reason.otherInformation != null %}
               <div class="app-check-your-answers__contents">
