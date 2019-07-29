@@ -36,9 +36,8 @@
         {% endif %}
 
         {% set addressTitle %}
-        Is the registered office
-        <br>
-        {{ scenario.company.address | nl2br | safe }}?
+        <h1 class="govuk-heading-xl">Check the address is correct</h1>
+        <h2 class="govuk-heading-l">{{ scenario.company.address | nl2br | safe }}</h2>
         {% endset -%}
 
         {{ govukRadios({
