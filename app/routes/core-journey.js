@@ -491,6 +491,14 @@ module.exports = function (router) {
   router.post('/accountsnotdue', function (req, res) {
     res.redirect('accountsnotdue')
   })
+  router.get('/account-reference-date', function (req, res) {
+    res.render('account-reference-date', {
+      scenario: req.session.scenario
+    })
+  })
+  router.post('/account-reference-date', function (req, res) {
+    res.redirect('/choose-reason')
+  })
   router.get('/ptf/ptf', function (req, res) {
     res.render('ptf/ptf', {
       scenario: req.session.scenario
