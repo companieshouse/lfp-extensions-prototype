@@ -1,8 +1,6 @@
 {% extends "layout.html" %}
 
-{% block pageTitle %}
-  Confirm registered office
-{% endblock %}
+{% block pageTitle %}Has an authentication code been requested?{% endblock %}
 {% block beforeContent %}
   {{ govukPhaseBanner({
   tag: {
@@ -35,24 +33,16 @@
           {% set Err = false %}
         {% endif %}
 
-        <h1 class="govuk-heading-xl">Confirm your registered office address</h1>
-        <p class="govuk-body-l">We'll send a new authentication code to your registered office address.</p>
-
-        <p class="govuk-body">
-          {{ scenario.company.name }}<br/>
-          {{ scenario.company.address | nl2br | safe }}
-        </p>
-
         {{ govukRadios({
           classes: "govuk-radios--inline",
-          idPrefix: "confirm-address",
-          name: "confirmAddress",
+          idPrefix: "auth-code-requested",
+          name: "authCodeRequested",
           errorMessage: Err,
           fieldset: {
             legend: {
-              text: "Is this address correct?",
-              isPageHeading: false,
-              classes: "govuk-fieldset__legend--m"
+              text: "Have you requested a new authentication code?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
             }
           },
           items: [
