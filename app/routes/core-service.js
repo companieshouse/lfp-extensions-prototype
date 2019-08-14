@@ -183,6 +183,7 @@ module.exports = function (router) {
         }
       })
       // SEND SUBMISSION EMAIL
+      /*
       client.sendEmailWithTemplate({
         'From': process.env.FROM_EMAIL,
         'To': process.env.TO_EMAIL,
@@ -197,6 +198,7 @@ module.exports = function (router) {
           console.error('Unable to send via postmark: ' + error.message)
         }
       })
+      */
     } else {
       console.log('No Postmrk API key detected. To test emails run app locally with `heroku local web`')
     }
