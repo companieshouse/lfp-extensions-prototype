@@ -16,22 +16,56 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      <div class="govuk-panel govuk-panel--confirmation">
-        <h1 class="govuk-panel__title">Application submitted</h1>
-        <div class="govuk-panel__body">
-          Your reference number is the company number<br>
-          <strong>{{ scenario.company.number }}</strong>
+      {% if authCodeFlag === true %}
+        <div class="govuk-panel govuk-panel--confirmation">
+          {% if scenario.company.deadlineStatus === 'Near' %}
+            <h1 class="govuk-panel__title">Application accepted</h1>
+            <div class="govuk-panel__body">
+              The filing deadline for
+              {{ scenario.company.name }}
+              has been extended by 14 days.
+            </div>
+          {% elseif scenario.company.deadlineStatus !== 'Near' %}
+            <h1 class="govuk-panel__title">Extension not required</h1>
+            <div class="govuk-panel__body">
+              {{ scenario.company.name }}
+              still has time to file its accounts before the deadline.
+            </div>
+          {% endif %}
         </div>
-      </div>
+      {% else %}
+        <div class="govuk-panel govuk-panel--confirmation">
+          <h1 class="govuk-panel__title">Application submitted</h1>
+          <div class="govuk-panel__body">
+            Your reference number is the company number<br>
+            <strong>{{ scenario.company.number }}</strong>
+          </div>
+        </div>
+      {% endif %}
 
-      <p class="govuk-body-l">
-        We've sent a confirmation email to
-        <span class="govuk-body-l govuk-!-font-weight-bold">{{ userEmail }}</span>
-        which contains your reference number and application information.
-      </p>
+      {% if authCodeFlag !== true %}
+        <p class="govuk-body-l">
+          We've sent a confirmation email to
+          <span class="govuk-body-l govuk-!-font-weight-bold">{{ userEmail }}</span>
+          which contains your reference number and application information.
+        </p>
+      {% else %}
+        <p class="govuk-body-l">
+          We've sent a confirmation email to
+          <span class="govuk-body-l govuk-!-font-weight-bold">{{ userEmail }}</span>
+          which contains your application information.
+        </p>
+        <p class="govuk-body-l">
+          {% if scenario.company.deadlineStatus === 'Near' %}
+            Your new filing deadline is
+            <span class="govuk-!-font-weight-bold">3 September 2019</span>.
+          {% endif %}
+          We've also sent a new authentication code to your registered office address.
+        </p>
+      {% endif %}
 
       <p class="govuk-body">
-        <a href="print-application" class="govuk-link">Print or save a copy of this application</a>
+        <a href="javascript:if(window.print)window.print()" class="govuk-link">Print a copy of this application</a>
       </p>
 
       {% if (scenario.company.deadlineStatus === 'Near') and (authCodeFlag === false) %}
@@ -41,13 +75,13 @@
       {% endif %}
       <h2 class="govuk-heading-m">What happens next</h2>
       {% if authCodeFlag === true %}
-        <p>You should receive the Authentication Code at the registered office within 5 working days.</p>
+        <p>You should receive the authentication code at the registered office within 5 working days.</p>
         {% if scenario.company.deadlineStatus === 'Near' %}
-          <p>You have an extension of 14 days. Your filing deadline is now
+          <p>You should file your accounts using your new code by
             <b>{{scenario.company.extensionTwoWeek}}</b>.
           </p>
         {% elseif scenario.company.deadlineStatus !== 'Near' %}
-          <p>You will not receive an extension to your filing deadline and should file before your filing due date of
+          <p>You will not receive an extension to your filing deadline and should file before your due date of
             <b>{{ scenario.company.accountsDue }}</b>.</p>
         {% endif %}
       {% else %}

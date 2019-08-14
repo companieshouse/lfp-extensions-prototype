@@ -10,6 +10,9 @@ require('./routes/core-journey.js')(router)
 // Illness
 require('./routes/illness.js')(router)
 
+// Authentication Code
+require('./routes/auth-code.js')(router)
+
 // Theft Or Criminal Damage
 require('./routes/theft-or-criminal-damage.js')(router)
 

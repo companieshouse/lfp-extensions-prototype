@@ -6,6 +6,7 @@ module.exports = function (router) {
     var id = 0
     var reasonObject = {}
     var checkedIllness = false
+    var checkedAuthCode = false
     var checkedDamage = false
     var checkedComputer = false
     var checkedAccounts = false
@@ -23,6 +24,9 @@ module.exports = function (router) {
       switch (reasonObject.reason) {
         case 'illness':
           checkedIllness = true
+          break
+        case 'authCode':
+          checkedAuthCode = true
           break
         case 'damage':
           checkedDamage = true
@@ -111,10 +115,10 @@ module.exports = function (router) {
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
-            reasonObject.nextStep = '/auth-code/address'
+            reasonObject.nextStep = '/auth-code/auth-code-requested'
             req.session.extensionReasons.push(reasonObject)
           }
-          res.redirect('/auth-code/address')
+          res.redirect('/auth-code/auth-code-requested')
           break
         case 'damage':
           if (editId !== '') {
@@ -177,68 +181,6 @@ module.exports = function (router) {
           break
       }
     }
-  })
-  router.get('/auth-code/address', function (req, res) {
-    res.render('auth-code/address', {
-      scenario: req.session.scenario
-    })
-  })
-  router.post('/auth-code/address', function (req, res) {
-    var confirmAddress = req.body.confirmAddress
-    var authCodeFlag = true
-    var errorFlag = false
-    var Err = {}
-    var errorList = []
-    var reasonObject = {}
-    var id = req.body.id
-
-    if (typeof confirmAddress === 'undefined') {
-      Err.type = 'blank'
-      Err.text = 'You must confirm the registered office'
-      Err.href = '#auth-code-1'
-      Err.flag = true
-    }
-    if (Err.flag) {
-      errorList.push(Err)
-      errorFlag = true
-    }
-    if (errorFlag === true) {
-      res.render('auth-code/address', {
-        scenario: req.session.scenario,
-        errorList: errorList,
-        Err: Err
-      })
-    } else {
-      switch (confirmAddress) {
-        case 'yes':
-          reasonObject = req.session.extensionReasons.pop()
-          reasonObject.flag = authCodeFlag
-          req.session.extensionReasons.push(reasonObject)
-          if (req.session.extensionReasons.length > 1) {
-            res.redirect('/check-your-answers')
-          } else {
-            res.redirect('/add-extension-reason')
-          }
-          break
-        case 'no':
-          res.redirect('/auth-code/change-address')
-          break
-      }
-    }
-  })
-  router.get('/auth-code/change-address', function (req, res) {
-    res.render('auth-code/change-address', {
-      scenario: req.session.scenario
-    })
-  })
-  router.post('/auth-code/change-address', function (req, res) {
-    var reasonObject = {}
-    var id = req.body.id
-
-    res.render('auth-code/change-address')
-    reasonObject = req.session.extensionReasons.pop()
-    req.session.extensionReasons.push(reasonObject)
-    reasonObject.nextStep = '/auth-code/address'
   })
   router.get('/add-extension-reason', function (req, res) {
     res.render('add-extension-reason')
