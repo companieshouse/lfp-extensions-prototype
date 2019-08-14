@@ -6,7 +6,7 @@ module.exports = {
     status: 'Active',
     incorporationDate: '25 September 2003',
     companyType: 'Private Limited Company',
-    address: '25 Bank Street\nBrighton\nBR1 2BS',
+    address: '1 High Street\nBristol\nBS1 1AB',
     accountsDue: '1 October 2019',
     extensionOneWeek: '27 November 2018',
     extensionTwoWeek: '29 September 2019',
