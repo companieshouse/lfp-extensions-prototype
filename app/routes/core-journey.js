@@ -115,10 +115,10 @@ module.exports = function (router) {
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
-            reasonObject.nextStep = '/auth-code/auth-code-requested'
+            reasonObject.nextStep = '/auth-code/address'
             req.session.extensionReasons.push(reasonObject)
           }
-          res.redirect('/auth-code/auth-code-requested')
+          res.redirect('/auth-code/address')
           break
         case 'damage':
           if (editId !== '') {
@@ -432,6 +432,14 @@ module.exports = function (router) {
   })
   router.post('/accountsnotdue', function (req, res) {
     res.redirect('accountsnotdue')
+  })
+  router.get('/accountsnotneeded', function (req, res) {
+    res.render('accountsnotneeded', {
+      scenario: req.session.scenario
+    })
+  })
+  router.post('/accountsnotneeded', function (req, res) {
+    res.redirect('accountsnotneeded')
   })
   router.get('/account-reference-date', function (req, res) {
     res.render('account-reference-date', {
