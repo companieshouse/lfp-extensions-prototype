@@ -312,6 +312,14 @@ module.exports = function (router) {
       errorList.push(Err)
       errorFlag = true
     }
+    if (doc === 0) {
+      Err.type = 'blank'
+      Err.text = 'You must choose a document to upload or select "continue without adding documents".'
+      Err.href = '#file-upload-1'
+      Err.flag = true
+      errorList.push(Err)
+      errorFlag = true
+    }
     if (errorFlag === true) {
       if (req.body.id) {
         reasonObject = req.session.extensionReasons[id]

@@ -40,7 +40,7 @@ module.exports = function (router) {
           if (req.session.extensionReasons.length > 1) {
             res.redirect('/check-your-answers')
           } else {
-            res.redirect('/add-extension-reason')
+            res.redirect('/check-your-answers')
           }
           break
         case 'no':
