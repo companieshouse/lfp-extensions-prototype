@@ -107,6 +107,11 @@ href: "ptf/ptf"
 text: "Continue",
 href: "accountsnotdue"
 }) }}
+      {% elif scenario.company.deadlineStatus === 'unlimited' %}
+        {{ govukButton({
+text: "Continue",
+href: "accountsnotneeded"
+}) }}
       {% elif scenario.company.accountingReferenceDateRequested === 'yes' %}
         {{ govukButton({
 text: "Continue",
