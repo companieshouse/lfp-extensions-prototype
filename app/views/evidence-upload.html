@@ -109,10 +109,18 @@
           value: id
         }) }}
       </form>
-      {{ govukButton({
+      <form action="" method="post" id="continue-check-form">
+        {{ govukButton({
         text: "Continue",
         href: continueLink
       }) }}
+        {{ govukInput({
+        id: "continueCheck",
+        name: "continueCheck",
+        type: "hidden",
+        value: id
+      }) }}
+      </form>
       <p>
         <a href="/{{ continueLink }}" class="govuk-link">Continue without adding documents</a>
       </p>
