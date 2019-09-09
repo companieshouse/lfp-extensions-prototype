@@ -61,11 +61,9 @@ module.exports = function (router) {
   router.post('/choose-reason', function (req, res) {
     var reasonObject = {}
     var extensionReason = req.body.extensionReason
-    var otherReason = req.body.otherReason
     var editId = req.body.editId
     var errorFlag = false
     var extensionReasonErr = {}
-    var otherReasonErr = {}
     var errorList = []
     reasonObject.documents = []
 
@@ -75,18 +73,8 @@ module.exports = function (router) {
       extensionReasonErr.href = '#choose-reason-1'
       extensionReasonErr.flag = true
     }
-    if (extensionReason === 'other' && otherReason === '') {
-      extensionReasonErr.type = 'invalid'
-      extensionReasonErr.text = 'You must tell us the reason'
-      extensionReasonErr.href = '#other-reason'
-      extensionReasonErr.flag = true
-    }
     if (extensionReasonErr.flag) {
       errorList.push(extensionReasonErr)
-      errorFlag = true
-    }
-    if (otherReasonErr.flag) {
-      errorList.push(otherReasonErr)
       errorFlag = true
     }
     if (errorFlag === true) {
@@ -94,9 +82,7 @@ module.exports = function (router) {
       res.render('choose-reason', {
         errorList: errorList,
         extensionReasonErr: extensionReasonErr,
-        otherReasonErr: otherReasonErr,
-        extensionReason: extensionReason,
-        otherReason: otherReason
+        extensionReason: extensionReason
       })
     } else {
       reasonObject.reason = req.body.extensionReason
@@ -165,18 +151,13 @@ module.exports = function (router) {
           }
           res.redirect('/computer-problem/choose-computer-problem')
           break
-        case 'death':
+        case 'other':
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
+            reasonObject.nextStep = 'other/reason-other'
             req.session.extensionReasons.push(reasonObject)
           }
-          res.redirect('/death/reason-death')
-          break
-        case 'other':
-          reasonObject.otherReason = req.body.otherReason
-          reasonObject.nextStep = 'other/reason-other'
-          req.session.extensionReasons.push(reasonObject)
           res.redirect('other/reason-other')
           break
       }

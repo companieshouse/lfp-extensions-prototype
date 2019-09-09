@@ -13,6 +13,21 @@ $govuk-global-styles: true;
 @import "components/cookie-banner";
 
 // Add extra styles here, or re-organise the Sass files in whichever way makes most sense to you
+
+.print-content {
+  display: none;
+}
+
+@include govuk-media-query($media-type: print) {
+  .print-content {
+    display: block;
+  }
+
+  .govuk-link__print {
+    display: none;
+  }
+}
+
 .govuk-panel--orange {
   background-color: goldenrod;
 }
@@ -62,7 +77,8 @@ $govuk-global-styles: true;
   display: block;
 }
 
-.upload-status__title {}
+.upload-status__title {
+}
 
 .upload-status__link,
 .upload-status__status {
@@ -96,12 +112,12 @@ $govuk-global-styles: true;
     width: 100%;
   }
   margin: 0; // Reset default user agent styles
-  @include govuk-responsive-margin(6, 'bottom');
+  @include govuk-responsive-margin(6, "bottom");
 }
 
 .ch-upload-list__row {
   @include govuk-responsive-padding(2);
-  @include govuk-media-query($until:tablet) {
+  @include govuk-media-query($until: tablet) {
     margin-bottom: govuk-spacing(2);
     border: 1px solid $govuk-border-colour;
   }
@@ -116,10 +132,11 @@ $govuk-global-styles: true;
 .ch-upload-list__value {
   display: inline-block;
   margin: 0; // Reset default user agent styles
-  @include govuk-responsive-padding(1, 'top');
-  @include govuk-responsive-padding(1, 'bottom');
+  @include govuk-responsive-padding(1, "top");
+  @include govuk-responsive-padding(1, "bottom");
   @include govuk-font($size: 19);
-  @include govuk-media-query($from: tablet) {}
+  @include govuk-media-query($from: tablet) {
+  }
 }
 
 .ch-upload-list__actions {

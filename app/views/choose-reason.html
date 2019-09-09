@@ -25,9 +25,9 @@
 
         {% if errorList.length > 0 %}
           {{ govukErrorSummary({
-                titleText: "There is an error on the page",
-                errorList: errorList
-              }) }}
+            titleText: "There is an error on the page",
+            errorList: errorList
+          }) }}
         {% endif %}
 
         {% if errorList.length > 0 %}
@@ -38,30 +38,13 @@
           {% set extensionReasonError = false %}
         {% endif %}
 
-        {% if errorList.length > 0 %}
-          {% if extensionReasonErr.type === 'invalid' %}
-            {% set otherReasonError = true %}
-          {% else %}
-            {% set otherReasonError = false %}
-          {% endif %}
-        {% endif %}
-
-        {% set otherInput %}
-        {{ govukInput({
-              id: "other-reason",
-              name: "otherReason",
-              classes: "",
-              errorMessage: otherReasonError,
-              label: {
-                text: "Short description of the reason"
-              }
-            }) }}
-        {% endset %}
-
         {{ govukRadios({
                 idPrefix: "choose-reason",
                 name: "extensionReason",
                 errorMessage: extensionReasonError,
+                hint: {
+                  text: "You can add more reasons later"
+                },
                 fieldset: {
                   legend: {
                     text: 'Why are you applying for an extension?',
@@ -73,7 +56,8 @@
                   {
                     value: "illness",
                     text: "Illness",
-                    checked: checkedIllness
+                    checked: checkedIllness,
+                    classes: "hello"
                   },
                   {
                     value: "authCode",
@@ -108,10 +92,7 @@
                   {
                     value: "other",
                     text: "I'm applying for another reason",
-                    checked: otherReasonError,
-                    conditional: {
-                      html: otherInput
-                    }
+                    checked: otherReasonError
                   }
                 ]
               }) }}
