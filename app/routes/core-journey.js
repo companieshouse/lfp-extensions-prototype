@@ -283,6 +283,9 @@ module.exports = function (router) {
 
     console.log(id)
 
+    if (req.body.continueCheck) {
+    }
+
     fileName = doc.split('.').pop()
 
     if (fileName === 'txt') {
