@@ -24,14 +24,15 @@
 
         {% if errorList.length > 0 %}
           {{ govukErrorSummary({
-              titleText: "There was a problem with the document you added",
+              titleText: "There is a problem",
               errorList: errorList
             }) }}
         {% endif %}
 
         {% if errorList.length > 0 %}
           {% set Err = {
-            text: Err.text
+            text: Err.text,
+            type: Err.type
           } %}
         {% else %}
           {% set Err = false %}
@@ -41,19 +42,25 @@
           Add documents to support your application
         </h1>
 
-        {% if Err %}
+        {% if Err.type === 'unsupported' %}
           <p class="govuk-body-l">
             Documents are supported in a number of formats
           </p>
           <ul class="govuk-list govuk-list--bullet">
             <li>Text (doc, docx, pdf, txt)</li>
             <li>Images (jpg, gif, tiff)</li>
-            <li>Video (mpeg,avi, mov, mp4, wmv)</li>
+            <li>Video (mpeg, avi, mov, mp4, wmv)</li>
           </ul>
         {% endif %}
 
+        {% if Err.type === 'size' %}
+          <p class="govuk-body-l">
+            Each supporting document must be smaller than 4MB
+          </p>
+        {% endif %}
+
         {% set uploadText %}
-        {% if evidence.length > 0 %}
+        {% if reasonObject.documents.length > 0 %}
           Add another document
         {% else %}
           Add a document
@@ -69,14 +76,21 @@
               },
               value: ""
             }) }}
+          <noscript>
+            {{ govukButton({
+            text: "Add document",
+            classes: "govuk-button--secondary"
+          }) }}
+          </noscript>
         </div>
         <div class="upload-status-heading">
           <h2 class="govuk-heading-s">Uploading document</h2>
         </div>
-        <div class="upload-status">
+        <div class="upload-status" role="alert">
           <h2 class="govuk-heading-m upload-status__title">document.docx</h2>
           <p class="govuk-body upload-status__status">
-            <span class='upload-status__value'>0</span>% uploaded</p>
+            <span class='upload-status__value' aria-live="assertive"></span>
+          </p>
           <a href='#' class="govuk-link upload-status__link">Cancel</a>
           <div class="progress-bar">
             <div class="indicator"></div>
@@ -111,12 +125,17 @@
       </form>
       <form action="" method="post" id="continue-check-form">
         {{ govukButton({
-        text: "Continue",
-        href: continueLink
+        text: "Continue"
       }) }}
         {{ govukInput({
-        id: "continueCheck",
+        id: "continue-check",
         name: "continueCheck",
+        type: "hidden",
+        value: "continueCheck"
+      }) }}
+        {{ govukInput({
+        id: "id",
+        name: "id",
         type: "hidden",
         value: id
       }) }}

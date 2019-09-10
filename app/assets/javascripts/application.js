@@ -19,11 +19,13 @@ $(document).ready(function () {
     $('.upload-status-heading').show()
     $('.file-upload').hide()
     $('.indicator').animate({
-      width: ['100%', 'easeInOutCirc']
+      width: ['100%', 'swing']
     }, {
-      duration: 5000,
+      duration: 15000,
       step: function (now, fx) {
-        $('.upload-status__value').html(Math.ceil(now))
+        if ((Math.ceil(now)) % 25 === 0) {
+          $('.upload-status__value').html(Math.ceil(now) + ' percent uploaded')
+        }
       },
       complete: function () {
         $('#file-upload-form').submit()
