@@ -29,53 +29,54 @@
           Check your application
         </h1>
       {% endif %}
-      <dl class="app-check-your-answers app-check-your-answers--long govuk-!-margin-bottom-8">
-        <div class="app-check-your-answers__contents">
-          <dt class="app-check-your-answers__question">
-            Company Name
-          </dt>
-          <dd class="app-check-your-answers__answer">
-            {{ scenario.company.name }}
-          </dd>
-          <dd class="app-check-your-answers__change"></dd>
-        </div>
-        <div class="app-check-your-answers__contents">
-          <dt class="app-check-your-answers__question">
-            Company Number
-          </dt>
-          <dd class="app-check-your-answers__answer">
-            {{ scenario.company.number }}
-          </dd>
-          <dd class="app-check-your-answers__change"></dd>
-        </div>
-        <div class="app-check-your-answers__contents">
-          <dt class="app-check-your-answers__question">
-            Address
-          </dt>
-          <dd class="app-check-your-answers__answer">
-            {{ scenario.company.address | nl2br | safe }}
-          </dd>
-          <dd class="app-check-your-answers__change"></dd>
-        </div>
-        <div class="app-check-your-answers__contents">
-          <dt class="app-check-your-answers__question">
-            Accounts due
-          </dt>
-          <dd class="app-check-your-answers__answer">
-            {{ scenario.company.accountsDue }}
-          </dd>
-          <dd class="app-check-your-answers__change"></dd>
-        </div>
-        <div class="app-check-your-answers__contents">
-          <dt class="app-check-your-answers__question">
-            Contact email address
-          </dt>
-          <dd class="app-check-your-answers__answer">
-            {{ userEmail }}
-          </dd>
-          <dd class="app-check-your-answers__change"></dd>
-        </div>
-      </dl>
+
+      {{ govukSummaryList({
+        classes: "govuk-!-margin-bottom-8",
+        rows: [
+          {
+            key: {
+              text: "Company name"
+            },
+            value: {
+              text: scenario.company.name
+            }
+          },
+          {
+            key: {
+              text: "Company number"
+            },
+            value: {
+              text: scenario.company.number
+            }
+          },
+          {
+            key: {
+              text: "Address"
+            },
+            value: {
+              text: scenario.company.address | nl2br | safe
+            }
+          },
+          {
+            key: {
+              text: "Accounts due"
+            },
+            value: {
+              text: scenario.company.accountsDue
+            }
+          },
+          {
+            key: {
+              text: "Email address"
+            },
+            value: {
+              text: userEmail
+            }
+          }
+        ]
+      })
+      }}
+
       {% if extensionReasons.length > 1 %}
         <h2 class="govuk-heading-l">Extension reasons</h2>
       {% else %}
@@ -192,14 +193,16 @@
           {% elif reason.reason === 'authCode' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Missing company authentication code</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Registered office address
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ scenario.company.address | nl2br | safe }}
-                </dd>
-              </div>
+              {% if scenario.company.deadlineStatus === 'Near' %}
+                <div class="app-check-your-answers__contents">
+                  <dt class="app-check-your-answers__question">
+                    Registered office address
+                  </dt>
+                  <dd class="app-check-your-answers__answer">
+                    {{ scenario.company.address | nl2br | safe }}
+                  </dd>
+                </div>
+              {% endif %}
             </dl>
           {% elif reason.reason === 'damage' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Theft or criminal damage</h3>
@@ -281,23 +284,31 @@
                   <a href="/natural-disaster/reason-natural-disaster?id={{loop.index0}}">Change</a>
                 </dd>
               </div>
-              {% if reason.supportingEvidence === 'yes' %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Supporting documents
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting documents
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {% if reason.documents.length > 0 %}
                     <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                      </li>
+                      {% for document in reason.documents | reverse %}
+                        <li>
+                          <a href='' class='govuk-link' download="download">{{ document }}</a>
+                        </li>
+                      {% endfor %}
                     </ul>
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="illness/illness-information/?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% endif %}
+                  {% else %}
+                    None
+                  {% endif %}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  {% if reason.documents.length > 0 %}
+                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
+                  {% else %}
+                    <a href="evidence?id={{loop.index0}}">Change</a>
+                  {% endif %}
+                </dd>
+              </div>
             </dl>
           {% elif reason.reason === 'accounts' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Accounting issues</h3>
@@ -326,23 +337,31 @@
                   <a href="/accounts/reason-accounts?id={{loop.index0}}">Change</a>
                 </dd>
               </div>
-              {% if reason.supportingEvidence === 'yes' %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Supporting documents
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting documents
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {% if reason.documents.length > 0 %}
                     <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                      </li>
+                      {% for document in reason.documents | reverse %}
+                        <li>
+                          <a href='' class='govuk-link' download="download">{{ document }}</a>
+                        </li>
+                      {% endfor %}
                     </ul>
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="/?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% endif %}
+                  {% else %}
+                    None
+                  {% endif %}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  {% if reason.documents.length > 0 %}
+                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
+                  {% else %}
+                    <a href="evidence?id={{loop.index0}}">Change</a>
+                  {% endif %}
+                </dd>
+              </div>
             </dl>
           {% elif reason.reason === 'companyChanges' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Changes to the company</h3>
@@ -404,23 +423,31 @@
                   <a href="/company-changes/reason-company-changes?id={{loop.index0}}">Change</a>
                 </dd>
               </div>
-              {% if reason.supportingEvidence === 'yes' %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Supporting documents
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting documents
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {% if reason.documents.length > 0 %}
                     <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                      </li>
+                      {% for document in reason.documents | reverse %}
+                        <li>
+                          <a href='' class='govuk-link' download="download">{{ document }}</a>
+                        </li>
+                      {% endfor %}
                     </ul>
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="/?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% endif %}
+                  {% else %}
+                    None
+                  {% endif %}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  {% if reason.documents.length > 0 %}
+                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
+                  {% else %}
+                    <a href="evidence?id={{loop.index0}}">Change</a>
+                  {% endif %}
+                </dd>
+              </div>
             </dl>
           {% elif reason.reason === 'computerProblem' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Problems filing online</h3>
@@ -468,29 +495,51 @@
                     <a href="/computer-problem/reason-computer-problem?id={{loop.index0}}">Change</a>
                   </dd>
                 </div>
-                {% if reason.supportingEvidence === 'yes' %}
-                  <div class="app-check-your-answers__contents">
-                    <dt class="app-check-your-answers__question">
-                      Supporting documents
-                    </dt>
-                    <dd class="app-check-your-answers__answer">
+                <div class="app-check-your-answers__contents">
+                  <dt class="app-check-your-answers__question">
+                    Supporting documents
+                  </dt>
+                  <dd class="app-check-your-answers__answer">
+                    {% if reason.documents.length > 0 %}
                       <ul class="govuk-list govuk-list--bullet">
-                        <li>
-                          <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                        </li>
+                        {% for document in reason.documents | reverse %}
+                          <li>
+                            <a href='' class='govuk-link' download="download">{{ document }}</a>
+                          </li>
+                        {% endfor %}
                       </ul>
-                    </dd>
-                    <dd class="app-check-your-answers__change">
-                      <a href="/?id={{loop.index0}}">Change</a>
-                    </dd>
-                  </div>
-                {% endif %}
+                    {% else %}
+                      None
+                    {% endif %}
+                  </dd>
+                  <dd class="app-check-your-answers__change">
+                    {% if reason.documents.length > 0 %}
+                      <a href="evidence-upload?id={{loop.index0}}">Change</a>
+                    {% else %}
+                      <a href="evidence?id={{loop.index0}}">Change</a>
+                    {% endif %}
+                  </dd>
+                </div>
               {% endif %}
             </dl>
           {% else %}
-            <h3 class="govuk-heading-m">{{loop.index}}:
-              {{ reason.otherReason }}</h3>
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Other reason</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Reason title
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {% if reason.otherReason != "" %}
+                    {{ reason.otherReason }}
+                  {% else %}
+                    Not provided
+                  {% endif %}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="/other/reason-other?id={{loop.index0}}">Change</a>
+                </dd>
+              </div>
               {% if reason.otherInformation != null %}
                 <div class="app-check-your-answers__contents">
                   <dt class="app-check-your-answers__question">
@@ -504,23 +553,31 @@
                   </dd>
                 </div>
               {% endif %}
-              {% if reason.supportingEvidence === 'yes' %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Supporting documents
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting documents
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {% if reason.documents.length > 0 %}
                     <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                      </li>
+                      {% for document in reason.documents | reverse %}
+                        <li>
+                          <a href='' class='govuk-link' download="download">{{ document }}</a>
+                        </li>
+                      {% endfor %}
                     </ul>
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="/?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% endif %}
+                  {% else %}
+                    None
+                  {% endif %}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  {% if reason.documents.length > 0 %}
+                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
+                  {% else %}
+                    <a href="evidence?id={{loop.index0}}">Change</a>
+                  {% endif %}
+                </dd>
+              </div>
             </dl>
           {% endif %}
           <p class="govuk-body">
