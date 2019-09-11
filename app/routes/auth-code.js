@@ -40,7 +40,7 @@ module.exports = function (router) {
           if (req.session.extensionReasons.length > 1) {
             res.redirect('/check-your-answers')
           } else {
-            res.redirect('/add-extension-reason')
+            res.redirect('/check-your-answers')
           }
           break
         case 'no':
@@ -106,7 +106,8 @@ module.exports = function (router) {
     var reasonObject = {}
     var id = req.body.id
 
-    res.render('auth-code/change-address')
+    res.redirect('/add-extension-reason')
+
     reasonObject = req.session.extensionReasons.pop()
     req.session.extensionReasons.push(reasonObject)
     reasonObject.nextStep = '/auth-code/address'

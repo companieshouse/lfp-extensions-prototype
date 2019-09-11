@@ -60,12 +60,11 @@ module.exports = function (router) {
   })
   router.post('/choose-reason', function (req, res) {
     var reasonObject = {}
+    var deadlineStatus = req.session.scenario.company.deadlineStatus
     var extensionReason = req.body.extensionReason
-    var otherReason = req.body.otherReason
     var editId = req.body.editId
     var errorFlag = false
     var extensionReasonErr = {}
-    var otherReasonErr = {}
     var errorList = []
     reasonObject.documents = []
 
@@ -75,18 +74,8 @@ module.exports = function (router) {
       extensionReasonErr.href = '#choose-reason-1'
       extensionReasonErr.flag = true
     }
-    if (extensionReason === 'other' && otherReason === '') {
-      extensionReasonErr.type = 'invalid'
-      extensionReasonErr.text = 'You must tell us the reason'
-      extensionReasonErr.href = '#other-reason'
-      extensionReasonErr.flag = true
-    }
     if (extensionReasonErr.flag) {
       errorList.push(extensionReasonErr)
-      errorFlag = true
-    }
-    if (otherReasonErr.flag) {
-      errorList.push(otherReasonErr)
       errorFlag = true
     }
     if (errorFlag === true) {
@@ -94,9 +83,7 @@ module.exports = function (router) {
       res.render('choose-reason', {
         errorList: errorList,
         extensionReasonErr: extensionReasonErr,
-        otherReasonErr: otherReasonErr,
-        extensionReason: extensionReason,
-        otherReason: otherReason
+        extensionReason: extensionReason
       })
     } else {
       reasonObject.reason = req.body.extensionReason
@@ -112,13 +99,23 @@ module.exports = function (router) {
           res.redirect('/illness/who-was-ill')
           break
         case 'authCode':
-          if (editId !== '') {
-            req.session.extensionReasons[editId].reason = reasonObject.reason
+          if (deadlineStatus !== 'Near') {
+            if (editId !== '') {
+              req.session.extensionReasons[editId].reason = reasonObject.reason
+            } else {
+              reasonObject.nextStep = '/add-extension-reason'
+              req.session.extensionReasons.push(reasonObject)
+            }
+            res.redirect('/add-extension-reason')
           } else {
-            reasonObject.nextStep = '/auth-code/auth-code-requested'
-            req.session.extensionReasons.push(reasonObject)
+            if (editId !== '') {
+              req.session.extensionReasons[editId].reason = reasonObject.reason
+            } else {
+              reasonObject.nextStep = '/auth-code/address'
+              req.session.extensionReasons.push(reasonObject)
+            }
           }
-          res.redirect('/auth-code/auth-code-requested')
+          res.redirect('/auth-code/address')
           break
         case 'damage':
           if (editId !== '') {
@@ -165,18 +162,13 @@ module.exports = function (router) {
           }
           res.redirect('/computer-problem/choose-computer-problem')
           break
-        case 'death':
+        case 'other':
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
+            reasonObject.nextStep = 'other/reason-other'
             req.session.extensionReasons.push(reasonObject)
           }
-          res.redirect('/death/reason-death')
-          break
-        case 'other':
-          reasonObject.otherReason = req.body.otherReason
-          reasonObject.nextStep = 'other/reason-other'
-          req.session.extensionReasons.push(reasonObject)
           res.redirect('other/reason-other')
           break
       }
@@ -219,13 +211,18 @@ module.exports = function (router) {
   })
 
   router.get('/evidence', function (req, res) {
-    res.render('evidence')
+    var id = req.query.id
+
+    res.render('evidence', {
+      id: id
+    })
   })
   router.post('/evidence', function (req, res) {
     var supportingEvidence = req.body.supportingEvidence
     var errorFlag = false
     var Err = {}
     var errorList = []
+    var id = req.query.id
     var reasonObject = {}
 
     if (typeof supportingEvidence === 'undefined') {
@@ -241,7 +238,8 @@ module.exports = function (router) {
     if (errorFlag === true) {
       res.render('evidence', {
         errorList: errorList,
-        Err: Err
+        Err: Err,
+        id: id
       })
     } else {
       reasonObject = req.session.extensionReasons.pop()
@@ -250,10 +248,14 @@ module.exports = function (router) {
       switch (req.body.supportingEvidence) {
         case 'yes':
           reasonObject.nextStep = 'evidence-upload'
-          res.redirect('/evidence-upload')
+          if (typeof id !== 'undefined') {
+            res.redirect('/evidence-upload?id=' + id)
+          } else {
+            res.redirect('/evidence-upload')
+          }
           break
         case 'no':
-          if (req.session.extensionReasons.length > 1) {
+          if (req.session.extensionReasons.length > 0) {
             reasonObject.nextStep = 'check-your-answers'
             res.redirect('/check-your-answers')
           } else {
@@ -277,7 +279,7 @@ module.exports = function (router) {
     } else {
       reasonObject = req.session.extensionReasons.pop()
       req.session.extensionReasons.push(reasonObject)
-      if (req.session.extensionReasons.length > 1) {
+      if (req.session.extensionReasons.length > 0) {
         continueLink = 'check-your-answers'
       } else {
         continueLink = 'add-extension-reason'
@@ -302,48 +304,101 @@ module.exports = function (router) {
 
     console.log(id)
 
-    fileName = doc.split('.').pop()
-
-    if (fileName === 'txt') {
-      Err.type = 'unsupported'
-      Err.text = 'We don\'t support files with an extension of \'.' + fileName + '\''
-      Err.href = '#file-upload'
-      Err.flag = true
-      errorList.push(Err)
-      errorFlag = true
-    }
-    if (errorFlag === true) {
-      if (req.body.id) {
+    if (req.body.continueCheck) {
+      if (id !== '') {
         reasonObject = req.session.extensionReasons[id]
-        continueLink = 'check-your-answers'
       } else {
         reasonObject = req.session.extensionReasons.pop()
         req.session.extensionReasons.push(reasonObject)
-        if (req.session.extensionReasons.length > 1) {
-          continueLink = 'check-your-answers'
+      }
+      if (reasonObject.documents.length > 0) {
+        if (req.session.extensionReasons.length > 0) {
+          res.redirect('check-your-answers')
         } else {
-          continueLink = 'add-extension-reason'
+          res.redirect('add-extension-reason')
+        }
+      } else {
+        Err.type = 'blank'
+        Err.text = 'You must add a document or select "Continue without adding documents"'
+        Err.href = '#file-upload-1'
+        Err.flag = true
+        errorList.push(Err)
+        errorFlag = true
+
+        if (errorFlag === true) {
+          if (req.body.id) {
+            reasonObject = req.session.extensionReasons[id]
+            continueLink = 'check-your-answers'
+          } else {
+            reasonObject = req.session.extensionReasons.pop()
+            req.session.extensionReasons.push(reasonObject)
+            if (req.session.extensionReasons.length > 0) {
+              continueLink = 'check-your-answers'
+            } else {
+              continueLink = 'add-extension-reason'
+            }
+          }
+          res.render('evidence-upload', {
+            errorList: errorList,
+            Err: Err,
+            reasonObject: reasonObject,
+            id: id,
+            continueLink: continueLink
+          })
         }
       }
-      res.render('evidence-upload', {
-        errorList: errorList,
-        Err: Err,
-        doc: doc.split('\\'),
-        reasonObject: reasonObject,
-        id: id,
-        continueLink: continueLink
-      })
     } else {
-      if (req.body.id) {
-        reasonObject.nextStep = 'check-your-answers'
-        req.session.extensionReasons[id].documents.push(doc)
-        res.redirect('/evidence-upload?id=' + id)
+      fileName = doc.split('.').pop()
+
+      if (fileName === 'html') {
+        Err.type = 'unsupported'
+        Err.text = 'We do not support files with an extension of \'' + fileName + '\''
+        Err.href = '#file-upload'
+        Err.flag = true
+        errorList.push(Err)
+        errorFlag = true
+      }
+      if (fileName === 'sh') {
+        Err.type = 'size'
+        Err.text = 'Documents must be smaller than 4MB'
+        Err.href = '#file-upload'
+        Err.flag = true
+        errorList.push(Err)
+        errorFlag = true
+      }
+      if (errorFlag === true) {
+        if (req.body.id) {
+          reasonObject = req.session.extensionReasons[id]
+          continueLink = 'check-your-answers'
+        } else {
+          reasonObject = req.session.extensionReasons.pop()
+          req.session.extensionReasons.push(reasonObject)
+          if (req.session.extensionReasons.length > 0) {
+            continueLink = 'check-your-answers'
+          } else {
+            continueLink = 'add-extension-reason'
+          }
+        }
+        res.render('evidence-upload', {
+          errorList: errorList,
+          Err: Err,
+          doc: doc.split('\\'),
+          reasonObject: reasonObject,
+          id: id,
+          continueLink: continueLink
+        })
       } else {
-        reasonObject.nextStep = 'evidence-upload'
-        reasonObject = req.session.extensionReasons.pop()
-        reasonObject.documents.push(doc)
-        req.session.extensionReasons.push(reasonObject)
-        res.redirect('/evidence-upload')
+        if (req.body.id) {
+          reasonObject.nextStep = 'check-your-answers'
+          req.session.extensionReasons[id].documents.push(doc)
+          res.redirect('/evidence-upload?id=' + id)
+        } else {
+          reasonObject.nextStep = 'evidence-upload'
+          reasonObject = req.session.extensionReasons.pop()
+          reasonObject.documents.push(doc)
+          req.session.extensionReasons.push(reasonObject)
+          res.redirect('/evidence-upload')
+        }
       }
     }
   })
@@ -432,6 +487,14 @@ module.exports = function (router) {
   })
   router.post('/accountsnotdue', function (req, res) {
     res.redirect('accountsnotdue')
+  })
+  router.get('/accountsnotneeded', function (req, res) {
+    res.render('accountsnotneeded', {
+      scenario: req.session.scenario
+    })
+  })
+  router.post('/accountsnotneeded', function (req, res) {
+    res.redirect('accountsnotneeded')
   })
   router.get('/account-reference-date', function (req, res) {
     res.render('account-reference-date', {

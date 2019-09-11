@@ -16,27 +16,43 @@
 }) }}
 {% endblock %}
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">Update the registered office</h1>
-      <p>You must
-        <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/287369/AD01_change_of_registered_office_address.pdf" target="_blank">tell us the new registered office address</a>
-        for
-        {{ scenario.company.name }}.
-      </p>
-      <p>Once we've confirmed the address, we'll send a new authentication code to the registered office.</p>
-      <p>You can then
-        <a href="resume-application">resume your application</a>
-        to extend the filing deadline.</p>
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <div class="interruption-card interruption-card-paper">
+        <h1 class="govuk-heading-xl">Update the registered office</h1>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <ul class="govuk-list">
+              <li>
+                <span class="circle-step-white">1</span>
+                <h2 class="govuk-heading-m">
+                  <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/287369/AD01_change_of_registered_office_address.pdf">Print out and complete a change of registered address form</a>
+                  and post it to Companies House.</h2>
+                <h3 class="govuk-heading-s">You cannot change your registered office address online if you do not have your company authentication code.</h3>
+              </li>
+              <li>
+                <span class="circle-step-white">2</span>
+                <h2 class="govuk-heading-m">
+                  <a href="https://ewf.companieshouse.gov.uk/">Request a new authentication code</a>
+                  Once received, we'll post the company authentication code to the updated registered office address within 7 working days.</h2>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  {{ govukInput({
+    {{ govukInput({
     id: "id",
     name: "id",
     type: "hidden",
     value: id
   }) }}
-  <p>
-    <a href="/sign-out" class="govuk-link">Save and sign out</a>
-  </p>
-{% endblock %}
+    <form>
+      {{ govukButton({
+    text: "Continue"
+  }) }}
+      <p>
+        <a href="/sign-out" class="govuk-link">Save and sign out</a>
+      </p>
+    </form>
+  {% endblock %}

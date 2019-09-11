@@ -14,11 +14,16 @@ const cookieParser = require('cookie-parser')
 dotenv.config()
 
 // Local dependencies
+const middleware = [
+  require('./lib/middleware/authentication/authentication.js'),
+  require('./lib/middleware/extensions/extensions.js')
+]
 const config = require('./app/config.js')
 const documentationRoutes = require('./docs/documentation_routes.js')
 const packageJson = require('./package.json')
 const routes = require('./app/routes.js')
 const utils = require('./lib/utils.js')
+const extensions = require('./lib/extensions/extensions.js')
 
 // Variables for v6 backwards compatibility
 // Set false by default, then turn on if we find /app/v6/routes.js
@@ -50,17 +55,12 @@ documentationApp.use(handleCookies)
 
 // Set up configuration variables
 var releaseVersion = packageJson.version
-var username = process.env.USERNAME
-var password = process.env.PASSWORD
-var env = process.env.NODE_ENV || 'development'
-var useAuth = process.env.USE_AUTH || config.useAuth
+var env = (process.env.NODE_ENV || 'development').toLowerCase()
 var useAutoStoreData = process.env.USE_AUTO_STORE_DATA || config.useAutoStoreData
 var useCookieSessionStore = process.env.USE_COOKIE_SESSION_STORE || config.useCookieSessionStore
 var useHttps = process.env.USE_HTTPS || config.useHttps
 var gtmId = process.env.GOOGLE_TAG_MANAGER_TRACKING_ID
 
-env = env.toLowerCase()
-useAuth = useAuth.toLowerCase()
 useHttps = useHttps.toLowerCase()
 
 var useDocumentation = (config.useDocumentation === 'true')
@@ -80,18 +80,13 @@ if (isSecure) {
   app.set('trust proxy', 1) // needed for secure cookies on heroku
 }
 
-// Ask for username and password on production
-if (env === 'production' && useAuth === 'true') {
-  app.use(utils.basicAuth(username, password))
-}
+middleware.forEach(func => app.use(func))
 
 // Set up App
-var appViews = [
-  path.join(__dirname, '/node_modules/govuk-frontend/'),
-  path.join(__dirname, '/node_modules/govuk-frontend/components'),
+var appViews = extensions.getAppViews([
   path.join(__dirname, '/app/views/'),
   path.join(__dirname, '/lib/')
-]
+])
 
 var nunjucksConfig = {
   autoescape: true,
@@ -115,9 +110,8 @@ app.set('view engine', 'html')
 
 // Middleware to serve static assets
 app.use('/public', express.static(path.join(__dirname, '/public')))
-app.use('/assets', express.static(path.join(__dirname, 'node_modules', 'govuk-frontend', 'assets')))
 
-// Serve govuk-frontend in /public
+// Serve govuk-frontend in from node_modules (so not to break pre-extenstions prototype kits)
 app.use('/node_modules/govuk-frontend', express.static(path.join(__dirname, '/node_modules/govuk-frontend')))
 
 // Set up documentation app
@@ -184,6 +178,8 @@ app.locals.cookieText = config.cookieText
 app.locals.promoMode = promoMode
 app.locals.releaseVersion = 'v' + releaseVersion
 app.locals.serviceName = config.serviceName
+// extensionConfig sets up variables used to add the scripts and stylesheets to each page.
+app.locals.extensionConfig = extensions.getAppConfig()
 
 // Session uses service name to avoid clashes with other prototypes
 const sessionName = 'govuk-prototype-kit-' + (Buffer.from(config.serviceName, 'utf8')).toString('hex')

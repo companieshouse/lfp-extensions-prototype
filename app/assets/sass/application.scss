@@ -1,18 +1,37 @@
 // global styles for <a> and <p> tags
 $govuk-global-styles: true;
 
-// Import GOV.UK Frontend
-@import "node_modules/govuk-frontend/all";
+// We can't mount GOV.UK Frontend's assets at root as it's done automatically by the extensions framework.
+$govuk-assets-path: '/govuk/assets/';
+
+// Import GOV.UK Frontend and any extension styles if extensions have been configured
+@import "lib/extensions/extensions";
 
 // Patterns that aren't in Frontend
-@import "patterns/check-your-answers";
+@import "patterns/step-by-step-navigation";
 @import "patterns/task-list";
 @import "patterns/related-items";
+@import "patterns/check-your-answers";
 
 // Components that aren't in Frontend
 @import "components/cookie-banner";
 
 // Add extra styles here, or re-organise the Sass files in whichever way makes most sense to you
+
+.print-content {
+  display: none;
+}
+
+@include govuk-media-query($media-type: print) {
+  .print-content {
+    display: block;
+  }
+
+  .govuk-link__print {
+    display: none;
+  }
+}
+
 .govuk-panel--orange {
   background-color: goldenrod;
 }
@@ -36,6 +55,121 @@ $govuk-global-styles: true;
   @include govuk-link-common;
   @include govuk-link-style-default;
   @include govuk-link-print-friendly;
+}
+
+/// interruption card ///
+
+.circle-step-white {
+  height: 1.4em;
+  width: 1.4em;
+  background-color: govuk-colour("white");
+  color: govuk-colour("black");
+  border-radius: 50%;
+  display: inline-block;
+  padding: .5em;
+  text-align: center;
+  font-weight: bold;
+  margin: -0.4em .5em 0 0;
+}
+
+.circle-step-black {
+  height: 1.4em;
+  width: 1.4em;
+  background-color: govuk-colour("black");
+  color: govuk-colour("white");
+  border-radius: 50%;
+  display: inline-block;
+  padding: .5em;
+  text-align: center;
+  font-weight: bold;
+  margin: -0.4em .5em 1em 0;
+}
+
+.interruption-card {
+  padding: 2em 3em;
+  background: $govuk-link-colour;
+
+  &.interruption-card-paper {
+    background: $govuk-link-colour;
+  }
+  @include govuk-media-query($until: tablet) {
+    background-image: none !important;
+  }
+
+  .govuk-button {
+    background-color: govuk-colour("white");
+    color: govuk-colour("black");
+
+    &:hover {
+      background-color: govuk-colour("light-grey");
+    }
+  }
+
+  h1 {
+    color: govuk-colour("white");
+  }
+
+  h2 {
+    display: inline;
+    color: govuk-colour("white");
+  }
+
+  h3 {
+    margin-left: 3em;
+    margin-top: none;
+    padding-bottom: 3em;
+    color: govuk-colour("light-grey");
+  }
+
+  ul {
+    width: 75%;
+    padding: 2em 0 0;
+    @include govuk-media-query(mobile) {
+      width: 100%;
+      margin-top: .5em;
+    }
+
+    li {
+      h2 {
+        padding-bottom: .5em;
+        display: inline-block;
+        width: 85%;
+        margin: 0 0 0 .2em;
+        @include govuk-media-query(mobile) {
+          width: 80%;
+        }
+      }
+
+      span {
+        vertical-align: top;
+      }
+    }
+  }
+
+  a:link,
+  a:visited {
+    color: govuk-colour("white") !important;
+  }
+
+  .button {
+    background-color: govuk-colour("white");
+    color: $govuk-link-colour;
+    font-weight: 700;
+
+    &:focus,
+    &:hover {
+      background-color: govuk-colour("light-grey");
+      color: $govuk-link-colour;
+    }
+  }
+
+  .circle-white {
+    background-color: govuk-colour("white");
+    color: govuk-colour("black");
+    margin-right: .5em;
+    position: relative;
+    top: -.3em;
+  }
 }
 
 .app-check-your-answers {
@@ -101,7 +235,7 @@ $govuk-global-styles: true;
 
 .ch-upload-list__row {
   @include govuk-responsive-padding(2);
-  @include govuk-media-query($until:tablet) {
+  @include govuk-media-query($until: tablet) {
     margin-bottom: govuk-spacing(2);
     border: 1px solid $govuk-border-colour;
   }

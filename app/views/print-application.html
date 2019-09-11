@@ -174,11 +174,11 @@
               </div>
             </dl>
           {% elif reason.reason === 'authCode' %}
-            <h3 class="govuk-heading-m">{{extensionListIndex}}Authentication code</h3>
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Missing company authentication code</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
-                  Registered address
+                  Registered office address
                 </dt>
                 <dd class="app-check-your-answers__answer">
                   {{ scenario.company.address | nl2br | safe }}

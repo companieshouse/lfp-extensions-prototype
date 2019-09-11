@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  Accounts not due
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+    tag: {
+      text: "alpha"
+    },
+    html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+  }) }}
+  {{ govukBackLink({
+    text: "Back",
+    href: "confirm-company"
+  }) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">You cannot use this service</h1>
+      <p class="govuk-body-m">
+        {{scenario.company.name}}
+        ({{scenario.company.number}}) is not required to file its accounts.
+      </p>
+      <p>For more information about running an unlimited company,
+        <a href="https://www.gov.uk/government/publications/life-of-a-company-annual-requirements/life-of-a-company-part-1-accounts#accounts-for-companies-house" class="govuk-link" target="_blank">read our guidance.</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}
