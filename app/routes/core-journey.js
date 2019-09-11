@@ -60,6 +60,7 @@ module.exports = function (router) {
   })
   router.post('/choose-reason', function (req, res) {
     var reasonObject = {}
+    var deadlineStatus = req.session.scenario.company.deadlineStatus
     var extensionReason = req.body.extensionReason
     var editId = req.body.editId
     var errorFlag = false
@@ -98,11 +99,21 @@ module.exports = function (router) {
           res.redirect('/illness/who-was-ill')
           break
         case 'authCode':
-          if (editId !== '') {
-            req.session.extensionReasons[editId].reason = reasonObject.reason
+          if (deadlineStatus !== 'Near') {
+            if (editId !== '') {
+              req.session.extensionReasons[editId].reason = reasonObject.reason
+            } else {
+              reasonObject.nextStep = '/add-extension-reason'
+              req.session.extensionReasons.push(reasonObject)
+            }
+            res.redirect('/add-extension-reason')
           } else {
-            reasonObject.nextStep = '/auth-code/address'
-            req.session.extensionReasons.push(reasonObject)
+            if (editId !== '') {
+              req.session.extensionReasons[editId].reason = reasonObject.reason
+            } else {
+              reasonObject.nextStep = '/auth-code/address'
+              req.session.extensionReasons.push(reasonObject)
+            }
           }
           res.redirect('/auth-code/address')
           break

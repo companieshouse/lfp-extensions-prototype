@@ -21,11 +21,13 @@ $(document).ready(function () {
     $('.indicator').animate({
       width: ['100%', 'swing']
     }, {
-      duration: 15000,
+      duration: 7000,
       step: function (now, fx) {
-        if ((Math.ceil(now)) % 25 === 0) {
+        /* if ((Math.ceil(now)) % 25 === 0) {
           $('.upload-status__value').html(Math.ceil(now) + ' percent uploaded')
-        }
+        } */
+
+        $('.upload-status__value').html(Math.ceil(now) + '% uploaded')
       },
       complete: function () {
         $('#file-upload-form').submit()
