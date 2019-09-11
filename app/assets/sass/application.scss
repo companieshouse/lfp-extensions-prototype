@@ -101,7 +101,7 @@ $govuk-assets-path: '/govuk/assets/';
     color: govuk-colour("black");
 
     &:hover {
-      background-color: govuk-colour("grey-3");
+      background-color: govuk-colour("light-grey");
     }
   }
 
@@ -114,6 +114,13 @@ $govuk-assets-path: '/govuk/assets/';
     color: govuk-colour("white");
   }
 
+  h3 {
+    margin-left: 3em;
+    margin-top: none;
+    padding-bottom: 3em;
+    color: govuk-colour("light-grey");
+  }
+
   ul {
     width: 75%;
     padding: 2em 0 0;
@@ -124,7 +131,7 @@ $govuk-assets-path: '/govuk/assets/';
 
     li {
       h2 {
-        padding-bottom: 2em;
+        padding-bottom: .5em;
         display: inline-block;
         width: 85%;
         margin: 0 0 0 .2em;
@@ -151,7 +158,7 @@ $govuk-assets-path: '/govuk/assets/';
 
     &:focus,
     &:hover {
-      background-color: govuk-colour("grey-3");
+      background-color: govuk-colour("light-grey");
       color: $govuk-link-colour;
     }
   }
