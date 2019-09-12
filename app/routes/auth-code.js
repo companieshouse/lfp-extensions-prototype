@@ -37,7 +37,7 @@ module.exports = function (router) {
           reasonObject.requestedFlag = authCodeRequestedFlag
           reasonObject.flag = authCodeFlag
           req.session.extensionReasons.push(reasonObject)
-          if (req.session.extensionReasons.length > 1) {
+          if (req.session.extensionReasons.length > 0) {
             res.redirect('/check-your-answers')
           } else {
             res.redirect('/check-your-answers')
@@ -85,7 +85,7 @@ module.exports = function (router) {
           reasonObject = req.session.extensionReasons.pop()
           reasonObject.flag = authCodeFlag
           req.session.extensionReasons.push(reasonObject)
-          if (req.session.extensionReasons.length > 1) {
+          if (req.session.extensionReasons.length > 0) {
             res.redirect('/check-your-answers')
           } else {
             res.redirect('/add-extension-reason')
@@ -106,10 +106,7 @@ module.exports = function (router) {
     var reasonObject = {}
     var id = req.body.id
 
-    res.redirect('/add-extension-reason')
-
-    reasonObject = req.session.extensionReasons.pop()
-    req.session.extensionReasons.push(reasonObject)
     reasonObject.nextStep = '/auth-code/address'
+    res.redirect('/add-extension-reason')
   })
 }
