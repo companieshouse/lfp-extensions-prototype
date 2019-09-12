@@ -115,10 +115,13 @@ $govuk-assets-path: '/govuk/assets/';
   }
 
   h3 {
-    margin-left: 3em;
-    margin-top: none;
-    padding-bottom: 3em;
+    padding-left: 3em;
+    padding-bottom: em;
     color: govuk-colour("light-grey");
+  }
+
+  p {
+    color: govuk-colour("white");
   }
 
   ul {
