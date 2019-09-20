@@ -83,7 +83,7 @@
         <h2 class="govuk-heading-l">Extension reason</h2>
       {% endif %}
       {% for reason in extensionReasons %}
-        {% if extensionReasons.length > 1 %}
+        {% if extensionReasons.length < 1 %}
           {% set extensionListIndex %}
           {{loop.index}}:
           {% endset %}
@@ -199,7 +199,11 @@
                     Registered office address
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    {{ scenario.company.address | nl2br | safe }}
+                    {% if reason.confirmAddress === 'no' %}
+                      <p>Needs to be updated</p>
+                    {% else %}
+                      {{ scenario.company.address | nl2br | safe }}
+                    {% endif %}
                   </dd>
                 </div>
               {% endif %}

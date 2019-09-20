@@ -83,6 +83,7 @@ module.exports = function (router) {
       switch (confirmAddress) {
         case 'yes':
           reasonObject = req.session.extensionReasons.pop()
+          reasonObject.confirmAddress = req.body.confirmAddress
           reasonObject.flag = authCodeFlag
           req.session.extensionReasons.push(reasonObject)
           if (req.session.extensionReasons.length > 0) {
@@ -92,6 +93,10 @@ module.exports = function (router) {
           }
           break
         case 'no':
+          reasonObject = req.session.extensionReasons.pop()
+          reasonObject.confirmAddress = req.body.confirmAddress
+          reasonObject.flag = authCodeFlag
+          req.session.extensionReasons.push(reasonObject)
           res.redirect('/auth-code/change-address')
           break
       }
