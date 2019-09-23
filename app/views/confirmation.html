@@ -17,14 +17,14 @@
     <div class="govuk-grid-column-two-thirds">
 
       {% if authCodeFlag === true and extensionReasons.length === 1 %}
-
         <div class="govuk-panel govuk-panel--confirmation">
           {% if scenario.company.deadlineStatus === 'Near' %}
             <h1 class="govuk-panel__title">Application accepted</h1>
             <div class="govuk-panel__body">
               The filing deadline for
               {{ scenario.company.name }}
-              has been extended by 14 days.
+              has been extended by 14 days until
+              {{ scenario.company.extensionTwoWeek }}.
             </div>
           {% elseif scenario.company.deadlineStatus !== 'Near' %}
             <h1 class="govuk-panel__title">Extension not required</h1>
@@ -32,7 +32,6 @@
               {{ scenario.company.name }}
               still has time to file its accounts before the deadline.
             </div>
-
           {% endif %}
         </div>
       {% else %}
@@ -57,14 +56,14 @@
           <span class="govuk-body-l govuk-!-font-weight-bold">{{ userEmail }}</span>
           which contains your application information.
         </p>
-        <p class="govuk-body-l">
+        <p class="govuk-body-m">
           {% if scenario.company.deadlineStatus === 'Near' %}
             Your new filing deadline is
             <span class="govuk-!-font-weight-bold">{{ scenario.company.extensionTwoWeek }}</span>.
           {% endif %}
-          {% if reason.confirmAddress === 'no' %}
+          {% if confirmAddress === false %}
           {% else %}
-            We've also sent a new authentication code to your registered office address.
+            We've also sent an authentication code reminder to the company's registered office address.
           {% endif %}
         </p>
       {% endif %}
@@ -544,17 +543,25 @@
       {% endif %}
       <h2 class="govuk-heading-m">What happens next</h2>
       {% if authCodeFlag === true %}
-        {% if reason.confirmAddress === 'no' %}
-          You will need to
-          <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/287369/AD01_change_of_registered_office_address.pdf">update your registered office</a>
-          and
-          <a href="https://ewf.companieshouse.gov.uk/">request an authentication code</a>
-          before
-          {{scenario.company.extensionTwoWeek}}.
+        {% if confirmAddress === false %}
+          <p class="govuk-body">You must file your accounts by
+            <span class="govuk-!-font-weight-bold">{{scenario.company.extensionTwoWeek}}</span>.</p>
+          <p class="govuk-body">To file online you'll need to:</p>
+          <ol class="govuk-list govuk-list--number">
+            <li>
+              <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/287369/AD01_change_of_registered_office_address.pdf">update your registered office</a>
+            </li>
+            <li>
+              <a href="https://beta.companieshouse.gov.uk/">check your registered office has been updated</a>
+            </li>
+            <li>
+              <a href="https://ewf.companieshouse.gov.uk/">request an authentication code</a>
+            </li>
+          </ol>
         {% else %}
           <p>You should receive the authentication code at the registered office within 5 working days.</p>
           {% if scenario.company.deadlineStatus === 'Near' %}
-            <p>You should file your accounts using your new code by
+            <p>You should file your accounts by
               <b>{{scenario.company.extensionTwoWeek}}</b>.
             </p>
           {% elseif scenario.company.deadlineStatus !== 'Near' %}
