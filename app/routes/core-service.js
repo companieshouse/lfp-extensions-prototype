@@ -155,12 +155,15 @@ module.exports = function (router) {
     var extensionReasons = req.session.extensionReasons
     var userEmail = req.session.userEmail
     var authCodeFlag = false
+    var confirmAddress = false
     var i = 0
 
     for (i = 0; i < extensionReasons.length; i++) {
       if (extensionReasons[i].reason === 'authCode') {
-        console.log('auth code flag 2')
         authCodeFlag = true
+        if (extensionReasons[i].confirmAddress === 'yes') {
+          confirmAddress = true
+        }
       }
     }
 
@@ -207,7 +210,8 @@ module.exports = function (router) {
       extensionReasons: req.session.extensionReasons,
       extensionLength: req.session.extensionLength,
       userEmail: req.session.userEmail,
-      authCodeFlag: authCodeFlag
+      authCodeFlag: authCodeFlag,
+      confirmAddress: confirmAddress
     })
   })
   router.get('/print-application', function (req, res) {
