@@ -99,23 +99,13 @@ module.exports = function (router) {
           res.redirect('/illness/who-was-ill')
           break
         case 'authCode':
-          if (deadlineStatus !== 'Near') {
-            if (editId !== '') {
-              req.session.extensionReasons[editId].reason = reasonObject.reason
-            } else {
-              reasonObject.nextStep = '/add-extension-reason'
-              req.session.extensionReasons.push(reasonObject)
-            }
-            res.redirect('/add-extension-reason')
+          if (editId !== '') {
+            req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
-            if (editId !== '') {
-              req.session.extensionReasons[editId].reason = reasonObject.reason
-            } else {
-              reasonObject.nextStep = '/auth-code/address'
-              req.session.extensionReasons.push(reasonObject)
-            }
+            reasonObject.nextStep = '/add-extension-reason'
+            req.session.extensionReasons.push(reasonObject)
           }
-          res.redirect('/auth-code/address')
+          res.redirect('/add-extension-reason')
           break
         case 'damage':
           if (editId !== '') {
