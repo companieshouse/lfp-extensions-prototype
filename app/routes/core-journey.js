@@ -83,7 +83,8 @@ module.exports = function (router) {
       res.render('choose-reason', {
         errorList: errorList,
         extensionReasonErr: extensionReasonErr,
-        extensionReason: extensionReason
+        extensionReason: extensionReason,
+        deadlineStatus: deadlineStatus
       })
     } else {
       reasonObject.reason = req.body.extensionReason
