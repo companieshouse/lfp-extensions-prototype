@@ -601,4 +601,44 @@ module.exports = function (router) {
       }
     }
   })
+  router.get('/delete-application', function (req, res) {
+    res.render('delete-application', {
+      scenario: req.session.scenario
+    })
+  })
+  router.post('/delete-application', function (req, res) {
+    var reasonObject = {}
+    var deleteApplication = req.body.deleteApplication
+    var errorFlag = false
+    var Err = {}
+    var errorList = []
+
+    if (typeof deleteApplication === 'undefined') {
+      Err.type = 'blank'
+      Err.text = 'You must tell us if you want to remove this reason'
+      Err.href = '#delete-application-1'
+      Err.flag = true
+    }
+    if (Err.flag) {
+      errorList.push(Err)
+      errorFlag = true
+    }
+    if (errorFlag === true) {
+      res.render('delete-application', {
+        errorList: errorList,
+        Err: Err,
+        reason: reasonObject,
+        extensionReasons: req.session.extensionReasons
+      })
+    } else {
+      switch (deleteApplication) {
+        case 'yes':
+          res.redirect('/start')
+          break
+        case 'no':
+          res.redirect('/check-your-answers')
+          break
+      }
+    }
+  })
 }
