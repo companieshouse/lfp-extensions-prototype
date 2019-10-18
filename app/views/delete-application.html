@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-  Continue with your application
+  Delete your application
 {% endblock %}
 {% block beforeContent %}
   {{ govukPhaseBanner({
@@ -16,22 +16,47 @@
 }) }}
 {% endblock %}
 {% block content %}
+
+  {% set HTMLTitle %}
+  <h1 class="govuk-heading-xl">
+    Do you want to delete your application for
+    {{ scenario.company.name }}
+  </h1>
+  {% endset %}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">
-        You've already started an application for
-        {{ scenario.company.name }}
-      </h1>
-      <p class="govuk-body-l">You started this application on
-        {{ scenario.company.startDate }}</p>
+      {{ govukRadios({
+  classes: "govuk-radios--inline",
+  idPrefix: "deleteApplication",
+  name: "delete-application",
+  fieldset: {
+    legend: {
+      html: HTMLTitle,
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--xl"
+    }
+  },
+  hint: {
+    text: "This will remove all your answers."
+  },
+  items: [
+    {
+      value: "yes",
+      text: "Yes"
+    },
+    {
+      value: "no",
+      text: "No"
+    }
+  ]
+}) }}
 
       <form action="" method="post">
         {{ govukButton({
-        text: "Continue application"
+        text: "Continue"
       }) }}
-        <p>
-          <a href="choose-reason?restart=yes" class="govuk-link">Start a new application</a>
-        </p>
+
         <p>
           <a href="sign-out" class="govuk-link">Sign out</a>
         </p>

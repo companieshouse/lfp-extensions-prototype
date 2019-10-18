@@ -16,41 +16,18 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      {% if authCodeFlag === true and extensionReasons.length === 1 %}
-        <div class="govuk-panel govuk-panel--confirmation">
-          {% if scenario.company.deadlineStatus === '7days' %}
-            <h1 class="govuk-panel__title">Application accepted</h1>
-            <div class="govuk-panel__body">
-              The filing deadline for
-              {{ scenario.company.name }}
-              has been extended by 14 days until
-              {{ scenario.company.extensionTwoWeek }}.
-            </div>
-          {% elseif scenario.company.deadlineStatus === '14days' %}
-            <h1 class="govuk-panel__title">Application accepted</h1>
-            <div class="govuk-panel__body">
-              The filing deadline for
-              {{ scenario.company.name }}
-              has been extended by 7 days until
-              {{ scenario.company.extensionOneWeek }}.
-            </div>
-          {% else %}
-            <h1 class="govuk-panel__title">Extension not required</h1>
-            <div class="govuk-panel__body">
-              {{ scenario.company.name }}
-              still has time to file its accounts before the deadline.
-            </div>
-          {% endif %}
+      <!--- Auth code automation {% if authCodeFlag === true and extensionReasons.length === 1 %} <div class="govuk-panel govuk-panel--confirmation"> {% if scenario.company.deadlineStatus === '7days' %} <h1 class="govuk-panel__title">Application
+      accepted</h1> <div class="govuk-panel__body"> The filing deadline for {{ scenario.company.name }} has been extended by 14 days until {{ scenario.company.extensionTwoWeek }}. </div> {% elseif scenario.company.deadlineStatus === '14days' %} <h1
+      class="govuk-panel__title">Application accepted</h1> <div class="govuk-panel__body"> The filing deadline for {{ scenario.company.name }} has been extended by 7 days until {{ scenario.company.extensionOneWeek }}. </div> {% else %} <h1
+      class="govuk-panel__title">Extension not required</h1> <div class="govuk-panel__body"> {{ scenario.company.name }} still has time to file its accounts before the deadline. </div> {% endif %} </div> {% else %} {% endif %} --->
+
+      <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">Application submitted</h1>
+        <div class="govuk-panel__body">
+          Your reference number is the company number<br>
+          <strong>{{ scenario.company.number }}</strong>
         </div>
-      {% else %}
-        <div class="govuk-panel govuk-panel--confirmation">
-          <h1 class="govuk-panel__title">Application submitted</h1>
-          <div class="govuk-panel__body">
-            Your reference number is the company number<br>
-            <strong>{{ scenario.company.number }}</strong>
-          </div>
-        </div>
-      {% endif %}
+      </div>
 
       {% if authCodeFlag !== true and extensionReasons.length === 1 %}
         <p class="govuk-body-l">
@@ -65,17 +42,9 @@
           which contains your application information.
         </p>
         <p class="govuk-body-m">
-          {% if scenario.company.deadlineStatus === '7days' %}
-            Your new filing deadline is
-            <span class="govuk-!-font-weight-bold">{{ scenario.company.extensionTwoWeek }}</span>.
-          {% elseif scenario.company.deadlineStatus === '14days' %}
-            Your new filing deadline is
-            <span class="govuk-!-font-weight-bold">{{ scenario.company.extensionOneWeek }}</span>.
-          {% endif %}
-          {% if confirmAddress === false %}
-          {% else %}
-            We've also sent an authentication code reminder to the company's registered office address.
-          {% endif %}
+          <!--- Auth code automation {% if scenario.company.deadlineStatus === '7days' %} Your new filing deadline is <span class="govuk-!-font-weight-bold">{{ scenario.company.extensionTwoWeek }}</span>. {% elseif scenario.company.deadlineStatus === '14days'
+          %} Your new filing deadline is <span class="govuk-!-font-weight-bold">{{ scenario.company.extensionOneWeek }}</span>. {% endif %} {% if confirmAddress === false %} {% else %} {% endif %} -->
+          We've also sent an authentication code reminder to the company's registered office address.
         </p>
       {% endif %}
 
@@ -546,53 +515,34 @@
           </div>
         {% endfor %}
       </div>
-
-      {% if (scenario.company.deadlineStatus === '7days') and (authCodeFlag === false) %}
-        {{ govukInsetText({
-          html: shortdeadlineHTML
-        }) }}
-      {% endif %}
-      {% if (scenario.company.deadlineStatus === '14days') and (authCodeFlag === false) %}
-        {{ govukInsetText({
-          html: shortdeadlineHTML
-        }) }}
-      {% endif %}
       <h2 class="govuk-heading-m">What happens next</h2>
-
-      <!-- {% if authCodeFlag === true %} {% if confirmAddress === false %} <p class="govuk-body">You must file your accounts by <span class="govuk-!-font-weight-bold">{{scenario.company.extensionTwoWeek}}</span>.</p> <p class="govuk-body">To file online
-      you'll need to:</p> <ol class="govuk-list govuk-list--number"> <li> <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/287369/AD01_change_of_registered_office_address.pdf">update your registered
-      office</a> </li> <li> <a href="https://beta.companieshouse.gov.uk/">check your registered office has been updated</a> </li> <li> <a href="https://ewf.companieshouse.gov.uk/">request an authentication code</a> </li> </ol> {% else %} <p>You should
-      receive the authentication code at the registered office within 5 working days.</p> {% if scenario.company.deadlineStatus === '7days' %} <p>You should file your accounts by <b>{{scenario.company.extensionTwoWeek}}</b>. </p> {% elseif
-      scenario.company.deadlineStatus === '14days' %} <p>You should file your accounts by <b>{{scenario.company.extensionOneWeek}}</b>. </p> {% else %} <p>You will not receive an extension to your filing deadline and should file before your due date of
-      <b>{{ scenario.company.accountsDue }}</b>.</p> {% endif %} {% endif %} {% else %} <p>It will take up to 5 working days to review your application. We’ll contact you by email with our decision. Accepted applications normally receive an extension of 28
-      days. We may also contact you if we need more information.</p> {% endif %} -->
-      {% if authCodeFlag === true %}
-        <p>You should receive the authentication code at the registered office within 5 working days.</p>
-        <p>If you haven't received your authentication code, you can
-          <a href='https://www.gov.uk/government/organisations/companies-house/about/access-and-opening'>
-            file on paper.</a>
-        </p>
-        {% if scenario.company.deadlineStatus === '7days' %}
-          <p>You should file your accounts by
-            <b>{{scenario.company.extensionTwoWeek}}</b>.
-          </p>
-        {% elseif scenario.company.deadlineStatus === '14days' %}
-          <p>You should file your accounts by
-            <b>{{scenario.company.extensionOneWeek}}</b>.
-          </p>
-        {% else %}
-          <p>You will not receive an extension to your filing deadline and should file before your due date of
-            <b>{{ scenario.company.accountsDue }}</b>.</p>
-        {% endif %}
-      {% else %}
-        <p>It will take up to 5 working days to review your application. We’ll contact you by email with our decision. Accepted applications normally receive an extension of 28 days. We may also contact you if we need more information.</p>
-      {% endif %}
-      <p class="govuk-body">
-        <a href="https://www.gov.uk/service-manual/user-centred-design/resources/patterns/feedback-pages.html" class="govuk-link">What did you think of this service?</a>
-        (takes 30 seconds)
+      <!-- authcode automation {% if (scenario.company.deadlineStatus === '7days') and (authCodeFlag === false) %} {{ govukInsetText({ html: shortdeadlineHTML }) }} {% endif %} {% if (scenario.company.deadlineStatus === '14days') and (authCodeFlag ===
+      false) %} {{ govukInsetText({ html: shortdeadlineHTML }) }} {% endif %} <!-- {% if authCodeFlag === true %} {% if confirmAddress === false %} <p class="govuk-body">You must file your accounts by <span
+      class="govuk-!-font-weight-bold">{{scenario.company.extensionTwoWeek}}</span>.</p> <p class="govuk-body">To file online you'll need to:</p> <ol class="govuk-list govuk-list--number"> <li> <a
+      href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/287369/AD01_change_of_registered_office_address.pdf">update your registered office</a> </li> <li> <a
+      href="https://beta.companieshouse.gov.uk/">check your registered office has been updated</a> </li> <li> <a href="https://ewf.companieshouse.gov.uk/">request an authentication code</a> </li> </ol> {% else %} <p>You should receive the authentication
+      code at the registered office within 5 working days.</p> {% if scenario.company.deadlineStatus === '7days' %} <p>You should file your accounts by <b>{{scenario.company.extensionTwoWeek}}</b>. </p> {% elseif scenario.company.deadlineStatus ===
+      '14days' %} <p>You should file your accounts by <b>{{scenario.company.extensionOneWeek}}</b>. </p> {% else %} <p>You will not receive an extension to your filing deadline and should file before your due date of <b>{{ scenario.company.accountsDue
+      }}</b>.</p> {% endif %} {% endif %} {% else %} --->
+    {% endif %}
+    {% if authCodeFlag === true %}
+      <p>You should receive the authentication code at the registered office within 5 working days.</p>
+      <p>If you haven't received your authentication code, you can
+        <a href='https://www.gov.uk/government/organisations/companies-house/about/access-and-opening'>
+          file on paper.</a>
       </p>
-    </div>
+      <!-- authcode automation {% if scenario.company.deadlineStatus === '7days' %} <p>You should file your accounts by <b>{{scenario.company.extensionTwoWeek}}</b>. </p> {% elseif scenario.company.deadlineStatus === '14days' %} <p>You should file your
+      accounts by <b>{{scenario.company.extensionOneWeek}}</b>. </p> {% else %} <p>You will not receive an extension to your filing deadline and should file before your due date of <b>{{ scenario.company.accountsDue }}</b>.</p> {% endif %} -->
+    {% else %}
+
+    {% endif %}
+    <p>It will take up to 5 working days to review your application. We’ll contact you by email with our decision. Accepted applications normally receive an extension of 28 days. We may also contact you if we need more information.</p>
+    <p class="govuk-body">
+      <a href="https://www.gov.uk/service-manual/user-centred-design/resources/patterns/feedback-pages.html" class="govuk-link">What did you think of this service?</a>
+      (takes 30 seconds)
+    </p>
   </div>
+</div>
 </div>
 
 {% endblock %}
