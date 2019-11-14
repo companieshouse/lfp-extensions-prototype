@@ -87,6 +87,100 @@ module.exports = function (router) {
         reasonObject = req.session.extensionReasons.pop()
         reasonObject.illPerson = req.body.illPerson
         reasonObject.otherPerson = req.body.otherPerson
+        reasonObject.nextStep = 'illness/relationship'
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/illness/relationship')
+      }
+    }
+  })
+  router.get('/illness/relationship', function (req, res) {
+    var id = 0
+    var info = ''
+    var checked = {}
+    var otherPersonError = false
+    checked.officer = false
+    checked.accountant = false
+    checked.family = false
+    checked.employee = false
+
+    if (req.query.id) {
+      id = req.query.id
+      info = req.session.extensionReasons[id].illPerson
+      switch (info) {
+        case 'Company director or officer':
+          checked.officer = true
+          break
+        case 'Company accountant or agent':
+          checked.accountant = true
+          break
+        case 'Family member':
+          checked.family = true
+          break
+        case 'Company employee':
+          checked.employee = true
+          break
+        case 'Someone else':
+          otherPersonError = true
+          break
+      }
+      res.render('illness/relationship', {
+        id: id,
+        info: info,
+        checked: checked,
+        otherPersonError: otherPersonError
+      })
+    } else {
+      res.render('illness/relationship')
+    }
+  })
+  router.post('/illness/relationship', function (req, res) {
+    var editId = req.body.editId
+    var illPerson = req.body.illPerson
+    var otherPerson = req.body.otherPerson
+    var errorFlag = false
+    var illPersonErr = {}
+    var otherPersonErr = {}
+    var errorList = []
+    var reasonObject = {}
+
+    if (typeof illPerson === 'undefined') {
+      illPersonErr.type = 'blank'
+      illPersonErr.text = 'You must select a person'
+      illPersonErr.href = '#ill-person-1'
+      illPersonErr.flag = true
+    }
+    if (illPerson === 'Someone else' && otherPerson === '') {
+      otherPersonErr.type = 'invalid'
+      otherPersonErr.text = 'You must tell us the person'
+      otherPersonErr.href = '#other-person'
+      otherPersonErr.flag = true
+    }
+    if (illPersonErr.flag) {
+      errorList.push(illPersonErr)
+      errorFlag = true
+    }
+    if (otherPersonErr.flag) {
+      errorList.push(otherPersonErr)
+      errorFlag = true
+    }
+    if (errorFlag === true) {
+      res.render('illness/relationship', {
+        errorList: errorList,
+        illPersonErr: illPersonErr,
+        otherPersonErr: otherPersonErr,
+        illPerson: illPerson,
+        otherPerson: otherPerson,
+        id: editId
+      })
+    } else {
+      if (req.body.editId !== '') {
+        req.session.extensionReasons[editId].illPerson = illPerson
+        req.session.extensionReasons[editId].otherPerson = otherPerson
+        res.redirect('/check-your-answers')
+      } else {
+        reasonObject = req.session.extensionReasons.pop()
+        reasonObject.illPerson = req.body.illPerson
+        reasonObject.otherPerson = req.body.otherPerson
         reasonObject.nextStep = 'illness/illness-start-date'
         req.session.extensionReasons.push(reasonObject)
         res.redirect('/illness/illness-start-date')
