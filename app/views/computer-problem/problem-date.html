@@ -39,7 +39,7 @@
         {% endif %}
 
         {% set hintHTML %}
-        For example, 31 8 2018, around 10am
+        For example, 31 8 2018
         {% endset -%}
 
         {{ govukDateInput({
@@ -76,21 +76,6 @@
             ]
           })
         }}
-        {% if reason.problemReason === "Companies House website" %}
-          {{ govukDateInput({
-          id: "problem-time",
-          namePrefix: "problemTime",
-        items: [
-            {
-              classes: "govuk-input--width-10",
-              name: "Time",
-              value: problemDate.time
-            }
-            ]
-          })
-        }}
-        {% else %}
-        {% endif %}
 
         {{ govukInput({
           id: "editId",
