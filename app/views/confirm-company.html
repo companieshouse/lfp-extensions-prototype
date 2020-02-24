@@ -18,7 +18,7 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">Check company details</h1>
+      <h1 class="govuk-heading-xl">Confirm this is the right company</h1>
       <h2 class="govuk-heading-l">{{scenario.company.name}}</h2>
 
       {% set inactiveHTML %}
@@ -98,27 +98,27 @@
 
       {% if scenario.company.deadlineStatus === 'Overdue' %}
         {{ govukButton({
-text: "Continue",
+text: "Confirm",
 href: "ptf/ptf"
 }) }}
       {% elif scenario.company.deadlineStatus === 'notDue' %}
         {{ govukButton({
-text: "Continue",
+text: "Confirm",
 href: "accountsnotdue"
 }) }}
       {% elif scenario.company.deadlineStatus === 'unlimited' %}
         {{ govukButton({
-text: "Continue",
+text: "Confirm",
 href: "accountsnotneeded"
 }) }}
       {% elif scenario.company.accountingReferenceDateRequested === 'yes' %}
         {{ govukButton({
-text: "Continue",
+text: "Confirm",
 href: "account-reference-date"
 }) }}
       {% else %}
         {{ govukButton({
-text: "Continue",
+text: "Confirm",
 href: "choose-reason"
 }) }}
       {% endif %}
