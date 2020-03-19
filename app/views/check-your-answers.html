@@ -1,3 +1,6 @@
+Skip to content Search or jump to… Pull requests Issues Marketplace Explore @oceannee companieshouse / lfp-extensions-prototype 7 00 Code Issues 19 Pull requests 1 Actions Projects 1 Wiki Security Insights Settings
+lfp-extensions-prototype/app/views/check-your-answers.html @oceannee oceannee accessibility statement commit 999c86d on Feb 5 @oceannee@olliewilliams-CH 636 lines (605 sloc) 17.6 KB
+
 {% extends "layout.html" %}
 
 {% block pageTitle %}
@@ -152,111 +155,6 @@
           {% if reason.reason === 'illness' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Illness</h3>
 
-<!-- old CYA code            <dl class="app-check-your-answers app-check-your-answers--long">
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Who was ill?
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {% if reason.illPerson === 'Someone else' %}
-                    Someone else -
-                    {{ reason.otherPerson }}
-                  {% else %}
-                    {{ reason.illPerson | capitalize }}
-                  {% endif %}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="illness/who-was-ill/?id={{loop.index0}}">Change</a>
-                </dd>
-                <dd class="app-check-your-answers__change"></dd>
-              </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Illness start date
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.illnessStartDate.day }}
-                  {{ reason.illnessStartDate.month | displayMonth }}
-                  {{ reason.illnessStartDate.year }}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="illness/illness-start-date/?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              {% if reason.continuedIllness === 'yes' %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Continuing illness?
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
-                    {{ reason.continuedIllness | capitalize }}
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="illness/continued-illness/?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% else %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Illness end date
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
-                    {{ reason.illnessEndDate.day }}
-                    {{ reason.illnessEndDate.month | displayMonth }}
-                    {{ reason.illnessEndDate.year }}
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="illness/illness-end-date/?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% endif %}
-              {% if reason.illnessInformation != null %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question app-check-your-answers__question-full-width">
-                    Further information
-                  </dt>
-                  <dd class="app-check-your-answers__answer app-check-your-answers__question--full-width">
-                    {{ reason.illnessInformation | safe | nl2br }}
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="illness/illness-information/?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% endif %}
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Supporting documents
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {% if reason.documents.length > 0 %}
-                    <ul class="govuk-list govuk-list--bullet">
-                      {% for document in reason.documents | reverse %}
-                        <li>
-                          <a href='' class='govuk-link' download="download">{{ document }}</a>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  {% else %}
-                    None
-                  {% endif %}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  {% if reason.documents.length > 0 %}
-                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
-                  {% else %}
-                    <a href="evidence?id={{loop.index0}}">Change</a>
-                  {% endif %}
-                </dd>
-              </div>
-            </dl>
-          {% elif reason.reason === 'covid' %}
-            <h3 class="govuk-heading-m">{{extensionListIndex}}Coronavirus (COVID-19)</h3>
-            <dl class="app-check-your-answers app-check-your-answers--long">
-              <!-- {% if scenario.company.deadlineStatus === 'Near' %} <div class="app-check-your-answers__contents"> <dt class="app-check-your-answers__question"> Registered office address </dt> <dd class="app-check-your-answers__answer"> {% if
-              reason.confirmAddress === 'no' %} <p>Needs to be updated</p> {% else %} {{ scenario.company.address | nl2br | safe }} {% endif %} </dd> </div> {% endif %} -->
-            </dl>
-=======
-
             {% set illPersonHTML %}
             {% if reason.illPerson === 'Someone else' %}
               Someone else -
@@ -363,8 +261,9 @@
     documents
   ]
 }) }}
+          {% elif reason.reason === 'covid' %}
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Coronavirus (COVID-19)</h3>
 
--->
           {% elif reason.reason === 'authCode' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Missing company authentication code</h3>
 
