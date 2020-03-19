@@ -187,6 +187,12 @@
                 </dd>
               </div>
             </dl>
+          {% elif reason.reason === 'covid' %}
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Coronavirus (COVID-19)</h3>
+            <dl class="app-check-your-answers app-check-your-answers--long">
+              <!-- {% if scenario.company.deadlineStatus === 'Near' %} <div class="app-check-your-answers__contents"> <dt class="app-check-your-answers__question"> Registered office address </dt> <dd class="app-check-your-answers__answer"> {% if
+              reason.confirmAddress === 'no' %} <p>Needs to be updated</p> {% else %} {{ scenario.company.address | nl2br | safe }} {% endif %} </dd> </div> {% endif %} -->
+            </dl>
           {% elif reason.reason === 'authCode' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Missing company authentication code</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">

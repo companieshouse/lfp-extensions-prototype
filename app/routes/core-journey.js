@@ -90,6 +90,15 @@ module.exports = function (router) {
       reasonObject.reason = req.body.extensionReason
       reasonObject.complete = false
       switch (req.body.extensionReason) {
+        case 'covid':
+          if (editId !== '') {
+            req.session.extensionReasons[editId].reason = reasonObject.reason
+          } else {
+            reasonObject.nextStep = 'check-your-answers'
+            req.session.extensionReasons.push(reasonObject)
+          }
+          res.redirect('/check-your-answers')
+          break
         case 'illness':
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
