@@ -1,0 +1,88 @@
+{% if extensionReasons.length > 1 %}
+  <h2 class="govuk-heading-l">Extension reasons</h2>
+{% else %}
+  <h2 class="govuk-heading-l">Extension reason</h2>
+{% endif %}
+{% for reason in extensionReasons %}
+  {% if extensionReasons.length < 1 %}
+    {% set extensionListIndex %}
+    {{loop.index}}:
+    {% endset %}
+  {% else %}
+    {% set extensionListIndex = '' %}
+  {% endif %}
+
+  {% if reason.documents.length > 0 %}
+    {% if reason.documents.length > 1 %}
+
+      {% set documentList %}
+      <ul class="govuk-list govuk-list--bullet">
+        {% for document in reason.documents | reverse %}
+          <li>
+            <a href='' class='govuk-link' download="download">{{ document }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+      {% endset %}
+
+    {% else %}
+
+      {% set documentList %}
+      <a href='' class='govuk-link' download="download">{{ reason.documents }}</a>
+      {% endset %}
+
+    {% endif %}
+
+    {% if showChangeLinks === true %}
+      {% set reasonDocumentChange = {
+        href: "evidence-upload?id=" + loop.index0,
+        text: "Change",
+        visuallyHiddenText: "supporting documents"
+     } %}
+    {% endif %}
+
+    {% set documents = {
+      key: {
+        text: "Supporting documents"
+      },
+      value: {
+        html: documentList
+      },
+      actions: {
+        items: [reasonDocumentChange]
+      }
+    }
+ %}
+  {% else %}
+    {% set documents = {
+      key: {
+        text: "Supporting documents"
+      },
+      value: {
+        text: "None"
+      },
+      actions: {
+        items: [reasonDocumentChange]
+      }
+    } %}
+  {% endif %}
+
+  <div class="reason-container">
+
+    {% if reason.reason === 'illness' %}
+      {% include "includes/cya/illness.html" %}
+
+    {% elif reason.reason === 'personal' %}
+      {% include "includes/cya/personal-reasons.html" %}
+
+    {% else %}
+      {% include "includes/cya/other.html" %}
+    {% endif %}
+
+    {% if showChangeLinks === true %}
+      <p class="govuk-body">
+        <a href="/remove-reason?id={{loop.index0}}" class="govuk-link">Remove this reason</a>
+      </p>
+    {% endif %}
+  </div>
+{% endfor %}

@@ -1,3 +1,6 @@
+Skip to content Search or jump to… Pull requests Issues Marketplace Explore @oceannee companieshouse / lfp-extensions-prototype 7 00 Code Issues 19 Pull requests 1 Actions Projects 1 Wiki Security Insights Settings
+lfp-extensions-prototype/app/views/check-your-answers.html @oceannee oceannee accessibility statement commit 999c86d on Feb 5 @oceannee@olliewilliams-CH 636 lines (605 sloc) 17.6 KB
+
 {% extends "layout.html" %}
 
 {% block pageTitle %}
@@ -258,6 +261,9 @@
     documents
   ]
 }) }}
+
+          {% elif reason.reason === 'covid' %}
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Coronavirus (COVID-19)</h3>
 
           {% elif reason.reason === 'authCode' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Missing company authentication code</h3>
