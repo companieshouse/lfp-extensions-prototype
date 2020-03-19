@@ -258,6 +258,8 @@
     documents
   ]
 }) }}
+          {% elif reason.reason === 'covid' %}
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Coronavirus (COVID-19)</h3>
 
           {% elif reason.reason === 'authCode' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Missing company authentication code</h3>
