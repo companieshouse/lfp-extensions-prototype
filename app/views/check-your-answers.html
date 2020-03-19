@@ -48,7 +48,7 @@
           },
           {
             key: {
-              text: "Address"
+              text: "Registered office address"
             },
             value: {
               text: scenario.company.address | nl2br | safe
@@ -87,10 +87,72 @@
         {% else %}
           {% set extensionListIndex = '' %}
         {% endif %}
+
+        {% if reason.documents.length > 0 %}
+          {% if reason.documents.length > 1 %}
+
+            {% set documentList %}
+            <ul class="govuk-list govuk-list--bullet">
+              {% for document in reason.documents | reverse %}
+                <li>
+                  <a href='' class='govuk-link' download="download">{{ document }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+            {% endset %}
+
+          {% else %}
+
+            {% set documentList %}
+            <a href='' class='govuk-link' download="download">{{ reason.documents }}</a>
+            {% endset %}
+
+          {% endif %}
+
+          {% set documents = {
+            key: {
+              text: "Supporting documents"
+            },
+            value: {
+              html: documentList
+            },
+            actions: {
+              items: [
+                {
+                  href: "evidence-upload?id=" + loop.index0,
+                  text: "Change",
+                  visuallyHiddenText: "supporting documents"
+                }
+              ]
+            }
+          }
+ %}
+        {% else %}
+          {% set documents = {
+            key: {
+              text: "Supporting documents"
+            },
+            value: {
+              text: "None"
+            },
+            actions: {
+              items: [
+                {
+                  href: "evidence?id=" + loop.index0,
+                  text: "Change",
+                  visuallyHiddenText: "supporting documents"
+                }
+              ]
+            }
+          }
+ %}
+        {% endif %}
+
         <div class="reason-container">
           {% if reason.reason === 'illness' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Illness</h3>
-            <dl class="app-check-your-answers app-check-your-answers--long">
+
+<!-- old CYA code            <dl class="app-check-your-answers app-check-your-answers--long">
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
                   Who was ill?
@@ -193,387 +255,453 @@
               <!-- {% if scenario.company.deadlineStatus === 'Near' %} <div class="app-check-your-answers__contents"> <dt class="app-check-your-answers__question"> Registered office address </dt> <dd class="app-check-your-answers__answer"> {% if
               reason.confirmAddress === 'no' %} <p>Needs to be updated</p> {% else %} {{ scenario.company.address | nl2br | safe }} {% endif %} </dd> </div> {% endif %} -->
             </dl>
+=======
+
+            {% set illPersonHTML %}
+            {% if reason.illPerson === 'Someone else' %}
+              Someone else -
+              {{ reason.otherPerson }}
+            {% else %}
+              {{ reason.illPerson | capitalize }}
+            {% endif %}
+            {% endset %}
+
+            {% if reason.continuedIllness === 'yes' %}
+              {% set endDateHTML = {
+              key: {
+                text: "Continuing illness?"
+              },
+              value: {
+                html: reason.continuedIllness | capitalize
+              },
+              actions: {
+                items: [
+                  {
+                    href: "illness/continued-illness/?id=" + loop.index0,
+                    text: "Change",
+                    visuallyHiddenText: "continuing illness"
+                  }
+                ]
+              }
+            }
+            %}
+            {% else %}
+              {% set endDateHTML = {
+              key: {
+                text: "Illness end date"
+              },
+              value: {
+                html: reason.illnessEndDate.day + " " + reason.illnessEndDate.month | displayMonth + " " + reason.illnessEndDate.year
+              },
+              actions: {
+                items: [
+                  {
+                    href: "illness/illness-end-date/?id=" + loop.index0,
+                    text: "Change",
+                    visuallyHiddenText: "illness end date"
+                  }
+                ]
+              }
+            }
+            %}
+            {% endif %}
+
+            {{ govukSummaryList({
+  rows: [
+    {
+      key: {
+        text: "Who was ill?"
+      },
+      value: {
+        html: illPersonHTML
+      },
+      actions: {
+        items: [
+          {
+            href: "illness/who-was-ill/?id=" + loop.index0,
+            text: "Change",
+            visuallyHiddenText: "who was ill"
+          }
+        ]
+      }
+    },
+    {
+      key: {
+        text: "Illness start date"
+      },
+      value: {
+        text: reason.illnessStartDate.day + " " + reason.illnessStartDate.month | displayMonth + " " + reason.illnessStartDate.year
+      },
+      actions: {
+        items: [
+          {
+            href: "illness/illness-start-date/?id" + loop.index0,
+            text: "Change",
+            visuallyHiddenText: "illness start date"
+          }
+        ]
+      }
+    },
+    endDateHTML,
+    {
+      key: {
+        text: "Further information"
+      },
+      value: {
+        html: reason.illnessInformation | safe | nl2br
+      },
+      actions: {
+        items: [
+          {
+            href: "illness/illness-information/?id=" + loop.index0,
+            text: "Change",
+            visuallyHiddenText: "further information"
+          }
+        ]
+      }
+    },
+    documents
+  ]
+}) }}
+
+-->
           {% elif reason.reason === 'authCode' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Missing company authentication code</h3>
-            <dl class="app-check-your-answers app-check-your-answers--long">
-              <!-- {% if scenario.company.deadlineStatus === 'Near' %} <div class="app-check-your-answers__contents"> <dt class="app-check-your-answers__question"> Registered office address </dt> <dd class="app-check-your-answers__answer"> {% if
-              reason.confirmAddress === 'no' %} <p>Needs to be updated</p> {% else %} {{ scenario.company.address | nl2br | safe }} {% endif %} </dd> </div> {% endif %} -->
-            </dl>
+
           {% elif reason.reason === 'damage' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Theft or criminal damage</h3>
-            <dl class="app-check-your-answers app-check-your-answers--long">
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Date of incident
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.damageDate.day }}
-                  {{ reason.damageDate.month | displayMonth }}
-                  {{ reason.damageDate.year }}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="theft-criminal-damage/damage-date/?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Further information
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.damage | safe | nl2br }}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="/theft-criminal-damage/reason-damage?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Supporting documents
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {% if reason.documents.length > 0 %}
-                    <ul class="govuk-list govuk-list--bullet">
-                      {% for document in reason.documents | reverse %}
-                        <li>
-                          <a href='' class='govuk-link' download="download">{{ document }}</a>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  {% else %}
-                    None
-                  {% endif %}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  {% if reason.documents.length > 0 %}
-                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
-                  {% else %}
-                    <a href="evidence?id={{loop.index0}}">Change</a>
-                  {% endif %}
-                </dd>
-              </div>
-            </dl>
+
+            {{ chSummaryList({
+            rows: [
+            {
+            key: {
+              text: "Date of incident"
+            },
+            value: {
+              html: reason.damageDate.day + " " + reason.damageDate.month | displayMonth + " " + reason.damageDate.year
+            },
+            actions: {
+              items: [
+            {
+            href: "theft-criminal-damage/damage-date/?id=" + loop.index0,
+              text: "Change",
+              visuallyHiddenText: "date of incident"
+            }
+            ]
+            }
+          },
+          {
+          key: {
+            text: "Further information"
+          },
+          value: {
+            html: reason.damage | safe | nl2br
+          },
+          actions: {
+            items: [
+          {
+          href: "/theft-criminal-damage/reason-damage?id=" + loop.index0,
+            text: "Change",
+            visuallyHiddenText: "further information"
+          }
+          ]
+        }
+      },
+        documents
+        ]
+          }) }}
+
           {% elif reason.reason === 'disaster' %}
-            <h3 class="govuk-heading-m">{{extensionListIndex}}Natural disaster</h3>
-            <dl class="app-check-your-answers app-check-your-answers--long">
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Date natural disaster happened
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.disasterDate.day }}
-                  {{ reason.disasterDate.month | displayMonth }}
-                  {{ reason.disasterDate.year }}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="natural-disaster/disaster-date/?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Further information
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.naturalDisaster | safe | nl2br }}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="/natural-disaster/reason-natural-disaster?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Supporting documents
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {% if reason.documents.length > 0 %}
-                    <ul class="govuk-list govuk-list--bullet">
-                      {% for document in reason.documents | reverse %}
-                        <li>
-                          <a href='' class='govuk-link' download="download">{{ document }}</a>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  {% else %}
-                    None
-                  {% endif %}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  {% if reason.documents.length > 0 %}
-                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
-                  {% else %}
-                    <a href="evidence?id={{loop.index0}}">Change</a>
-                  {% endif %}
-                </dd>
-              </div>
-            </dl>
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Fire, flood or other natural disaster</h3>
+            {{ chSummaryList({
+            rows: [
+            {
+            key: {
+              text: "Date of incident"
+            },
+            value: {
+              html: reason.disasterDate.day + " " + reason.disasterDate.month | displayMonth + " " + reason.disasterDate.year
+            },
+            actions: {
+              items: [
+            {
+            href: "natural-disaster/disaster-date/?id=" + loop.index0,
+              text: "Change",
+              visuallyHiddenText: "date of incident"
+            }
+            ]
+            }
+          },
+          {
+          key: {
+            text: "Further information"
+          },
+          value: {
+            html: reason.naturalDisaster | safe | nl2br
+          },
+          actions: {
+            items: [
+          {
+          href: "/natural-disaster/reason-natural-disaster?id=" + loop.index0,
+            text: "Change",
+            visuallyHiddenText: "further information"
+          }
+          ]
+        }
+      },
+        documents
+        ]
+          }) }}
+
           {% elif reason.reason === 'accounts' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Accounting issues</h3>
-            <dl class="app-check-your-answers app-check-your-answers--long">
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Date issue happened
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.accountsDate.day }}
-                  {{ reason.accountsDate.month | displayMonth }}
-                  {{ reason.accountsDate.year }}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="accounts/accounts-date/?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Further information
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.accounts | safe | nl2br }}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="/accounts/reason-accounts?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Supporting documents
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {% if reason.documents.length > 0 %}
-                    <ul class="govuk-list govuk-list--bullet">
-                      {% for document in reason.documents | reverse %}
-                        <li>
-                          <a href='' class='govuk-link' download="download">{{ document }}</a>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  {% else %}
-                    None
-                  {% endif %}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  {% if reason.documents.length > 0 %}
-                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
-                  {% else %}
-                    <a href="evidence?id={{loop.index0}}">Change</a>
-                  {% endif %}
-                </dd>
-              </div>
-            </dl>
+            {{ chSummaryList({
+            rows: [
+            {
+            key: {
+              text: "Date issue happened"
+            },
+            value: {
+              html: reason.accountsDate.day + " " + reason.accountsDate.month | displayMonth + " " + reason.accountsDate.year
+            },
+            actions: {
+              items: [
+            {
+            href: "accounts/accounts-date/?id=" + loop.index0,
+              text: "Change",
+              visuallyHiddenText: "date accounting issue happened"
+            }
+            ]
+            }
+            },
+            {
+            key: {
+            text: "Further information"
+            },
+            value: {
+            html: reason.accounts | safe | nl2br
+            },
+            actions: {
+            items: [
+            {
+            href: "/accounts/reason-accounts?id=" + loop.index0,
+            text: "Change",
+            visuallyHiddenText: "further information"
+            }
+            ]
+            }
+            },
+            documents
+            ]
+            }) }}
+
           {% elif reason.reason === 'companyChanges' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Changes to the company</h3>
-            <dl class="app-check-your-answers app-check-your-answers--long">
-              {% if reason.dateWasChanged != null %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Date the changes happened
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
-                    {{ reason.dateWasChanged.day }}
-                    {{ reason.dateWasChanged.month | displayMonth }}
-                    {{ reason.dateWasChanged.year }}
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="/company-changes/aware-change-date?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% elseif reason.dateWillChange != null %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Date the changes will happen
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
-                    {{ reason.dateWillChange.day }}
-                    {{ reason.dateWillChange.month | displayMonth }}
-                    {{ reason.dateWillChange.year }}
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="/company-changes/date-will-change?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% else %}
-              {% endif %}
-              {% if reason.awareChangeDate != null %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Date aware of change
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
-                    {{ reason.awareChangeDate.day }}
-                    {{ reason.awareChangeDate.month | displayMonth }}
-                    {{ reason.awareChangeDate.year }}
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="/company-changes/aware-change-date?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% else %}
-              {% endif %}
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Further information
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.companyChanges | safe | nl2br }}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="/company-changes/reason-company-changes?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Supporting documents
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {% if reason.documents.length > 0 %}
-                    <ul class="govuk-list govuk-list--bullet">
-                      {% for document in reason.documents | reverse %}
-                        <li>
-                          <a href='' class='govuk-link' download="download">{{ document }}</a>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  {% else %}
-                    None
-                  {% endif %}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  {% if reason.documents.length > 0 %}
-                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
-                  {% else %}
-                    <a href="evidence?id={{loop.index0}}">Change</a>
-                  {% endif %}
-                </dd>
-              </div>
-            </dl>
+
+            {% if reason.dateWasChanged != null %}
+              {% set changesDateHTML = {
+              key: {
+                text: "Date the changes happened"
+              },
+              value: {
+                html: reason.dateWasChanged.day + " " + reason.dateWasChanged.month | displayMonth + " " + reason.dateWasChanged.year
+              },
+              actions: {
+                items: [
+                  {
+                    href: "/company-changes/aware-change-date?id={" + loop.index0,
+                    text: "Change",
+                    visuallyHiddenText: "date the changes happened"
+                  }
+                ]
+              }
+            }
+            %}
+            {% elseif reason.dateWillChanged != null %}
+              {% set changesDateHTML = {
+              key: {
+                text: "Date the changes will happen"
+              },
+              value: {
+                html: reason.dateWillChange.day + " " + reason.dateWillChange.month | displayMonth + " " + reason.dateWillChange.year
+              },
+              actions: {
+                items: [
+                  {
+                    href: "/company-changes/date-will-change?id=" + loop.index0,
+                    text: "Change",
+                    visuallyHiddenText: "date the changes will happen"
+                  }
+                ]
+              }
+            }
+            %}
+            {% elseif reason.awareChangeDate != null %}
+              {% set changesDateHTML = {
+              key: {
+                text: "Date aware of changes"
+              },
+              value: {
+                html: reason.awareChangeDate.day + " " + reason.awareChangeDate.month | displayMonth + " " + reason.awareChangeDate.year
+              },
+              actions: {
+                items: [
+                  {
+                    href: "/company-changes/aware-change-date?id={" + loop.index0,
+                    text: "Change",
+                    visuallyHiddenText: "date aware of changes"
+                  }
+                ]
+              }
+            }
+            %}
+            {% else %}
+            {% endif %}
+
+            {{ chSummaryList({
+            rows: [
+            changesDateHTML,
+            {
+            key: {
+            text: "Further information"
+            },
+            value: {
+            html: reason.companyChanges | safe | nl2br
+            },
+            actions: {
+            items: [
+            {
+            href: "/company-changes/reason-company-changes?id=" + loop.index0,
+            text: "Change",
+            visuallyHiddenText: "further information"
+            }
+            ]
+            }
+            },
+            documents
+            ]
+            }) }}
+
           {% elif reason.reason === 'computerProblem' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Problems filing online</h3>
-            <dl class="app-check-your-answers app-check-your-answers--long">
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Reason
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {% if reason.problemReason === 'other' %}
-                    Other reason -
-                    {{ reason.otherProblemReason }}
-                  {% else %}
-                    {{ reason.problemReason | safe | nl2br }}
-                  {% endif %}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="/computer-problem/choose-computer-problem?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              {% if reason.problemReason !== 'Authentication code' %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    You tried to file
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
-                    {{ reason.problemDate.day }}
-                    {{ reason.problemDate.month | displayMonth }}
-                    {{ reason.problemDate.year }}
-                    {{ reason.problemTime.hour }}
-                    {{ reason.problemTime.minute }}
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="/computer-problem/problem-date?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Further information
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
-                    {{ reason.computerProblem | safe | nl2br }}
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="/computer-problem/reason-computer-problem?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Supporting documents
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
-                    {% if reason.documents.length > 0 %}
-                      <ul class="govuk-list govuk-list--bullet">
-                        {% for document in reason.documents | reverse %}
-                          <li>
-                            <a href='' class='govuk-link' download="download">{{ document }}</a>
-                          </li>
-                        {% endfor %}
-                      </ul>
-                    {% else %}
-                      None
-                    {% endif %}
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    {% if reason.documents.length > 0 %}
-                      <a href="evidence-upload?id={{loop.index0}}">Change</a>
-                    {% else %}
-                      <a href="evidence?id={{loop.index0}}">Change</a>
-                    {% endif %}
-                  </dd>
-                </div>
-              {% endif %}
-            </dl>
+
+            {% set problemReasonHTML %}
+            {% if reason.problemReason === 'other' %}
+              Other reason -
+              {{ reason.otherProblemReason }}
+            {% else %}
+              {{ reason.problemReason | safe | nl2br }}
+            {% endif %}
+            {% endset %}
+
+            {{ chSummaryList({
+            rows: [
+              {
+                key: {
+                  text: "Reason"
+                },
+                value: {
+                   html: problemReasonHTML
+                },
+                 actions: {
+                    items: [
+                 {
+                    href: "/computer-problem/choose-computer-problem?id=" + loop.index0,
+                    text: "Change",
+                    visuallyHiddenText: "Problems filing online reason"
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+            text: "Date you tried to file"
+            },
+            value: {
+            html: reason.problemDate.day + " " + reason.problemDate.month | displayMonth + " " + reason.problemDate.year
+            },
+            actions: {
+            items: [
+            {
+            href: "/computer-problem/problem-date?id=" + loop.index0,
+            text: "Change",
+            visuallyHiddenText: "Date you tried to file"
+            }
+            ]
+            }
+            },
+            {
+              key: {
+            text: "Further information"
+            },
+            value: {
+            html: reason.computerProblem | safe | nl2br
+            },
+            actions: {
+            items: [
+            {
+            href: "/computer-problem/reason-computer-problem?id=" + loop.index0,
+            text: "Change",
+            visuallyHiddenText: "further information"
+            }
+            ]
+            }
+            },
+            documents
+            ]
+            }) }}
+
           {% else %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Other reason</h3>
-            <dl class="app-check-your-answers app-check-your-answers--long">
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Reason title
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {% if reason.otherReason != "" %}
-                    {{ reason.otherReason }}
-                  {% else %}
-                    Not provided
-                  {% endif %}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  <a href="/other/reason-other?id={{loop.index0}}">Change</a>
-                </dd>
-              </div>
-              {% if reason.otherInformation != null %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Further information
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
-                    {{ reason.otherInformation | safe | nl2br }}
-                  </dd>
-                  <dd class="app-check-your-answers__change">
-                    <a href="/other/reason-other?id={{loop.index0}}">Change</a>
-                  </dd>
-                </div>
-              {% endif %}
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Supporting documents
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {% if reason.documents.length > 0 %}
-                    <ul class="govuk-list govuk-list--bullet">
-                      {% for document in reason.documents | reverse %}
-                        <li>
-                          <a href='' class='govuk-link' download="download">{{ document }}</a>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                  {% else %}
-                    None
-                  {% endif %}
-                </dd>
-                <dd class="app-check-your-answers__change">
-                  {% if reason.documents.length > 0 %}
-                    <a href="evidence-upload?id={{loop.index0}}">Change</a>
-                  {% else %}
-                    <a href="evidence?id={{loop.index0}}">Change</a>
-                  {% endif %}
-                </dd>
-              </div>
-            </dl>
+
+            {% set otherReasonHTML %}
+            {% if reason.otherReason != "" %}
+              {{ reason.otherReason }}
+            {% else %}
+              Not provided
+            {% endif %}
+            {% endset %}
+
+            {{ chSummaryList({
+            rows: [
+              {
+                key: {
+                  text: "Reason"
+                },
+                value: {
+                   html: otherReasonHTML
+                },
+                 actions: {
+                    items: [
+                 {
+                    href: "/other/reason-other?id=" + loop.index0,
+                    text: "Change",
+                    visuallyHiddenText: "other reason"
+                  }
+                ]
+              }
+            },
+            {
+              key: {
+                text: "Further information"
+              },
+              value: {
+                 html: reason.otherInformation | safe | nl2br
+              },
+               actions: {
+                  items: [
+               {
+                  href: "/other/reason-other?id=" + loop.index0,
+                  text: "Change",
+                  visuallyHiddenText: "further information"
+                }
+              ]
+            }
+            },
+            documents
+            ]
+            }) }}
+
           {% endif %}
           <p class="govuk-body">
             <a href="/remove-reason?id={{loop.index0}}" class="govuk-link">Remove this reason</a>

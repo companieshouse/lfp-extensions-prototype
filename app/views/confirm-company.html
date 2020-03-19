@@ -41,61 +41,60 @@
       {% endif %}
       {% endset %}
 
-      {{ govukTable({
-
-  firstCellIsHeader: true,
-  classes: "align-top",
-  rows: [
-    [
-      {
-        text: "Company number"
-      },
-      {
-        text: scenario.company.number
-      }
-    ],
-    [
-      {
-        text: "Status"
-      },
-      {
-        html: inactiveHTML
-      }
-    ],
-    [
-      {
-        text: "Incorporation date"
-      },
-      {
-        text: scenario.company.incorporationDate
-      }
-    ],
-    [
-      {
-        text: "Company type"
-      },
-      {
-        text: scenario.company.companyType
-      }
-    ],
-    [
-      {
-        text: "Registered office address"
-      },
-      {
-        html: scenario.company.address | nl2br
-      }
-    ],
-    [
-      {
-        text: "Accounts due"
-      },
-      {
-        html: overdueHTML
-      }
-    ]
-  ]
-}) }}
+      {{ govukSummaryList({
+        classes: "govuk-!-margin-bottom-8",
+        rows: [
+          {
+            key: {
+              text: "Company number"
+            },
+            value: {
+              text: scenario.company.number
+            }
+          },
+          {
+            key: {
+              text: "Status"
+            },
+            value: {
+              html: inactiveHTML
+            }
+          },
+          {
+            key: {
+              text: "Incorporation date"
+            },
+            value: {
+              text: scenario.company.incorporationDate
+            }
+          },
+          {
+            key: {
+              text: "Company type"
+            },
+            value: {
+              text: scenario.company.companyType
+            }
+          },
+          {
+            key: {
+              text: "Registered office address"
+            },
+            value: {
+              text: scenario.company.address | nl2br | safe
+            }
+          },
+          {
+            key: {
+              text: "Accounts due"
+            },
+            value: {
+              text: scenario.company.accountsDue
+            }
+          }
+        ]
+      })
+      }}
 
       {% if scenario.company.deadlineStatus === 'Overdue' %}
         {{ govukButton({
