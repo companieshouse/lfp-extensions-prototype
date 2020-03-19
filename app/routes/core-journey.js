@@ -5,6 +5,7 @@ module.exports = function (router) {
     var companyNumber = req.session.scenario.company.number
     var id = 0
     var reasonObject = {}
+    var checkedCovid = false
     var checkedIllness = false
     var checkedAuthCode = false
     var checkedDamage = false
@@ -22,6 +23,9 @@ module.exports = function (router) {
       console.log(req.session.extensionReasons)
       reasonObject = req.session.extensionReasons[id]
       switch (reasonObject.reason) {
+        case 'covid':
+          checkedCovid = true
+          break
         case 'illness':
           checkedIllness = true
           break
@@ -45,6 +49,7 @@ module.exports = function (router) {
           break
       }
       res.render('choose-reason', {
+        checkedCovid: checkedCovid,
         checkedIllness: checkedIllness,
         checkedAuthCode: checkedAuthCode,
         checkedDamage: checkedDamage,
@@ -90,6 +95,15 @@ module.exports = function (router) {
       reasonObject.reason = req.body.extensionReason
       reasonObject.complete = false
       switch (req.body.extensionReason) {
+        case 'covid':
+          if (editId !== '') {
+            req.session.extensionReasons[editId].reason = reasonObject.reason
+          } else {
+            reasonObject.nextStep = 'covid-information'
+            req.session.extensionReasons.push(reasonObject)
+          }
+          res.redirect('/covid-information')
+          break
         case 'illness':
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason

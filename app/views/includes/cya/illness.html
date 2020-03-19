@@ -1,0 +1,104 @@
+<h3 class="govuk-heading-m">{{appealListIndex}}Illness</h3>
+{% set illPersonHTML %}
+{% if reason.illPerson === 'otherPerson' %}
+  Someone else -
+  {{ reason.otherPerson | capitalize }}
+{% else %}
+  {{ reason.illPerson | capitalize }}
+{% endif %}
+{% endset %}
+
+{% if showChangeLinks === true %}
+  {% set continuedIllnessChange = {
+    href: "illness/continued-illness/?id=" + loop.index0,
+    text: "Change",
+    visuallyHiddenText: "continuing illness"
+} %}
+  {% set endDateChange = {
+    href: "illness/illness-end-date/?id=" + loop.index0,
+    text: "Change",
+    visuallyHiddenText: "illness end date"
+} %}
+  {% set illPersonChange = {
+    href: "illness/who-was-ill/?id=" + loop.index0,
+    text: "Change",
+    visuallyHiddenText: "who was ill"
+} %}
+  {% set startDateChange = {
+    href: "illness/illness-start-date/?id" + loop.index0,
+    text: "Change",
+    visuallyHiddenText: "illness start date"
+} %}
+  {% set infoChange = {
+  href: "illness/illness-information/?id=" + loop.index0,
+  text: "Change",
+  visuallyHiddenText: "further information"
+} %}
+{% endif %}
+
+{% if reason.continuedIllness === 'yes' %}
+  {% set endDateHTML = {
+    key: {
+      text: "Continuing illness?"
+    },
+    value: {
+      html: reason.continuedIllness | capitalize
+    },
+    actions: {
+      items: [continuedIllnessChange]
+    }
+  } %}
+{% else %}
+  {% set endDateHTML = {
+    key: {
+      text: "Illness end date"
+    },
+    value: {
+      html: reason.illnessEndDate.day + " " + reason.illnessEndDate.month | displayMonth + " " + reason.illnessEndDate.year
+    },
+    actions: {
+      items: [endDateChange]
+    }
+  } %}
+{% endif %}
+
+{{ govukSummaryList({
+  rows: [
+  {
+    key: {
+    text: "Who was ill?"
+  },
+  value: {
+    html: illPersonHTML
+  },
+  actions: {
+    items: [illPersonChange]
+    }
+  },
+  illDirectorHTML,
+  {
+  key: {
+    text: "Illness start date"
+  },
+  value: {
+    text: reason.illnessStartDate.day + " " + reason.illnessStartDate.month | displayMonth + " " + reason.illnessStartDate.year
+  },
+  actions: {
+    items: [startDateChange]
+  }
+  },
+  endDateHTML,
+  {
+  key: {
+    text: "Further information"
+  },
+  value: {
+    html: reason.illnessInformation | safe | nl2br
+  },
+  actions: {
+    items: [infoChange]
+  }
+  },
+  documents
+  ]
+}) }}
