@@ -99,10 +99,10 @@ module.exports = function (router) {
           if (editId !== '') {
             req.session.extensionReasons[editId].reason = reasonObject.reason
           } else {
-            reasonObject.nextStep = 'check-your-answers'
+            reasonObject.nextStep = 'coronavirus-information'
             req.session.extensionReasons.push(reasonObject)
           }
-          res.redirect('/check-your-answers')
+          res.redirect('/coronavirus-information')
           break
         case 'illness':
           if (editId !== '') {
@@ -176,6 +176,55 @@ module.exports = function (router) {
           }
           res.redirect('other/reason-other')
           break
+      }
+    }
+  })
+  router.get('/coronavirus-information', function (req, res) {
+    var id = 0
+    var info = ''
+    if (req.query.id) {
+      id = req.query.id
+      info = req.session.extensionReasons[id].coronavirusInformation
+      res.render('coronavirus-information', {
+        id: id,
+        info: info
+      })
+    } else {
+      res.render('coronavirus-information')
+    }
+  })
+  router.post('/coronavirus-information', function (req, res) {
+    var coronavirusInformation = req.body.coronavirusInformation
+    var editId = req.body.editId
+    var errorFlag = false
+    var Err = {}
+    var errorList = []
+
+    if (coronavirusInformation === '') {
+      Err.type = 'blank'
+      Err.text = 'You must tell us more information'
+      Err.href = '#coronavirus-information'
+      Err.flag = true
+    }
+    if (Err.flag) {
+      errorList.push(Err)
+      errorFlag = true
+    }
+    if (errorFlag === true) {
+      res.render('coronavirus-information', {
+        errorList: errorList,
+        Err: Err
+      })
+    } else {
+      if (req.body.editId !== '') {
+        req.session.extensionReasons[editId].coronavirusInformation = coronavirusInformation
+        res.redirect('/check-your-answers')
+      } else {
+        var reasonObject = req.session.extensionReasons.pop()
+        reasonObject.coronavirusInformation = req.body.coronavirusInformation
+        reasonObject.nextStep = 'check-your-answers'
+        req.session.extensionReasons.push(reasonObject)
+        res.redirect('/check-your-answers')
       }
     }
   })

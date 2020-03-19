@@ -263,6 +263,27 @@ lfp-extensions-prototype/app/views/check-your-answers.html @oceannee oceannee ac
 }) }}
           {% elif reason.reason === 'covid' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Coronavirus (COVID-19)</h3>
+            {{ govukSummaryList ({
+            rows: [
+            {
+            key: {
+              text: "Further information"
+            },
+            value: {
+              html: reason.coronavirusInformation
+            },
+            actions: {
+              items: [
+            {
+            href: "coronavirus-information" + loop.index0,
+              text: "Change",
+              visuallyHiddenText: "further information"
+            }
+            ]
+            }
+          }
+          ]
+        }) }}
 
           {% elif reason.reason === 'authCode' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Missing company authentication code</h3>
