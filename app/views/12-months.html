@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}
+  You cannot use this service
+{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+    tag: {
+      text: "alpha"
+    },
+    html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+  }) }}
+  {{ govukBackLink({
+    text: "Back",
+    href: "confirm-company"
+  }) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">You cannot use this service</h1>
+      <p class="govuk-body-m">
+        We cannot grant a filing deadling extension to RUNNING LATE LTD (00111112).</p>
+      <p>The company must file its accounts no more than 12 months after the end of the accounting period.</p>
+      <p>
+        <a href="https://www.gov.uk/running-a-limited-company">File the company accounts</a>
+        as soon as possible to avoid a late filing penalty.</p>
+
+    </div>
+  </div>
+{% endblock %}
