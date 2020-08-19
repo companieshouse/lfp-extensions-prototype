@@ -12,7 +12,7 @@
 }) }}
   {{ govukBackLink({
   text: "Back",
-  href: backLinkHref
+  href: "confirmation"
 }) }}
 {% endblock %}
 {% block content %}
@@ -72,11 +72,6 @@
           <dd class="app-check-your-answers__change"></dd>
         </div>
       </dl>
-      {% if extensionReasons.length > 1 %}
-        <h2 class="govuk-heading-l">Extension reasons</h2>
-      {% else %}
-        <h2 class="govuk-heading-l">Extension reason</h2>
-      {% endif %}
       {% for reason in extensionReasons %}
         {% if extensionReasons.length > 1 %}
           {% set extensionListIndex %}
@@ -101,6 +96,10 @@
                     {{ reason.illPerson | capitalize }}
                   {% endif %}
                 </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="illness/who-was-ill/?id={{loop.index0}}"></a>
+                </dd>
+                <dd class="app-check-your-answers__change"></dd>
               </div>
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
@@ -111,6 +110,9 @@
                   {{ reason.illnessStartDate.month | displayMonth }}
                   {{ reason.illnessStartDate.year }}
                 </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="illness/illness-start-date/?id={{loop.index0}}"></a>
+                </dd>
               </div>
               {% if reason.continuedIllness === 'yes' %}
                 <div class="app-check-your-answers__contents">
@@ -119,6 +121,9 @@
                   </dt>
                   <dd class="app-check-your-answers__answer">
                     {{ reason.continuedIllness | capitalize }}
+                  </dd>
+                  <dd class="app-check-your-answers__change">
+                    <a href="illness/continued-illness/?id={{loop.index0}}"></a>
                   </dd>
                 </div>
               {% else %}
@@ -131,44 +136,69 @@
                     {{ reason.illnessEndDate.month | displayMonth }}
                     {{ reason.illnessEndDate.year }}
                   </dd>
+                  <dd class="app-check-your-answers__change">
+                    <a href="illness/illness-end-date/?id={{loop.index0}}"></a>
+                  </dd>
                 </div>
               {% endif %}
               {% if reason.illnessInformation != null %}
                 <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
+                  <dt class="app-check-your-answers__question app-check-your-answers__question-full-width">
                     Further information
                   </dt>
-                  <dd class="app-check-your-answers__answer">
+                  <dd class="app-check-your-answers__answer app-check-your-answers__question--full-width">
                     {{ reason.illnessInformation | safe | nl2br }}
                   </dd>
-                </div>
-              {% endif %}
-              {% if reason.supportingEvidence === 'yes' %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Supporting documents
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
-                    <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                      </li>
-                    </ul>
+                  <dd class="app-check-your-answers__change">
+                    <a href="illness/illness-information/?id={{loop.index0}}"></a>
                   </dd>
                 </div>
               {% endif %}
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting documents
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {% if reason.documents.length > 0 %}
+                    <ul class="govuk-list govuk-list--bullet">
+                      {% for document in reason.documents | reverse %}
+                        <li>
+                          <a href='' class='govuk-link' download="download">{{ document }}</a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% else %}
+                    None
+                  {% endif %}
+                </dd>
+              </div>
+            </dl>
+          {% elif reason.reason === 'authCode' %}
+            <h3 class="govuk-heading-m">{{extensionListIndex}}Missing company authentication code</h3>
+            <dl class="app-check-your-answers app-check-your-answers--long">
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Registered office address
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {{ scenario.company.address | nl2br | safe }}
+                </dd>
+              </div>
             </dl>
           {% elif reason.reason === 'damage' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Theft or criminal damage</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
-                  Date theft or criminal damage happened
+                  Date of incident
                 </dt>
                 <dd class="app-check-your-answers__answer">
                   {{ reason.damageDate.day }}
                   {{ reason.damageDate.month | displayMonth }}
                   {{ reason.damageDate.year }}
+                </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="theft-criminal-damage/damage-date/?id={{loop.index0}}"></a>
                 </dd>
               </div>
               <div class="app-check-your-answers__contents">
@@ -178,21 +208,28 @@
                 <dd class="app-check-your-answers__answer">
                   {{ reason.damage | safe | nl2br }}
                 </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="/theft-criminal-damage/reason-damage?id={{loop.index0}}"></a>
+                </dd>
               </div>
-              {% if reason.supportingEvidence === 'yes' %}
-                <div class="app-check-your-answers__contents">
-                  <dt class="app-check-your-answers__question">
-                    Supporting documents
-                  </dt>
-                  <dd class="app-check-your-answers__answer">
+              <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">
+                  Supporting documents
+                </dt>
+                <dd class="app-check-your-answers__answer">
+                  {% if reason.documents.length > 0 %}
                     <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                      </li>
+                      {% for document in reason.documents | reverse %}
+                        <li>
+                          <a href='' class='govuk-link' download="download">{{ document }}</a>
+                        </li>
+                      {% endfor %}
                     </ul>
-                  </dd>
-                </div>
-              {% endif %}
+                  {% else %}
+                    None
+                  {% endif %}
+                </dd>
+              </div>
             </dl>
           {% elif reason.reason === 'disaster' %}
             <h3 class="govuk-heading-m">{{extensionListIndex}}Natural disaster</h3>
@@ -206,6 +243,9 @@
                   {{ reason.disasterDate.month | displayMonth }}
                   {{ reason.disasterDate.year }}
                 </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="natural-disaster/disaster-date/?id={{loop.index0}}"></a>
+                </dd>
               </div>
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
@@ -214,6 +254,9 @@
                 <dd class="app-check-your-answers__answer">
                   {{ reason.naturalDisaster | safe | nl2br }}
                 </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="/natural-disaster/reason-natural-disaster?id={{loop.index0}}"></a>
+                </dd>
               </div>
               {% if reason.supportingEvidence === 'yes' %}
                 <div class="app-check-your-answers__contents">
@@ -221,11 +264,17 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                      </li>
-                    </ul>
+                    {% if reason.documents.length > 0 %}
+                      <ul class="govuk-list govuk-list--bullet">
+                        {% for document in reason.documents | reverse %}
+                          <li>
+                            <a href='' class='govuk-link' download="download">{{ document }}</a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      None
+                    {% endif %}
                   </dd>
                 </div>
               {% endif %}
@@ -242,6 +291,9 @@
                   {{ reason.accountsDate.month | displayMonth }}
                   {{ reason.accountsDate.year }}
                 </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="accounts/accounts-date/?id={{loop.index0}}"></a>
+                </dd>
               </div>
               <div class="app-check-your-answers__contents">
                 <dt class="app-check-your-answers__question">
@@ -250,6 +302,9 @@
                 <dd class="app-check-your-answers__answer">
                   {{ reason.accounts | safe | nl2br }}
                 </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="/accounts/reason-accounts?id={{loop.index0}}"></a>
+                </dd>
               </div>
               {% if reason.supportingEvidence === 'yes' %}
                 <div class="app-check-your-answers__contents">
@@ -257,11 +312,17 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                      </li>
-                    </ul>
+                    {% if reason.documents.length > 0 %}
+                      <ul class="govuk-list govuk-list--bullet">
+                        {% for document in reason.documents | reverse %}
+                          <li>
+                            <a href='' class='govuk-link' download="download">{{ document }}</a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      None
+                    {% endif %}
                   </dd>
                 </div>
               {% endif %}
@@ -279,6 +340,9 @@
                     {{ reason.dateWasChanged.month | displayMonth }}
                     {{ reason.dateWasChanged.year }}
                   </dd>
+                  <dd class="app-check-your-answers__change">
+                    <a href="/company-changes/aware-change-date?id={{loop.index0}}"></a>
+                  </dd>
                 </div>
               {% elseif reason.dateWillChange != null %}
                 <div class="app-check-your-answers__contents">
@@ -289,6 +353,9 @@
                     {{ reason.dateWillChange.day }}
                     {{ reason.dateWillChange.month | displayMonth }}
                     {{ reason.dateWillChange.year }}
+                  </dd>
+                  <dd class="app-check-your-answers__change">
+                    <a href="/company-changes/date-will-change?id={{loop.index0}}"></a>
                   </dd>
                 </div>
               {% else %}
@@ -303,6 +370,9 @@
                     {{ reason.awareChangeDate.month | displayMonth }}
                     {{ reason.awareChangeDate.year }}
                   </dd>
+                  <dd class="app-check-your-answers__change">
+                    <a href="/company-changes/aware-change-date?id={{loop.index0}}"></a>
+                  </dd>
                 </div>
               {% else %}
               {% endif %}
@@ -313,6 +383,9 @@
                 <dd class="app-check-your-answers__answer">
                   {{ reason.companyChanges | safe | nl2br }}
                 </dd>
+                <dd class="app-check-your-answers__change">
+                  <a href="/company-changes/reason-company-changes?id={{loop.index0}}"></a>
+                </dd>
               </div>
               {% if reason.supportingEvidence === 'yes' %}
                 <div class="app-check-your-answers__contents">
@@ -320,11 +393,17 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                      </li>
-                    </ul>
+                    {% if reason.documents.length > 0 %}
+                      <ul class="govuk-list govuk-list--bullet">
+                        {% for document in reason.documents | reverse %}
+                          <li>
+                            <a href='' class='govuk-link' download="download">{{ document }}</a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      None
+                    {% endif %}
                   </dd>
                 </div>
               {% endif %}
@@ -337,52 +416,69 @@
                   Reason
                 </dt>
                 <dd class="app-check-your-answers__answer">
-                  {% if reason.problemReason === 'Other reason' %}
+                  {% if reason.problemReason === 'other' %}
                     Other reason -
-                    {{ reason.otherReason }}
+                    {{ reason.otherProblemReason }}
                   {% else %}
                     {{ reason.problemReason | safe | nl2br }}
                   {% endif %}
                 </dd>
-              </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  You tried to file
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.problemDate.day }}
-                  {{ reason.problemDate.month | displayMonth }}
-                  {{ reason.problemDate.year }}
-                  {{ reason.problemTime.hour }}
-                  {{ reason.problemTime.minute }}
+                <dd class="app-check-your-answers__change">
+                  <a href="/computer-problem/choose-computer-problem?id={{loop.index0}}"></a>
                 </dd>
               </div>
-              <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">
-                  Further information
-                </dt>
-                <dd class="app-check-your-answers__answer">
-                  {{ reason.computerProblem | safe | nl2br }}
-                </dd>
-              </div>
-              {% if reason.supportingEvidence === 'yes' %}
+              {% if reason.problemReason !== 'Authentication code' %}
                 <div class="app-check-your-answers__contents">
                   <dt class="app-check-your-answers__question">
-                    Supporting documents
+                    You tried to file
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                      </li>
-                    </ul>
+                    {{ reason.problemDate.day }}
+                    {{ reason.problemDate.month | displayMonth }}
+                    {{ reason.problemDate.year }}
+                    {{ reason.problemTime.hour }}
+                    {{ reason.problemTime.minute }}
+                  </dd>
+                  <dd class="app-check-your-answers__change">
+                    <a href="/computer-problem/problem-date?id={{loop.index0}}"></a>
                   </dd>
                 </div>
+                <div class="app-check-your-answers__contents">
+                  <dt class="app-check-your-answers__question">
+                    Further information
+                  </dt>
+                  <dd class="app-check-your-answers__answer">
+                    {{ reason.computerProblem | safe | nl2br }}
+                  </dd>
+                  <dd class="app-check-your-answers__change">
+                    <a href="/computer-problem/reason-computer-problem?id={{loop.index0}}"></a>
+                  </dd>
+                </div>
+                {% if reason.supportingEvidence === 'yes' %}
+                  <div class="app-check-your-answers__contents">
+                    <dt class="app-check-your-answers__question">
+                      Supporting documents
+                    </dt>
+                    <dd class="app-check-your-answers__answer">
+                      {% if reason.documents.length > 0 %}
+                        <ul class="govuk-list govuk-list--bullet">
+                          {% for document in reason.documents | reverse %}
+                            <li>
+                              <a href='' class='govuk-link' download="download">{{ document }}</a>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {% else %}
+                        None
+                      {% endif %}
+                    </dd>
+                  </div>
+                {% endif %}
               {% endif %}
             </dl>
           {% else %}
             <h3 class="govuk-heading-m">{{loop.index}}:
-              {{ reason.otherReason }}</h3>
+              {{ reason.otherReason | capitalize }}</h3>
             <dl class="app-check-your-answers app-check-your-answers--long">
               {% if reason.otherInformation != null %}
                 <div class="app-check-your-answers__contents">
@@ -392,6 +488,9 @@
                   <dd class="app-check-your-answers__answer">
                     {{ reason.otherInformation | safe | nl2br }}
                   </dd>
+                  <dd class="app-check-your-answers__change">
+                    <a href="/other/reason-other?id={{loop.index0}}"></a>
+                  </dd>
                 </div>
               {% endif %}
               {% if reason.supportingEvidence === 'yes' %}
@@ -400,17 +499,24 @@
                     Supporting documents
                   </dt>
                   <dd class="app-check-your-answers__answer">
-                    <ul class="govuk-list govuk-list--bullet">
-                      <li>
-                        <a href='' class='govuk-link'>evidence-letter.jpg</a>
-                      </li>
-                    </ul>
+                    {% if reason.documents.length > 0 %}
+                      <ul class="govuk-list govuk-list--bullet">
+                        {% for document in reason.documents | reverse %}
+                          <li>
+                            <a href='' class='govuk-link' download="download">{{ document }}</a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      None
+                    {% endif %}
                   </dd>
                 </div>
               {% endif %}
             </dl>
           {% endif %}
-        {% endfor %}
-      </div>
+        </div>
+      {% endfor %}
     </div>
-  {% endblock %}
+  </div>
+{% endblock %}

@@ -18,7 +18,7 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">Check company details</h1>
+      <h1 class="govuk-heading-xl">Confirm this is the right company</h1>
       <h2 class="govuk-heading-l">{{scenario.company.name}}</h2>
 
       {% set inactiveHTML %}
@@ -41,76 +41,84 @@
       {% endif %}
       {% endset %}
 
-      {{ govukTable({
-
-  firstCellIsHeader: true,
-  classes: "align-top",
-  rows: [
-    [
-      {
-        text: "Company number"
-      },
-      {
-        text: scenario.company.number
-      }
-    ],
-    [
-      {
-        text: "Status"
-      },
-      {
-        html: inactiveHTML
-      }
-    ],
-    [
-      {
-        text: "Incorporation date"
-      },
-      {
-        text: scenario.company.incorporationDate
-      }
-    ],
-    [
-      {
-        text: "Company type"
-      },
-      {
-        text: scenario.company.companyType
-      }
-    ],
-    [
-      {
-        text: "Registered office address"
-      },
-      {
-        html: scenario.company.address | nl2br
-      }
-    ],
-    [
-      {
-        text: "Accounts due"
-      },
-      {
-        html: overdueHTML
-      }
-    ]
-  ]
-}) }}
+      {{ govukSummaryList({
+        classes: "govuk-!-margin-bottom-8",
+        rows: [
+          {
+            key: {
+              text: "Company number"
+            },
+            value: {
+              text: scenario.company.number
+            }
+          },
+          {
+            key: {
+              text: "Status"
+            },
+            value: {
+              html: inactiveHTML
+            }
+          },
+          {
+            key: {
+              text: "Incorporation date"
+            },
+            value: {
+              text: scenario.company.incorporationDate
+            }
+          },
+          {
+            key: {
+              text: "Company type"
+            },
+            value: {
+              text: scenario.company.companyType
+            }
+          },
+          {
+            key: {
+              text: "Registered office address"
+            },
+            value: {
+              text: scenario.company.address | nl2br | safe
+            }
+          },
+          {
+            key: {
+              text: "Accounts due"
+            },
+            value: {
+              text: scenario.company.accountsDue
+            }
+          }
+        ]
+      })
+      }}
 
       {% if scenario.company.deadlineStatus === 'Overdue' %}
         {{ govukButton({
-text: "Continue",
+text: "Confirm",
 href: "ptf/ptf"
 }) }}
       {% elif scenario.company.deadlineStatus === 'notDue' %}
         {{ govukButton({
-text: "Continue",
+text: "Confirm",
 href: "accountsnotdue"
 }) }}
-      {% elif scenario.company.deadlineStatus === 'inactive' %}
+      {% elif scenario.company.deadlineStatus === 'unlimited' %}
+        {{ govukButton({
+text: "Confirm",
+href: "accountsnotneeded"
+}) }}
+      {% elif scenario.company.accountingReferenceDateRequested === 'yes' %}
+        {{ govukButton({
+text: "Confirm",
+href: "account-reference-date"
+}) }}
       {% else %}
         {{ govukButton({
-text: "Continue",
+text: "Confirm",
 href: "choose-reason"
 }) }}
       {% endif %}

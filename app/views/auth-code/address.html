@@ -22,7 +22,7 @@
 
         {% if errorList.length > 0 %}
           {{ govukErrorSummary({
-              titleText: "There is an error on the page",
+              titleText: "There is a problem",
               errorList: errorList
             }) }}
         {% endif %}
@@ -35,11 +35,13 @@
           {% set Err = false %}
         {% endif %}
 
-        {% set addressTitle %}
-        Is the registered office
-        <br>
-        {{ scenario.company.address | nl2br | safe }}?
-        {% endset -%}
+        <h1 class="govuk-heading-xl">Confirm your registered office address</h1>
+        <p class="govuk-body-l">We'll send a new authentication code to your registered office address.</p>
+
+        <p class="govuk-body">
+          {{ scenario.company.name }}<br/>
+          {{ scenario.company.address | nl2br | safe }}
+        </p>
 
         {{ govukRadios({
           classes: "govuk-radios--inline",
@@ -48,13 +50,10 @@
           errorMessage: Err,
           fieldset: {
             legend: {
-              html: addressTitle,
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--xl"
+              text: "Is this address correct?",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--m"
             }
-          },
-          hint: {
-            text: "We'll send a new authentication code to the registered office."
           },
           items: [
             {
@@ -69,13 +68,16 @@
         }) }}
 
         {{ govukInput({
-          id: "reason-ID",
-          name: "reasonID",
+          id: "id",
+          name: "id",
           type: "hidden",
-          value: reasonID
+          value: id
         }) }}
 
         {{ govukButton({ text: "Continue" }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
       </form>
     </div>
   </div>

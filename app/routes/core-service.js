@@ -1,5 +1,6 @@
 const fs = require('graceful-fs')
 const postmark = require('postmark')
+const del = require('del')
 
 module.exports = function (router) {
   // Sign in pages
@@ -152,15 +153,20 @@ module.exports = function (router) {
   })
   router.get('/confirmation', function (req, res) {
     var scenario = req.session.scenario
+    var companyNumber = req.session.scenario.company.number
     var extensionReasons = req.session.extensionReasons
     var userEmail = req.session.userEmail
     var authCodeFlag = false
+    var confirmAddress = false
     var i = 0
 
+    del('public/saved-sessions/' + companyNumber + '.json')
+
     for (i = 0; i < extensionReasons.length; i++) {
-      if (extensionReasons[i].reason === 'computerProblem') {
-        if (extensionReasons[i].problemReason === 'Authentication code') {
-          authCodeFlag = true
+      if (extensionReasons[i].reason === 'authCode') {
+        authCodeFlag = true
+        if (extensionReasons[i].confirmAddress === 'yes') {
+          confirmAddress = true
         }
       }
     }
@@ -184,6 +190,7 @@ module.exports = function (router) {
         }
       })
       // SEND SUBMISSION EMAIL
+      /*
       client.sendEmailWithTemplate({
         'From': process.env.FROM_EMAIL,
         'To': process.env.TO_EMAIL,
@@ -198,6 +205,7 @@ module.exports = function (router) {
           console.error('Unable to send via postmark: ' + error.message)
         }
       })
+      */
     } else {
       console.log('No Postmrk API key detected. To test emails run app locally with `heroku local web`')
     }
@@ -206,7 +214,8 @@ module.exports = function (router) {
       extensionReasons: req.session.extensionReasons,
       extensionLength: req.session.extensionLength,
       userEmail: req.session.userEmail,
-      authCodeFlag: authCodeFlag
+      authCodeFlag: authCodeFlag,
+      confirmAddress: confirmAddress
     })
   })
   router.get('/print-application', function (req, res) {

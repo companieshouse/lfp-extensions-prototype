@@ -150,11 +150,11 @@ module.exports = function (router) {
         Err: Err
       })
     } else {
-      reasonObject = req.session.extensionReasons.pop()
       if (req.body.editId !== '') {
         req.session.extensionReasons[editId].accounts = accounts
         res.redirect('/check-your-answers')
       } else {
+        reasonObject = req.session.extensionReasons.pop()
         reasonObject.accounts = req.body.accounts
         reasonObject.nextStep = 'evidence'
         req.session.extensionReasons.push(reasonObject)

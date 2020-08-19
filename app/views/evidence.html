@@ -80,6 +80,12 @@
         {{ govukButton({
               text: "Continue"
             }) }}
+        {{ govukInput({
+            id: "id",
+            name: "id",
+            type: "hidden",
+            value: id
+          }) }}
         <p>
           <a href="/sign-out" class="govuk-link">Save and sign out</a>
         </p>

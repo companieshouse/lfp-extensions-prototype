@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block pageTitle %}Has an authentication code been requested?{% endblock %}
+{% block beforeContent %}
+  {{ govukPhaseBanner({
+  tag: {
+    text: "alpha"
+  },
+  html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+}) }}
+  {{ govukBackLink({
+  text: "Back",
+  href: "choose-reason"
+}) }}
+{% endblock %}
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="" method="post">
+
+        {% if errorList.length > 0 %}
+          {{ govukErrorSummary({
+              titleText: "There is an error on the page",
+              errorList: errorList
+            }) }}
+        {% endif %}
+
+        {% if errorList.length > 0 %}
+          {% set Err = {
+            text: Err.text
+          } %}
+        {% else %}
+          {% set Err = false %}
+        {% endif %}
+
+        {{ govukRadios({
+          classes: "govuk-radios--inline",
+          idPrefix: "auth-code-requested",
+          name: "authCodeRequested",
+          errorMessage: Err,
+          fieldset: {
+            legend: {
+              text: "Have you requested a new authentication code?",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--xl"
+            }
+          },
+          items: [
+            {
+              value: "yes",
+              text: "Yes"
+            },
+            {
+              value: "no",
+              text: "No"
+            }
+          ]
+        }) }}
+
+        {{ govukInput({
+          id: "id",
+          name: "id",
+          type: "hidden",
+          value: id
+        }) }}
+
+        {{ govukButton({ text: "Continue" }) }}
+        <p>
+          <a href="/sign-out" class="govuk-link">Save and sign out</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -16,18 +16,52 @@
 }) }}
 {% endblock %}
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">Change the registered office</h1>
-      <h2 class="govuk-heading-m">What to do next</h2>
-      <p>You need to
-        <a href="https://www.gov.uk/government/publications/change-a-registered-office-address-ad01">update the registered office</a>
-        for
-        {{scenario.company.name}}.
-      </p>
-      <p>Once you have updated the registered office, you'll need to
-        <a href="resume-application">resume your application</a>
-        to extend the filing deadline.</p>
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <div class="interruption-card interruption-card-paper">
+        <h1 class="govuk-heading-xl">Before you continue</h1>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <p>You may be eligible for an extension. You will need to update your registered office and request an authentication code before your extension expires.</p>
+            <ul class="govuk-list">
+              <li>
+                <span class="circle-step-white">1</span>
+                <h2 class="govuk-heading-m">
+                  <a href="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/287369/AD01_change_of_registered_office_address.pdf" target="_blank">Print out and complete a change of registered address form</a>
+                </h2>
+              </li>
+              <li>
+                <span class="circle-step-white">2</span>
+                <h2 class="govuk-heading-m">
+                  <a href="https://beta.companieshouse.gov.uk/">Check Companies House
+                  </a>
+                  to see if your registered office address has been updated</h2>
+              </li>
+              <li>
+                <span class="circle-step-white">3</span>
+                <h2 class="govuk-heading-m">
+                  <a href="https://ewf.companieshouse.gov.uk/" target="_blank">
+                    Request a new authentication code</a>
+                </h2>
+              </li>
+            </ul>
+            <form action="" method="post">
+              {{ govukButton({
+                text: "Continue with application",
+                classes: "govuk-!-margin-top-5"
+              }) }}
+              <p>
+                <a href="/sign-out" class="govuk-link">Save and sign out</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-{% endblock %}
+    {{ govukInput({
+    id: "id",
+    name: "id",
+    type: "hidden",
+    value: id
+  }) }}
+  {% endblock %}
